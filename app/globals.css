@@ -744,18 +744,37 @@ body {
   transform-origin: center;
 }
 @keyframes vex-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
+}
+.vex-scroll {
+  animation: vex-scroll 1s linear infinite;
+}
+@keyframes vex-scroll {
+  to { transform: translateX(-40px); }
+}
+.vex-belt {
+  animation: vex-belt 0.5s linear infinite;
+}
+@keyframes vex-belt {
+  to { stroke-dashoffset: -10; }
 }
 .vex-feed {
   animation: vex-feed 3.3s linear infinite;
 }
 @keyframes vex-feed {
-  0% { transform: translateX(0); opacity: 1; }
-  70% { transform: translateX(220px); opacity: 1; }
-  80%, 100% { transform: translateX(250px); opacity: 0; }
+  0% { transform: translate(0, 0); opacity: 0; }
+  8% { opacity: 1; }
+  62% { transform: translate(226px, 0); opacity: 1; }
+  74% { transform: translate(246px, -22px); opacity: 1; }
+  82%, 100% { transform: translate(262px, -30px); opacity: 0; }
+}
+.vex-pop {
+  animation: vex-pop 0.7s ease-out forwards;
+}
+@keyframes vex-pop {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-14px); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .vex-spin, .vex-feed { animation: none; }
+  .vex-spin, .vex-feed, .vex-scroll, .vex-belt, .vex-pop { animation: none; }
 }
