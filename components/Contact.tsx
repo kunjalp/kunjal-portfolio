@@ -129,9 +129,9 @@ export default function Contact() {
   };
 
   const cls: Record<Line["kind"], string> = {
-    cmd: "text-[rgb(var(--paper))]",
-    out: "text-[rgb(var(--paper)/0.75)]",
-    link: "text-[rgb(var(--g1))] underline underline-offset-2 hover:text-[rgb(var(--paper))]",
+    cmd: "text-[rgb(var(--term-fg))]",
+    out: "text-[rgb(var(--term-fg)/0.75)]",
+    link: "text-[rgb(var(--g1))] underline underline-offset-2 hover:text-[rgb(var(--term-fg))]",
     err: "text-[rgb(var(--accent))]",
   };
 
@@ -189,7 +189,7 @@ export default function Contact() {
                   autoComplete="off"
                   spellCheck={false}
                   type={mode === "email" ? "email" : "text"}
-                  className="min-w-0 flex-1 bg-transparent text-[rgb(var(--paper))] caret-[rgb(var(--accent))] outline-none"
+                  className="min-w-0 flex-1 bg-transparent text-[rgb(var(--term-fg))] caret-[rgb(var(--accent))] outline-none"
                   aria-label="Terminal input"
                 />
               </form>
@@ -204,7 +204,7 @@ export default function Contact() {
                       run(c);
                       input.current?.focus();
                     }}
-                    className="rounded border border-[rgb(var(--paper)/0.35)] px-2 py-0.5 text-xs text-[rgb(var(--paper)/0.85)] hover:border-[rgb(var(--g1))] hover:text-[rgb(var(--g1))]"
+                    className="rounded border border-[rgb(var(--term-fg)/0.35)] px-2 py-0.5 text-xs text-[rgb(var(--term-fg)/0.85)] hover:border-[rgb(var(--g1))] hover:text-[rgb(var(--g1))]"
                   >
                     {c}
                   </button>

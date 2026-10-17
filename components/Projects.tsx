@@ -74,7 +74,7 @@ export default function Projects() {
           <Window title="cosmos/perception-and-mapping">
             <div className="space-y-4 p-6 sm:p-7">
               <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
-                Scaled autonomous vehicle
+                Scaled Autonomous Vehicle
               </h3>
               <p className="font-mono text-xs text-muted">UC San Diego COSMOS · 2024</p>
               <p className="text-[1.05rem] leading-relaxed">
@@ -140,7 +140,7 @@ export default function Projects() {
           <Window title="acm-ucsc/web-lead.md">
             <div className="space-y-4 p-6 sm:p-7">
               <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
-                ACM at UCSC: web redesign
+                ACM at UCSC: Web Redesign
               </h3>
               <p className="font-mono text-xs text-muted">Web Development Lead · August 2026 – Present</p>
               <p className="text-[1.05rem] leading-relaxed">

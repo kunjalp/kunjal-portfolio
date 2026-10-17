@@ -74,6 +74,7 @@
   --spoke: 150 150 154;
   --caliper: 214 40 46;
   --tire: 22 22 20;
+  --term-fg: 246 243 228; /* terminal text, stays light on the dark terminal */
   --exhaust: 120 116 110;
   --drl: 255 240 222;
   --skid: 34 28 20;
@@ -147,6 +148,7 @@
   --spoke: 140 140 146;
   --caliper: 226 52 56;
   --tire: 6 6 6;
+  --term-fg: 255 255 255;
   --exhaust: 200 196 188;
   --drl: 255 240 222;
   --skid: 0 0 0;
