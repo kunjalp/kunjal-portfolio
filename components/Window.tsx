@@ -242,7 +242,6 @@ export default function Window({ title, children, className = "" }: Props) {
 
         {toast && (
           <button type="button" role="status" className="win-toast" onClick={pokeClose}>
-            <span aria-hidden className="win-toast-emoji">🔒</span>
             <span>{CLOSE_MSG}</span>
           </button>
         )}
