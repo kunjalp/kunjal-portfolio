@@ -79,10 +79,11 @@ const clouds: { x: number; y: number; w: number }[] = [
   { x: 1300, y: 330, w: 140 },
 ];
 
+// flap: wing-beat cycle (s); drift: slow wander loop (s); delay staggers them.
 const birds = [
-  { x: 1010, y: 300, s: 1 },
-  { x: 1034, y: 290, s: 0.8 },
-  { x: 1052, y: 304, s: 0.65 },
+  { x: 1010, y: 236, s: 1, flap: 2.6, drift: 26, delay: 0 },
+  { x: 1034, y: 226, s: 0.8, flap: 2.2, drift: 31, delay: -0.9 },
+  { x: 1052, y: 240, s: 0.65, flap: 1.9, drift: 23, delay: -1.6 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -199,10 +200,17 @@ export default function Scenery() {
 
         <g className="birds">
           {birds.map((b, i) => (
-            <path
+            <g
               key={i}
-              d={`M ${b.x - 7 * b.s} ${b.y - 3 * b.s} Q ${b.x - 3 * b.s} ${b.y - 4 * b.s} ${b.x} ${b.y} Q ${b.x + 3 * b.s} ${b.y - 4 * b.s} ${b.x + 7 * b.s} ${b.y - 3 * b.s}`}
-            />
+              className="bird-drift"
+              style={{ animationDuration: `${b.drift}s`, animationDelay: `${b.delay * 5}s` }}
+            >
+              <path
+                className="bird-flap"
+                style={{ animationDuration: `${b.flap}s`, animationDelay: `${b.delay}s` }}
+                d={`M ${b.x - 7 * b.s} ${b.y - 3 * b.s} Q ${b.x - 3 * b.s} ${b.y - 4 * b.s} ${b.x} ${b.y} Q ${b.x + 3 * b.s} ${b.y - 4 * b.s} ${b.x + 7 * b.s} ${b.y - 3 * b.s}`}
+              />
+            </g>
           ))}
         </g>
       </Layer>

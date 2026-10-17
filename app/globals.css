@@ -256,6 +256,31 @@ body {
   stroke-linecap: round;
   opacity: calc(var(--sun-op) * 0.7);
 }
+/* A few quick wing beats, then a glide. Pivot on the body (bottom of the V). */
+.bird-flap {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: bird-flap 2.4s ease-in-out infinite;
+}
+@keyframes bird-flap {
+  0%, 44%, 100% { transform: scaleY(1); }
+  8% { transform: scaleY(-0.55) translateY(1px); }
+  16% { transform: scaleY(1); }
+  24% { transform: scaleY(-0.55) translateY(1px); }
+  32% { transform: scaleY(1); }
+  60% { transform: scaleY(0.75); }
+  76% { transform: scaleY(1.05); }
+}
+/* Slow wander around the flock's spot in the sky. */
+.bird-drift {
+  animation: bird-drift 26s ease-in-out infinite;
+}
+@keyframes bird-drift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(22px, -7px); }
+  50% { transform: translate(40px, 2px); }
+  75% { transform: translate(16px, 6px); }
+}
 
 .far-rock { fill: rgb(var(--far)); }
 .far-rock-lit { fill: rgb(var(--far-lit)); }
@@ -747,6 +772,9 @@ body {
   animation: fade-up 0.25s ease-out;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .bird-flap, .bird-drift { animation: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
