@@ -18,8 +18,9 @@ export default function Hero() {
           <span className="text-muted">CS & CE Double Major · UC Santa Cruz</span>
         </div>
 
-        <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted">
-          Kunjal Purohit
+        <p className="mb-3 font-mono text-sm text-muted sm:text-base">
+          <span className="text-accent">&gt;</span> kunjal_purohit
+          <span className="cursor" aria-hidden />
         </p>
 
         <h1 className="max-w-3xl text-[2.5rem] font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">

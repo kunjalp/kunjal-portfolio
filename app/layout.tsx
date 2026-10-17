@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Leaves from "@/components/Leaves";
+import Scenery from "@/components/Scenery";
 
 export const metadata: Metadata = {
   title: "Kunjal Purohit | CS & Computer Engineering",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
+        <Scenery />
         {children}
         <Leaves />
       </body>
