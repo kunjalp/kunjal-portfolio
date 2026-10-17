@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { dockAdd, dockRemove } from "./windowDock";
 
 // Shared across all windows so whichever you touch last sits on top.
 let topZ = 1;
+
+const MIN_W = 260;
+const MIN_H = 140;
+const CLOSE_MSG = "Nice try! System cannot be closed without hiring Kunjal first.";
 
 type Props = {
   title: string;
@@ -12,54 +17,92 @@ type Props = {
 };
 
 export default function Window({ title, children, className = "" }: Props) {
+  const id = useId();
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [z, setZ] = useState(1);
   const [dragging, setDragging] = useState(false);
-  const [open, setOpen] = useState(true);
-  const [collapsed, setCollapsed] = useState(false);
-  const drag = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const [resizing, setResizing] = useState(false);
+  const [minState, setMinState] = useState<"off" | "going" | "on" | "back">("off");
+  const [expanded, setExpanded] = useState(false);
+  const [toast, setToast] = useState(false);
+  const [slotH, setSlotH] = useState(0);
+
+  const drag = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
   const rs = useRef<{ sx: number; sy: number; w: number; h: number } | null>(null);
   const win = useRef<HTMLDivElement>(null);
-  const MIN_W = 260, MIN_H = 140;
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const front = () => setZ(++topZ);
+  const minimized = minState === "going" || minState === "on";
 
-  if (!open) {
-    return (
-      <button
-        type="button"
-        className="glass-btn"
-        onClick={() => {
-          setOpen(true);
-          front();
-        }}
-      >
-        Reopen {title}
-      </button>
-    );
-  }
+  /* ---------- red: playful refusal ---------- */
+  const pokeClose = () => {
+    clearTimeout(toastTimer.current);
+    setToast((t) => {
+      if (!t) toastTimer.current = setTimeout(() => setToast(false), 4500);
+      return !t;
+    });
+  };
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
 
+  /* ---------- yellow: minimize to dock ---------- */
+  const restore = useCallback(() => {
+    dockRemove(id);
+    setMinState("back");
+    setZ(++topZ);
+    setTimeout(() => setMinState("off"), 260);
+  }, [id]);
+
+  const minimize = () => {
+    if (expanded) setExpanded(false);
+    setToast(false);
+    setMinState("going");
+    setTimeout(() => {
+      setMinState("on");
+      dockAdd({ id, title, restore });
+    }, 240);
+  };
+  useEffect(() => () => dockRemove(id), [id]);
+
+  /* ---------- green: expand / restore ---------- */
+  const toggleExpand = () => {
+    if (!expanded) {
+      setSlotH(win.current?.getBoundingClientRect().height ?? 0);
+      front();
+    }
+    setExpanded((x) => !x);
+  };
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setExpanded(false);
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [expanded]);
+
+  /* ---------- dragging ---------- */
   const onBarPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest("button")) return;
+    if (expanded || (e.target as HTMLElement).closest("button")) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     drag.current = { sx: e.clientX, sy: e.clientY, ox: pos.x, oy: pos.y };
     setDragging(true);
   };
-
   const onBarPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d) return;
     setPos({ x: d.ox + e.clientX - d.sx, y: d.oy + e.clientY - d.sy });
   };
-
   const endDrag = () => {
     drag.current = null;
     setDragging(false);
   };
-
   const onBarKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (expanded) return;
     const step = e.shiftKey ? 48 : 16;
     const moves: Record<string, [number, number]> = {
       ArrowLeft: [-step, 0],
@@ -72,8 +115,12 @@ export default function Window({ title, children, className = "" }: Props) {
     e.preventDefault();
     setPos((p) => ({ x: p.x + m[0], y: p.y + m[1] }));
   };
+  const resetPlacement = () => {
+    setPos({ x: 0, y: 0 });
+    setSize(null);
+  };
 
-  // If the browser shrinks after a window was enlarged, keep it on screen.
+  /* ---------- resizing ---------- */
   useEffect(() => {
     if (!size) return;
     const onResize = () =>
@@ -86,7 +133,6 @@ export default function Window({ title, children, className = "" }: Props) {
     w: Math.min(Math.max(w, MIN_W), Math.max(MIN_W, window.innerWidth - 24)),
     h: Math.max(h, MIN_H),
   });
-
   const onGripDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     front();
@@ -120,70 +166,100 @@ export default function Window({ title, children, className = "" }: Props) {
     setSize(clampSize(cur.w + d[0], cur.h + d[1]));
   };
 
+  const fixed = expanded;
+  const sized = !!size && !expanded;
+
   return (
-    <div
-      ref={win}
-      className={`win ${dragging || resizing ? "is-dragging" : ""} ${size ? "flex flex-col" : ""} ${className}`}
-      style={{
-        transform: `translate(${pos.x}px, ${pos.y}px)`,
-        zIndex: z,
-        ...(size ? { width: size.w, height: collapsed ? undefined : size.h, maxWidth: "none" } : {}),
-      }}
-      onPointerDown={front}
-    >
+    <>
+      {/* keeps the page layout from jumping while the window is full-screen */}
+      {expanded && <div aria-hidden style={{ height: slotH }} />}
+      {expanded && <div className="win-backdrop" onClick={() => setExpanded(false)} aria-hidden />}
+
       <div
-        className="win-bar"
-        tabIndex={0}
-        aria-label={`${title} window. Drag the title bar, or use arrow keys to move.`}
-        onPointerDown={onBarPointerDown}
-        onPointerMove={onBarPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        onKeyDown={onBarKeyDown}
+        ref={win}
+        className={[
+          "win",
+          dragging || resizing || expanded ? "is-dragging" : "",
+          sized || fixed ? "flex flex-col" : "",
+          minState === "going" ? "win-min-going" : "",
+          minState === "back" ? "win-min-back" : "",
+          minState === "on" ? "hidden" : "",
+          fixed ? "win-expanded" : "",
+          className,
+        ].join(" ")}
+        style={
+          fixed
+            ? { zIndex: 70 }
+            : {
+                transform: `translate(${pos.x}px, ${pos.y}px)`,
+                zIndex: z,
+                ...(size ? { width: size.w, height: size.h, maxWidth: "none" } : {}),
+              }
+        }
+        onPointerDown={front}
       >
-        <button
-          type="button"
-          className="win-dot win-dot-close"
-          aria-label="Close window"
-          onClick={() => setOpen(false)}
-        />
-        <button
-          type="button"
-          className="win-dot win-dot-min"
-          aria-label={collapsed ? "Expand window" : "Collapse window"}
-          aria-expanded={!collapsed}
-          onClick={() => setCollapsed((c) => !c)}
-        />
-        <button
-          type="button"
-          className="win-dot win-dot-reset"
-          aria-label="Reset window position and size"
-          onClick={() => {
-            setPos({ x: 0, y: 0 });
-            setSize(null);
+        <div
+          className="win-bar"
+          tabIndex={0}
+          aria-label={`${title} window. Drag the title bar, or use arrow keys to move. Double-click to reset position and size.`}
+          onPointerDown={onBarPointerDown}
+          onPointerMove={onBarPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          onKeyDown={onBarKeyDown}
+          onDoubleClick={(e) => {
+            if (!(e.target as HTMLElement).closest("button")) resetPlacement();
           }}
-        />
-        <span className="win-title-wrap">
-          <span className="win-title">{title}</span>
-        </span>
-        {/* spacer so the title stays centered between the dots and the edge */}
-        <span aria-hidden className="w-[3.1rem] flex-none" />
+        >
+          <button
+            type="button"
+            className="win-dot win-dot-close"
+            aria-label="Close window"
+            aria-expanded={toast}
+            onClick={pokeClose}
+          />
+          <button
+            type="button"
+            className="win-dot win-dot-min"
+            aria-label="Minimize window to the dock"
+            onClick={minimize}
+          />
+          <button
+            type="button"
+            className="win-dot win-dot-reset"
+            aria-label={expanded ? "Exit full screen" : "Expand window to full screen"}
+            aria-pressed={expanded}
+            onClick={toggleExpand}
+          />
+          <span className="win-title-wrap">
+            <span className="win-title">{title}</span>
+          </span>
+          {/* spacer so the title stays centered between the dots and the edge */}
+          <span aria-hidden className="w-[3.1rem] flex-none" />
+        </div>
+
+        <div className={sized || fixed ? "min-h-0 flex-1 overflow-auto" : ""}>{children}</div>
+
+        {toast && (
+          <button type="button" role="status" className="win-toast" onClick={pokeClose}>
+            <span aria-hidden className="win-toast-emoji">🔒</span>
+            <span>{CLOSE_MSG}</span>
+          </button>
+        )}
+
+        {!expanded && (
+          <button
+            type="button"
+            className="win-grip"
+            aria-label={`Resize ${title} window. Drag, or use arrow keys.`}
+            onPointerDown={onGripDown}
+            onPointerMove={onGripMove}
+            onPointerUp={endResize}
+            onPointerCancel={endResize}
+            onKeyDown={onGripKey}
+          />
+        )}
       </div>
-
-      {!collapsed && <div className={size ? "min-h-0 flex-1 overflow-auto" : ""}>{children}</div>}
-
-      {!collapsed && (
-        <button
-          type="button"
-          className="win-grip"
-          aria-label={`Resize ${title} window. Drag, or use arrow keys.`}
-          onPointerDown={onGripDown}
-          onPointerMove={onGripMove}
-          onPointerUp={endResize}
-          onPointerCancel={endResize}
-          onKeyDown={onGripKey}
-        />
-      )}
-    </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/bricolage-grotesque/standard.css";
 import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
+import Dock from "@/components/Dock";
 import Leaves from "@/components/Leaves";
 import Scenery from "@/components/Scenery";
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Scenery />
         {children}
+        <Dock />
         <Leaves />
       </body>
     </html>
