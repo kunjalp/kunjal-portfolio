@@ -589,6 +589,23 @@ body {
 .car-rev { fill: #ffffff; opacity: 0; transition: opacity 0.1s ease; }
 .car.is-reversing .car-rev { opacity: 1; filter: drop-shadow(0 0 2px #ffffff); }
 
+/* Pulsing "live" indicator */
+.live-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: rgb(var(--accent2));
+  animation: live 1.6s ease-out infinite;
+}
+@keyframes live {
+  0% {
+    box-shadow: 0 0 0 0 rgb(var(--accent2) / 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgb(var(--accent2) / 0);
+  }
+}
+
 /* Blinking terminal cursor */
 .cursor {
   display: inline-block;
@@ -699,6 +716,7 @@ body {
   }
   .leaf-sway,
   .fade-up,
+  .live-dot,
   .cursor {
     animation: none;
   }
