@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Car, Code, Cpu, Radar, type LucideIcon } from "lucide-react";
+import Window from "./Window";
 
 type Milestone = {
   id: string;
@@ -188,22 +189,10 @@ export default function Journey() {
           </ol>
         </div>
 
-        {/* Detail, styled as a window */}
-        <div
-          key={current.id}
-          aria-live="polite"
-          className="glass fade-up mt-4 overflow-hidden rounded-3xl"
-        >
-          <div className="flex items-center gap-2 border-b border-fg/10 px-4 py-3">
-            <span className="h-3 w-3 rounded-full bg-[rgb(var(--g3))]" />
-            <span className="h-3 w-3 rounded-full bg-[rgb(var(--g2))]" />
-            <span className="h-3 w-3 rounded-full bg-[rgb(var(--g1))]" />
-            <span className="ml-2 truncate font-mono text-xs text-muted">
-              ~/trail/{current.id}.log
-            </span>
-          </div>
-
-          <div className="p-5 sm:p-8">
+        {/* Detail: a draggable window; only its content re-fades per stop */}
+        <div className="mt-4">
+         <Window title={`~/trail/${current.id}.log`}>
+          <div key={current.id} aria-live="polite" className="fade-up p-5 sm:p-8">
             <div className="flex items-start gap-4">
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent/15 text-accent">
                 <Icon size={22} aria-hidden />
@@ -257,6 +246,7 @@ export default function Journey() {
               </button>
             </div>
           </div>
+         </Window>
         </div>
       </div>
     </section>

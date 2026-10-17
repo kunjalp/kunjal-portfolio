@@ -31,6 +31,11 @@
   --glass-border: rgba(60, 54, 32, 0.15);
   --glow1: rgba(122, 132, 62, 0.26);
   --glow2: rgba(204, 98, 84, 0.16);
+  /* retro window tokens */
+  --paper: 251 247 234;
+  --paper2: 232 224 200;
+  --edge: 58 48 32;
+  --shadow: 58 48 32;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
@@ -61,6 +66,11 @@
   --glass-border: rgba(240 240 215 / 0.14);
   --glow1: rgba(120, 130, 60, 0.2);
   --glow2: rgba(170, 60, 70, 0.2);
+  /* retro window tokens */
+  --paper: 38 37 28;
+  --paper2: 56 54 40;
+  --edge: 188 180 150;
+  --shadow: 6 6 4;
   color-scheme: dark;
 }
 
@@ -155,24 +165,94 @@ body {
 }
 
 @layer components {
+  /* "glass" now means an opaque paper panel with an ink border and a hard
+     offset shadow (retro desktop look). Name kept so existing markup works. */
   .glass {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
-    backdrop-filter: blur(14px) saturate(1.2);
-    box-shadow: 0 8px 30px -14px rgba(0, 0, 0, 0.3);
+    background: rgb(var(--paper));
+    border: 2px solid rgb(var(--edge));
+    box-shadow: 3px 3px 0 rgb(var(--shadow));
   }
 
   .glass-btn {
     @apply glass inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full px-5 text-sm font-medium;
-    transition: background 0.2s ease, transform 0.2s ease;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
   }
   .glass-btn:hover {
-    background: var(--glass-hover);
-    transform: translateY(-1px);
+    background: rgb(var(--paper2));
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 rgb(var(--shadow));
   }
   .glass-btn:active {
-    transform: scale(0.98);
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 rgb(var(--shadow));
+  }
+
+  /* ---- Draggable window ---- */
+  .win {
+    position: relative;
+    overflow: hidden;
+    background: rgb(var(--paper));
+    border: 2px solid rgb(var(--edge));
+    border-radius: 14px;
+    box-shadow: 6px 6px 0 rgb(var(--shadow));
+    transition: box-shadow 0.15s ease;
+  }
+  .win.is-dragging {
+    box-shadow: 11px 11px 0 rgb(var(--shadow));
+  }
+  .win-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    background: linear-gradient(rgb(var(--paper2)), rgb(var(--paper)));
+    border-bottom: 2px solid rgb(var(--edge));
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+  }
+  .win.is-dragging .win-bar {
+    cursor: grabbing;
+  }
+  .win-bar:focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: -4px;
+  }
+  .win-dot {
+    position: relative;
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 9999px;
+    border: 1.5px solid rgb(var(--edge));
+    cursor: pointer;
+  }
+  .win-dot::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+  }
+  .win-dot:hover {
+    filter: brightness(1.12);
+  }
+  .win-dot-close {
+    background: #d6574c;
+  }
+  .win-dot-min {
+    background: #e0a83e;
+  }
+  .win-dot-reset {
+    background: #7d9a45;
+  }
+  .win-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgb(var(--muted));
   }
   .glass-btn:focus-visible,
   .leaf-btn:focus-visible {

@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <Journey />
       </main>
