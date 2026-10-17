@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Shared across all windows so whichever you touch last sits on top.
 let topZ = 1;
@@ -18,6 +18,11 @@ export default function Window({ title, children, className = "" }: Props) {
   const [open, setOpen] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const drag = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+  const [resizing, setResizing] = useState(false);
+  const rs = useRef<{ sx: number; sy: number; w: number; h: number } | null>(null);
+  const win = useRef<HTMLDivElement>(null);
+  const MIN_W = 260, MIN_H = 140;
 
   const front = () => setZ(++topZ);
 
@@ -68,10 +73,62 @@ export default function Window({ title, children, className = "" }: Props) {
     setPos((p) => ({ x: p.x + m[0], y: p.y + m[1] }));
   };
 
+  // If the browser shrinks after a window was enlarged, keep it on screen.
+  useEffect(() => {
+    if (!size) return;
+    const onResize = () =>
+      setSize((s) => (s && s.w > window.innerWidth - 24 ? { ...s, w: Math.max(MIN_W, window.innerWidth - 24) } : s));
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [size]);
+
+  const clampSize = (w: number, h: number) => ({
+    w: Math.min(Math.max(w, MIN_W), Math.max(MIN_W, window.innerWidth - 24)),
+    h: Math.max(h, MIN_H),
+  });
+
+  const onGripDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    front();
+    const r = win.current!.getBoundingClientRect();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    rs.current = { sx: e.clientX, sy: e.clientY, w: r.width, h: r.height };
+    setResizing(true);
+  };
+  const onGripMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    const d = rs.current;
+    if (!d) return;
+    setSize(clampSize(d.w + e.clientX - d.sx, d.h + e.clientY - d.sy));
+  };
+  const endResize = () => {
+    rs.current = null;
+    setResizing(false);
+  };
+  const onGripKey = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    const step = e.shiftKey ? 48 : 16;
+    const m: Record<string, [number, number]> = {
+      ArrowLeft: [-step, 0],
+      ArrowRight: [step, 0],
+      ArrowUp: [0, -step],
+      ArrowDown: [0, step],
+    };
+    const d = m[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const r = win.current!.getBoundingClientRect();
+    const cur = size ?? { w: r.width, h: r.height };
+    setSize(clampSize(cur.w + d[0], cur.h + d[1]));
+  };
+
   return (
     <div
-      className={`win ${dragging ? "is-dragging" : ""} ${className}`}
-      style={{ transform: `translate(${pos.x}px, ${pos.y}px)`, zIndex: z }}
+      ref={win}
+      className={`win ${dragging || resizing ? "is-dragging" : ""} ${size ? "flex flex-col" : ""} ${className}`}
+      style={{
+        transform: `translate(${pos.x}px, ${pos.y}px)`,
+        zIndex: z,
+        ...(size ? { width: size.w, height: collapsed ? undefined : size.h, maxWidth: "none" } : {}),
+      }}
       onPointerDown={front}
     >
       <div
@@ -100,8 +157,11 @@ export default function Window({ title, children, className = "" }: Props) {
         <button
           type="button"
           className="win-dot win-dot-reset"
-          aria-label="Reset window position"
-          onClick={() => setPos({ x: 0, y: 0 })}
+          aria-label="Reset window position and size"
+          onClick={() => {
+            setPos({ x: 0, y: 0 });
+            setSize(null);
+          }}
         />
         <span className="win-title-wrap">
           <span className="win-title">{title}</span>
@@ -110,7 +170,20 @@ export default function Window({ title, children, className = "" }: Props) {
         <span aria-hidden className="w-[3.1rem] flex-none" />
       </div>
 
-      {!collapsed && <div>{children}</div>}
+      {!collapsed && <div className={size ? "min-h-0 flex-1 overflow-auto" : ""}>{children}</div>}
+
+      {!collapsed && (
+        <button
+          type="button"
+          className="win-grip"
+          aria-label={`Resize ${title} window. Drag, or use arrow keys.`}
+          onPointerDown={onGripDown}
+          onPointerMove={onGripMove}
+          onPointerUp={endResize}
+          onPointerCancel={endResize}
+          onKeyDown={onGripKey}
+        />
+      )}
     </div>
   );
 }

@@ -370,6 +370,31 @@ body {
   .win.is-dragging {
     box-shadow: 10px 10px 0 rgb(var(--shadow));
   }
+  /* Resize grip, bottom-right corner. */
+  .win-grip {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 22px;
+    height: 22px;
+    cursor: nwse-resize;
+    touch-action: none;
+    background:
+      linear-gradient(135deg, transparent 0 48%, rgb(var(--edge) / 0.7) 48% 54%, transparent 54% 64%,
+        rgb(var(--edge) / 0.7) 64% 70%, transparent 70% 80%, rgb(var(--edge) / 0.7) 80% 86%, transparent 86%);
+    border: 0;
+    padding: 0;
+    opacity: 0.55;
+    transition: opacity 0.15s ease;
+  }
+  .win-grip:hover,
+  .win-grip:focus-visible {
+    opacity: 1;
+  }
+  .win-grip:focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: -3px;
+  }
   /* Title bar with fine pinstripes, as on classic desktop windows. */
   .win-bar {
     display: flex;
