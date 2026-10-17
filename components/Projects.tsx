@@ -114,6 +114,49 @@ export default function Projects() {
             </div>
           </Window>
 
+          {/* Heirloom */}
+          <Window title="heirloom/README.md">
+            <div className="space-y-4 p-6 sm:p-7">
+              <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
+                Heirloom
+              </h3>
+              <p className="font-mono text-xs text-muted">AI multi-generational wealth platform · October 2026</p>
+              <p className="inline-block rounded-md border-2 border-[rgb(var(--edge))] bg-[rgb(var(--accent)/0.15)] px-3 py-1 text-sm font-bold">
+                1st place, Daytona track · SF Tech Week
+              </p>
+              <Bullets
+                items={[
+                  "Team of 3 won the Daytona track (20 teams, 12 hours), iterating on feedback from finance professionals.",
+                  "Designed AI agents that flag family goal conflicts for wealth advisors.",
+                  "Multi-tenant data isolation with row-level security.",
+                ]}
+              />
+              <Tags items={["Next.js", "FastAPI", "PostgreSQL", "Neo4j", "Clerk", "Plaid", "Bright Data", "Daytona"]} />
+            </div>
+          </Window>
+
+          {/* ACM */}
+          <Window title="acm-ucsc/web-lead.md">
+            <div className="space-y-4 p-6 sm:p-7">
+              <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
+                ACM at UCSC: web redesign
+              </h3>
+              <p className="font-mono text-xs text-muted">Web Development Lead · August 2026 – Present</p>
+              <p className="text-[1.05rem] leading-relaxed">
+                I lead a team of 4 developers through a full redesign of the club&apos;s website,
+                splitting the work across content, navigation, responsive UI and backend
+                authentication.
+              </p>
+              <Bullets
+                items={[
+                  "Directing 5 features: member login with sessions, a unified nav bar, a mobile-responsive layout, a redesigned events page, and a refreshed Meet the Board section.",
+                  "Weekly meetings to assign tasks and keep releases on schedule, with progress reported to the executive board.",
+                ]}
+              />
+              <Tags items={["Team leadership", "Authentication", "Responsive UI"]} />
+            </div>
+          </Window>
+
           {/* VEX */}
           <div className="lg:col-span-2">
             <Window title="vex-vrc/leadership.txt">
@@ -138,7 +181,7 @@ export default function Projects() {
                   />
                   <Tags items={["Mechanical design", "Autonomous routines", "Budgeting", "Leadership"]} />
                 </div>
-                <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <dl className="grid grid-cols-2 content-start gap-3 sm:grid-cols-4">
                   {[
                     ["~30", "members led"],
                     ["3", "competitive teams"],

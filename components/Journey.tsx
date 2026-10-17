@@ -18,11 +18,11 @@ type Milestone = {
 const milestones: Milestone[] = [
   {
     id: "high-school",
-    short: "VEX",
+    short: "High school",
     period: "2021 – 2025",
-    title: "VEX Robotics, club president",
-    blurb: "Three seasons designing and programming robots, then ran a 30-member club with three teams.",
-    tags: ["Robot design", "Autonomous routines", "Leadership"],
+    title: "VEX Robotics and autonomous vehicles",
+    blurb: "Got hooked on autonomous vehicles, and spent four years in VEX robotics, ending as president of a 30-member club.",
+    tags: ["VEX VRC", "Autonomous vehicles", "Leadership"],
     icon: Car,
   },
   {
