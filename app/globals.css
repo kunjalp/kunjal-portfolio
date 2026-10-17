@@ -65,6 +65,16 @@
   --fore: 32 36 22;
   --dusk-tint: 120 50 70;
 
+  /* car and road */
+  --car: 142 47 60;
+  --car-shade: 92 26 38;
+  --car-glass: 40 42 50;
+  --rim: 210 204 186;
+  --tire: 28 26 20;
+  --drl: 255 240 222;
+  --skid: 34 28 20;
+  --smoke: 170 160 148;
+
   --font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
   color-scheme: light;
@@ -124,6 +134,15 @@
   --shore: 12 14 10;
   --fore: 6 8 5;
   --dusk-tint: 10 6 20;
+
+  --car: 190 74 88;
+  --car-shade: 118 38 52;
+  --car-glass: 14 14 20;
+  --rim: 170 164 146;
+  --tire: 6 6 4;
+  --drl: 255 240 222;
+  --skid: 0 0 0;
+  --smoke: 130 126 118;
   color-scheme: dark;
 }
 
@@ -426,6 +445,118 @@ body {
   color: rgb(var(--fg));
   text-wrap: balance;
 }
+
+/* ==========================================================================
+   Journey road, checkpoints and car
+   ========================================================================== */
+.road-base {
+  fill: none;
+  stroke: rgb(var(--fg) / 0.35);
+  stroke-width: 3;
+  stroke-dasharray: 1 8;
+  stroke-linecap: round;
+}
+.road-walked {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cp-via {
+  stroke: rgb(var(--edge) / 0.3);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 3;
+}
+.cp-flag {
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+}
+.cp-flag.reached {
+  opacity: 1;
+}
+.cp-pole {
+  stroke: rgb(var(--edge));
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.cp-cloth {
+  fill: rgb(var(--paper));
+  stroke: rgb(var(--edge));
+  stroke-width: 1;
+}
+.cp-check {
+  fill: rgb(var(--edge));
+}
+
+.skid {
+  opacity: var(--a);
+}
+.skid path {
+  fill: none;
+  stroke: rgb(var(--skid));
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.skid-near {
+  stroke-width: 1.7;
+  stroke-dasharray: 16 2 7 1.5 22 3;
+}
+.skid-far {
+  stroke-width: 1.2;
+  stroke-dasharray: 11 3 19 2 6 2;
+  opacity: 0.6;
+}
+.skid.fade {
+  animation: skid-fade 4s ease-in forwards;
+}
+@keyframes skid-fade {
+  0%,
+  30% {
+    opacity: var(--a);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.puff {
+  fill: rgb(var(--smoke));
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: puff 0.8s ease-out forwards;
+  opacity: 0;
+}
+@keyframes puff {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-6px) scale(2.4);
+    opacity: 0;
+  }
+}
+
+.car-shadow { fill: rgb(0 0 0 / 0.18); }
+.car-body { stroke: rgb(var(--car-shade)); stroke-width: 0.6; stroke-linejoin: round; }
+.car-glass { fill: rgb(var(--car-glass)); }
+.car-pillar { stroke: rgb(var(--car)); stroke-width: 1.8; }
+.car-glint { stroke: rgb(255 255 255 / 0.35); stroke-width: 1; stroke-linecap: round; }
+.car-crease { fill: none; stroke: rgb(255 255 255 / 0.22); stroke-width: 0.7; }
+.car-seam { fill: none; stroke: rgb(var(--car-shade) / 0.7); stroke-width: 0.5; }
+.car-handle { stroke: rgb(var(--car-shade)); stroke-width: 0.9; stroke-linecap: round; }
+.car-trim { fill: none; stroke: rgb(var(--tire)); stroke-width: 1.2; stroke-linecap: round; }
+.car-trim-fill { fill: rgb(var(--tire)); }
+.car-tire { fill: rgb(var(--tire)); }
+.car-rim { fill: rgb(var(--rim)); }
+.car-spoke { stroke: rgb(var(--tire)); stroke-width: 1.3; stroke-linecap: round; }
+.car-hub { fill: rgb(var(--tire)); }
+.car-caliper { fill: none; stroke: rgb(var(--g2)); stroke-width: 1.3; }
+.car-drl { fill: rgb(var(--drl)); }
+.car-beam { opacity: 0.35; }
+.car-tail { fill: #a83038; transition: fill 0.1s ease; }
+.car.is-braking .car-tail { fill: #ff4b4b; filter: drop-shadow(0 0 2px #ff4b4b); }
+.car-rev { fill: #ffffff; opacity: 0; transition: opacity 0.1s ease; }
+.car.is-reversing .car-rev { opacity: 1; filter: drop-shadow(0 0 2px #ffffff); }
 
 /* Blinking terminal cursor */
 .cursor {

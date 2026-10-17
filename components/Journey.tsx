@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Car, Code, Cpu, Radar, type LucideIcon } from "lucide-react";
 import Window from "./Window";
+import Track from "./journey/Track";
 
 type Milestone = {
   id: string;
@@ -53,12 +54,6 @@ const milestones: Milestone[] = [
   },
 ];
 
-// Trace geometry in a 800x44 box. Pads sit at x = 100, 300, 500, 700 (y = 22),
-// matching the centers of the four equal columns. Between pads the trace
-// jogs up or down with 45-degree chamfers, like a PCB route.
-const TRACE =
-  "M100 22 H122 L136 36 H264 L278 22 H322 L336 8 H464 L478 22 H522 L536 36 H664 L678 22 H700";
-
 export default function Journey() {
   const [active, setActive] = useState(0);
   const last = milestones.length - 1;
@@ -66,7 +61,6 @@ export default function Journey() {
   const Icon = current.icon;
 
   const go = (i: number) => setActive(Math.min(Math.max(i, 0), last));
-  const clipWidth = 100 + (active / last) * 600;
 
   return (
     <section id="journey" className="scroll-mt-20 px-4 py-16 sm:px-8">
@@ -77,50 +71,12 @@ export default function Journey() {
               How I got here
             </h2>
             <p className="mt-3 max-w-xl text-muted">
-              Four stops that shaped how I build. Click a waypoint to open it.
+              Four stops that shaped how I build. Pick a checkpoint and the car drives you there.
             </p>
 
-            {/* Trail / circuit trace */}
-            <div className="relative mt-10">
-              <svg
-                aria-hidden
-                viewBox="0 0 800 44"
-                preserveAspectRatio="none"
-                className="pointer-events-none absolute inset-x-0 top-0 h-11 w-full"
-              >
-                <defs>
-                  <linearGradient id="trace-grad" gradientUnits="userSpaceOnUse" x1="100" x2="700" y1="0" y2="0">
-                    <stop offset="0" style={{ stopColor: "rgb(var(--g1))" }} />
-                    <stop offset="0.55" style={{ stopColor: "rgb(var(--g2))" }} />
-                    <stop offset="1" style={{ stopColor: "rgb(var(--g3))" }} />
-                  </linearGradient>
-                  <clipPath id="trace-clip">
-                    <rect x="0" y="0" height="44" style={{ width: clipWidth, transition: "width 0.3s ease-out" }} />
-                  </clipPath>
-                </defs>
-                {/* unwalked trail: dotted */}
-                <path
-                  d={TRACE}
-                  fill="none"
-                  stroke="rgb(var(--fg) / 0.35)"
-                  strokeWidth="3"
-                  strokeDasharray="1 8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-                {/* walked trail: solid trace */}
-                <path
-                  d={TRACE}
-                  fill="none"
-                  stroke="url(#trace-grad)"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  vectorEffect="non-scaling-stroke"
-                  clipPath="url(#trace-clip)"
-                />
-              </svg>
+            {/* Road with the car, then the checkpoint buttons */}
+            <div className="mt-6">
+              <Track active={active} />
 
               <ol
                 className="relative grid grid-cols-4"
@@ -140,7 +96,7 @@ export default function Journey() {
                         onClick={() => go(i)}
                         aria-current={isActive ? "step" : undefined}
                         aria-label={`${m.title}, ${m.period}`}
-                        className="group flex min-h-[92px] w-full flex-col items-center gap-1.5 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                        className="group flex min-h-[86px] w-full flex-col items-center gap-1.5 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                       >
                         <span
                           className={`relative grid h-11 w-11 place-items-center rounded-full border-2 border-[rgb(var(--edge))] transition duration-200 ${
