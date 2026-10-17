@@ -90,7 +90,17 @@ export default function Track({ active }: { active: number }) {
 
   // Mutable animation state. face = which way the car points (1 = right);
   // flip = its current horizontal scale, which passes through 0 in a turn.
-  const st = useRef({ s: 0, face: 1, flip: 1, odo: 0, idx: active, token: 0, raf: 0 });
+  const st = useRef({
+    s: 0,
+    face: 1,
+    flip: 1,
+    odo: 0,
+    idx: active,
+    token: 0,
+    raf: 0,
+    pose: { x: 0, y: 0, ang: 0, k: 1 },
+    lastPuff: 0,
+  });
 
   useEffect(() => {
     const el = wrap.current;
@@ -113,10 +123,13 @@ export default function Track({ active }: { active: number }) {
     const L = T.at(s - half);
     const R = T.at(s + half);
     const ang = (Math.atan2(R[1] - L[1], R[0] - L[0]) * 180) / Math.PI + extraRot;
+    const mx = (L[0] + R[0]) / 2;
+    const my = (L[1] + R[1]) / 2;
+    S.pose = { x: mx, y: my, ang, k };
     // lift by half the road stroke so the tires sit on top of the line
     car.setAttribute(
       "transform",
-      `translate(${((L[0] + R[0]) / 2).toFixed(2)} ${((L[1] + R[1]) / 2).toFixed(2)}) rotate(${ang.toFixed(2)}) translate(0 -2) scale(${(S.flip * k).toFixed(3)} ${k})`,
+      `translate(${mx.toFixed(2)} ${my.toFixed(2)}) rotate(${ang.toFixed(2)}) translate(0 -2) scale(${(S.flip * k).toFixed(3)} ${k})`,
     );
     const spin = ((S.odo / (CAR.wheelR * k)) * 180) / Math.PI;
     wheelRefs.current.forEach((w, i) =>
@@ -166,6 +179,33 @@ export default function Track({ active }: { active: number }) {
       g.appendChild(c);
       c.addEventListener("animationend", () => c.remove(), { once: true });
     });
+  };
+
+  /** A small puff from the tailpipe, drifting back and up behind the car. */
+  const exhaust = (throttle: boolean) => {
+    const g = marksRef.current;
+    if (!g) return;
+    const S = st.current;
+    const now = performance.now();
+    if (now - S.lastPuff < (throttle ? 35 : 140)) return;
+    S.lastPuff = now;
+    // tailpipe in car-local units -> page pixels (same steps as draw())
+    const { x, y, ang, k } = S.pose;
+    const lx = CAR.exhaust[0] * S.flip * k;
+    const ly = CAR.exhaust[1] * k - 2;
+    const a = (ang * Math.PI) / 180;
+    const px = x + lx * Math.cos(a) - ly * Math.sin(a);
+    const py = y + lx * Math.sin(a) + ly * Math.cos(a);
+    const c = document.createElementNS(SVGNS, "circle");
+    c.setAttribute("class", "exhaust");
+    c.setAttribute("cx", px.toFixed(1));
+    c.setAttribute("cy", py.toFixed(1));
+    c.setAttribute("r", (1.4 + Math.random() * 0.8).toFixed(2));
+    // drift away from the car's nose, with a little lift and wobble
+    c.style.setProperty("--dx", `${(-S.face * (3 + Math.random() * 4)).toFixed(1)}px`);
+    c.style.setProperty("--dy", `${(-1.5 - Math.random() * 2.5).toFixed(1)}px`);
+    g.appendChild(c);
+    c.addEventListener("animationend", () => c.remove(), { once: true });
   };
 
   // ---- motion primitives ----------------------------------------------------
@@ -231,6 +271,7 @@ export default function Track({ active }: { active: number }) {
           m.el?.querySelectorAll("path").forEach((p) => p.setAttribute("d", d));
         });
         draw();
+        exhaust(t < 0.55);
       },
       token,
     );

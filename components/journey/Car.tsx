@@ -7,6 +7,7 @@ export const CAR = {
   wheelR: 7.4,
   wheelX: [-25, 25] as const,
   wheelY: -7.4,
+  exhaust: [-44.2, -6.9] as const,
 };
 
 const BODY = [
@@ -80,8 +81,13 @@ export default function Car({ setWheelRef }: { setWheelRef: (i: number, el: SVGG
       {/* headlight beam */}
       <path className="car-beam" d="M 46.6 -12.6 L 92 -19 L 92 -3 Z" fill="url(#car-beam)" />
 
+      {/* dark wheel wells inside the arches */}
+      {CAR.wheelX.map((x) => (
+        <path key={`well${x}`} className="car-well" d={`M ${x - 10} -6 A 10 10 0 0 1 ${x + 10} -6 Z`} />
+      ))}
       <path d={BODY} fill="url(#car-paint)" className="car-body" />
       <path d={GLASS} className="car-glass" />
+      <path d={GLASS} className="car-glass-trim" />
       {/* B-pillar and glass highlight */}
       <path d="M -10.6 -18.4 L -12 -24.8" className="car-pillar" />
       <path d="M 2 -19.5 L -2.5 -23.2" className="car-glint" />
@@ -93,6 +99,9 @@ export default function Car({ setWheelRef }: { setWheelRef: (i: number, el: SVGG
       <path d="M -15 -6.3 L 15 -6.3 M 37 -6.1 L 47 -6.4 M -42.6 -7.2 L -35.5 -6.3" className="car-trim" />
       <path d="M 12.6 -9.4 L 9.4 -8.9 L 9.9 -11.3 Z" className="car-trim-fill" />
       <path d="M 6.8 -17.8 L 4.4 -18.2 L 3.9 -19.9 L 6.4 -19.7 Z" className="car-trim-fill" />
+
+      {/* tailpipe */}
+      <rect x="-44.6" y="-7.7" width="3" height="1.6" rx="0.8" className="car-pipe" />
 
       {/* lights: thin front bar, rear bar, reverse lamp */}
       <rect x="41.4" y="-13.4" width="5.2" height="1.3" rx="0.65" className="car-drl" />
