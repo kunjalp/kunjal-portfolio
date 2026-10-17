@@ -122,17 +122,27 @@ export default function Projects() {
                   <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
                     VEX VRC Robotics
                   </h3>
-                  <p className="font-mono text-xs text-muted">Club President · leadership and systems engineering</p>
+                  <p className="font-mono text-xs text-muted">Fremont, CA · Jul 2021 – May 2025 · Club President</p>
                   <p className="text-[1.05rem] leading-relaxed">
-                    I ran the club: coordinating teams, managing the budget and getting robots
-                    ready to compete.
+                    Three seasons designing and programming robots as a technical team member,
+                    then elected president. Every year meant a new game and a robot built from
+                    scratch before the first qualifying tournament.
                   </p>
+                  <Bullets
+                    items={[
+                      "Structured the club into three competitive teams and coordinated build schedules, testing and competition readiness.",
+                      "Owned a $3,000+ annual budget from student fees and local sponsors, deciding which team's needs came first when money was tight.",
+                      "Created pathways for girls in the club to take on technical and leadership roles instead of support roles.",
+                      "Stayed hands-on with hardware and software the whole time.",
+                    ]}
+                  />
+                  <Tags items={["Mechanical design", "Autonomous routines", "Budgeting", "Leadership"]} />
                 </div>
                 <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {[
-                    ["~30", "members"],
-                    ["3", "teams"],
-                    ["$3,000+", "budget managed"],
+                    ["~30", "members led"],
+                    ["3", "competitive teams"],
+                    ["$3,000+", "annual budget"],
                     ["2", "teams qualified for State"],
                   ].map(([v, l]) => (
                     <div
