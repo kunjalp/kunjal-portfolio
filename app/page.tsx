@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Journey from "@/components/Journey";
 import Projects from "@/components/Projects";
+import About from "@/components/About";
 
 export default function Page() {
   return (
@@ -11,6 +12,7 @@ export default function Page() {
         <Hero />
         <Projects />
         <Journey />
+        <About />
       </main>
     </>
   );
