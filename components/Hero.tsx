@@ -1,67 +1,60 @@
-import { ArrowDown, GraduationCap, Leaf, Mail } from "lucide-react";
+import { ArrowDown, Leaf, Mail } from "lucide-react";
+import Window from "./Window";
 
-const stats = [
-  { value: "3.95 / 4.0", label: "Cumulative GPA" },
-  { value: "June 2028", label: "Expected graduation" },
-  { value: "CS + CE", label: "Double major" },
+const facts: [string, string][] = [
+  ["school", "UC Santa Cruz"],
+  ["majors", "Computer Science + Computer Engineering"],
+  ["gpa", "3.95 / 4.0"],
+  ["graduating", "June 2028"],
 ];
 
 export default function Hero() {
   return (
-    <section
-      id="top"
-      className="relative flex min-h-[100svh] items-center px-4 pb-16 pt-28 sm:px-6"
-    >
-      <div className="mx-auto w-full max-w-5xl">
-        <div className="glass mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm">
-          <GraduationCap size={16} className="text-accent" aria-hidden />
-          <span className="text-muted">CS & CE Double Major · UC Santa Cruz</span>
-        </div>
-
-        <p className="mb-3 font-mono text-sm text-muted sm:text-base">
-          <span className="text-accent">&gt;</span> kunjal_purohit
-          <span className="cursor" aria-hidden />
-        </p>
-
-        <h1 className="max-w-3xl text-[2.5rem] font-semibold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
-          Bridging <span className="text-sunset">hardware</span> and{" "}
-          <span className="text-sunset">software</span>.
+    <section id="top" className="relative px-4 pb-24 pt-28 sm:px-8 lg:pt-32">
+      <div className="mx-auto w-full max-w-[1240px]">
+        <h1 className="hero-name text-[clamp(3.4rem,10vw,8.5rem)] font-extrabold leading-[0.86]">
+          Kunjal Purohit
         </h1>
-
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          I&apos;m a Computer Science and Computer Engineering double major,
-          building across embedded firmware, autonomous systems, and full-stack
-          software.
+        <p className="mt-4 max-w-xl text-[clamp(1.15rem,1.8vw,1.45rem)] font-medium leading-snug">
+          I build where software meets hardware.
         </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="#journey" className="glass-btn">
-            View my journey
-            <ArrowDown size={16} aria-hidden />
-          </a>
-          <a href="#contact" className="glass-btn">
-            <Mail size={16} aria-hidden />
-            Get in touch
-          </a>
-        </div>
+        <div className="mt-10 max-w-[560px]">
+          <Window title="README.md">
+            <div className="p-6 sm:p-7">
+              <p className="text-[1.05rem] leading-relaxed">
+                I write firmware for a Formula SAE race car, built perception and
+                mapping for a scaled autonomous vehicle, and ship full-stack apps
+                like a nutrition tracker for UCSC dining halls.
+              </p>
 
-        <dl className="mt-10 grid max-w-2xl grid-cols-3 gap-2 sm:gap-3">
-          {stats.map((s) => (
-            <div key={s.label} className="glass flex flex-col rounded-2xl p-3 sm:p-4">
-              <dt className="order-2 text-[0.65rem] leading-tight text-muted sm:text-xs">
-                {s.label}
-              </dt>
-              <dd className="mb-1 text-sm font-semibold tracking-tight sm:text-xl">
-                {s.value}
-              </dd>
+              <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 border-t-2 border-dashed border-[rgb(var(--edge)/0.25)] pt-4 font-mono text-[0.82rem]">
+                {facts.map(([k, v]) => (
+                  <div key={k} className="contents">
+                    <dt className="text-muted">{k}</dt>
+                    <dd>{v}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a href="#journey" className="glass-btn btn-primary">
+                  See my work
+                  <ArrowDown size={16} aria-hidden />
+                </a>
+                <a href="#contact" className="glass-btn">
+                  <Mail size={16} aria-hidden />
+                  Contact me
+                </a>
+              </div>
+
+              <p className="mt-5 flex items-center gap-2 text-sm text-muted">
+                <Leaf size={15} className="text-accent2" aria-hidden />
+                Click a drifting leaf for something non-technical about me.
+              </p>
             </div>
-          ))}
-        </dl>
-
-        <p className="mt-8 flex items-center gap-2 text-sm text-muted">
-          <Leaf size={16} className="text-accent" aria-hidden />
-          Tap a drifting leaf to learn something about me.
-        </p>
+          </Window>
+        </div>
       </div>
     </section>
   );

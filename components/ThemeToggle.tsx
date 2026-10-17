@@ -26,9 +26,9 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      className="glass-btn !min-h-[44px] !w-11 !px-0"
+      className="menu-link grid h-9 w-9 place-items-center !p-0"
     >
-      {theme === "dark" ? <Sun size={18} /> : theme === "light" ? <Moon size={18} /> : null}
+      {theme === "dark" ? <Sun size={17} /> : theme === "light" ? <Moon size={17} /> : null}
     </button>
   );
 }

@@ -1,10 +1,131 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { buildRange, scatter, treeLine, underCurve, VB_H, VB_W } from "./scenery/geometry";
 
-// Fixed golden-hour landscape behind the whole page. Scroll progress (0..1)
-// drives --p: the sky cross-fades from golden hour to dusk, the sun sinks,
-// and each hill layer drifts at its own rate for parallax.
+// ---------------------------------------------------------------------------
+// Scene geometry, generated once at module load from fixed seeds.
+// ---------------------------------------------------------------------------
+
+const SHORE = 742; // waterline of the lake
+const SUN = { x: 1182, y: 384, r: 50 };
+
+// Far range: a Three Sisters-style trio on the right, the sun setting between them.
+const far = buildRange({
+  seed: 11,
+  ridge: [
+    [-20, 540], [60, 488], [130, 528], [215, 452], [300, 520], [360, 500],
+    [430, 432], [520, 512], [610, 470], [690, 528], [790, 450], [880, 520],
+    [960, 460], [1020, 492], [1080, 372], [1150, 452], [1215, 336], [1285, 434],
+    [1350, 360], [1430, 472], [1500, 432], [1560, 502], [1620, 474],
+  ],
+  peaks: [1, 3, 6, 8, 10, 12, 14, 16, 18, 20],
+  bottom: VB_H,
+  step: 13,
+  amp: 7,
+  lean: 24,
+  snowLine: 446,
+  snowDepth: 40,
+});
+
+// Mid range: a Rundle-style tilted slab on the left, rougher peaks to the right.
+const mid = buildRange({
+  seed: 23,
+  ridge: [
+    [-20, 600], [40, 584], [90, 614], [300, 560], [470, 518], [560, 490],
+    [600, 560], [660, 630], [760, 600], [860, 642], [960, 612], [1060, 648],
+    [1180, 592], [1260, 642], [1370, 552], [1412, 578], [1470, 518], [1560, 604],
+    [1620, 592],
+  ],
+  peaks: [1, 5, 8, 10, 12, 14, 16],
+  bottom: VB_H,
+  step: 11,
+  amp: 6,
+  lean: 30,
+  snowLine: 540,
+  snowDepth: 28,
+  strata: { gap: 8, slope: 0.3 },
+});
+
+const backGround = (x: number) => 676 + 13 * Math.sin(x / 150 + 0.6) + 7 * Math.sin(x / 53);
+const frontGround = (x: number) => 712 + 10 * Math.sin(x / 120 + 2) + 5 * Math.sin(x / 41);
+const shoreGround = (x: number) =>
+  884 +
+  6 * Math.sin(x / 90) -
+  46 * Math.exp(-(((x - 90) / 210) ** 2)) -
+  58 * Math.exp(-(((x - 1560) / 230) ** 2));
+
+const backHill = underCurve(backGround, -20, 1620, SHORE + 4);
+const backTrees = treeLine({ seed: 31, from: -20, to: 1620, ground: backGround, minH: 16, maxH: 38, spacing: 6 });
+const frontHill = underCurve(frontGround, -20, 1620, SHORE + 4);
+const frontTrees = treeLine({ seed: 37, from: -20, to: 1620, ground: frontGround, minH: 24, maxH: 56, spacing: 7, density: 0.95 });
+
+const shore = underCurve(shoreGround, -20, 1620, VB_H + 10, 6);
+const edgeTrees = [
+  treeLine({ seed: 41, from: -30, to: 300, ground: shoreGround, minH: 120, maxH: 330, spacing: 30, density: 1 }),
+  treeLine({ seed: 43, from: 1330, to: 1640, ground: shoreGround, minH: 140, maxH: 360, spacing: 32, density: 1 }),
+].join(" ");
+const shoreBrush = treeLine({ seed: 47, from: 260, to: 1350, ground: shoreGround, minH: 10, maxH: 30, spacing: 9, density: 0.5 });
+
+const stars = scatter(7, 110, 0, VB_W, 0, 520);
+const shimmer = scatter(13, 46, 60, 1540, SHORE + 8, 880);
+
+// Thin stratus clouds catching the low sun on their undersides.
+const clouds: { x: number; y: number; w: number }[] = [
+  { x: 250, y: 300, w: 300 },
+  { x: 560, y: 252, w: 190 },
+  { x: 900, y: 318, w: 240 },
+  { x: 1440, y: 262, w: 230 },
+  { x: 1300, y: 330, w: 140 },
+];
+
+const birds = [
+  { x: 1010, y: 300, s: 1 },
+  { x: 1034, y: 290, s: 0.8 },
+  { x: 1052, y: 304, s: 0.65 },
+];
+
+// ---------------------------------------------------------------------------
+
+function Layer({ className, children }: { className: string; children: React.ReactNode }) {
+  return (
+    <svg
+      className={`scene-layer ${className}`}
+      viewBox={`0 0 ${VB_W} ${VB_H}`}
+      preserveAspectRatio="xMidYMax slice"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function Range({ id, r, strataClip }: { id: string; r: typeof far; strataClip?: boolean }) {
+  return (
+    <>
+      <defs>
+        <clipPath id={`${id}-clip`}>
+          <path d={r.silhouette} />
+        </clipPath>
+        <clipPath id={`${id}-lit`}>
+          <path d={r.lit} />
+        </clipPath>
+      </defs>
+      <path className={`${id}-rock`} d={r.silhouette} />
+      <g clipPath={`url(#${id}-clip)`}>
+        <path className={`${id}-rock-lit`} d={r.lit} />
+        {strataClip && r.strata && <path className="strata" d={r.strata} />}
+        <path className={`${id}-snow`} d={r.snow} />
+        <path className={`${id}-snow-lit`} d={r.snow} clipPath={`url(#${id}-lit)`} />
+      </g>
+    </>
+  );
+}
+
+/**
+ * Fixed Banff-style wallpaper behind the whole page. Scroll progress (0..1) is
+ * written to --p; CSS uses it to fade golden hour into dusk, sink the sun, and
+ * drift each layer at its own rate.
+ */
 export default function Scenery() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -12,7 +133,6 @@ export default function Scenery() {
     const el = ref.current;
     if (!el) return;
     let raf = 0;
-
     const update = () => {
       raf = 0;
       const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -22,7 +142,6 @@ export default function Scenery() {
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
-
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -37,26 +156,154 @@ export default function Scenery() {
     <div ref={ref} aria-hidden className="scenery">
       <div className="sky" />
       <div className="sky sky-dusk" />
-      <div className="sun" />
 
-      {/* far ridge: angular peaks */}
-      <svg className="hill hill-1" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path d="M0 230 L110 175 L210 205 L330 120 L450 195 L570 145 L690 215 L830 95 L970 185 L1090 150 L1230 205 L1350 165 L1440 195 L1440 400 L0 400 Z" />
-      </svg>
+      {/* Sky: stars, moon, sun, clouds, birds */}
+      <Layer className="layer-sky">
+        <defs>
+          <radialGradient id="sun-glow">
+            <stop offset="0" style={{ stopColor: "rgb(var(--sun-glow))", stopOpacity: 0.85 }} />
+            <stop offset="0.35" style={{ stopColor: "rgb(var(--sun-glow))", stopOpacity: 0.35 }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--sun-glow))", stopOpacity: 0 }} />
+          </radialGradient>
+          <filter id="soft" x="-10%" y="-200%" width="120%" height="500%">
+            <feGaussianBlur stdDeviation="1.6" />
+          </filter>
+          <mask id="crescent">
+            <circle cx="1390" cy="150" r="24" fill="white" />
+            <circle cx="1401" cy="142" r="22" fill="black" />
+          </mask>
+        </defs>
 
-      {/* rolling mid hills */}
-      <svg className="hill hill-2" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path d="M0 265 C160 205 300 215 460 255 S760 315 940 245 S1260 195 1440 255 L1440 400 L0 400 Z" />
-      </svg>
-      <svg className="hill hill-3" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path d="M0 300 C180 250 340 270 520 305 S860 345 1060 290 S1320 260 1440 290 L1440 400 L0 400 Z" />
-      </svg>
+        <g className="stars">
+          {stars.map((s, i) => (
+            <circle key={i} cx={s.x} cy={s.y} r={0.6 + s.s * 1.1} opacity={0.35 + s.s * 0.65} />
+          ))}
+        </g>
+        <circle className="moon" cx="1390" cy="150" r="24" mask="url(#crescent)" />
 
-      {/* foreground hill with a few pines */}
-      <svg className="hill hill-4" viewBox="0 0 1440 400" preserveAspectRatio="none">
-        <path d="M0 335 C200 295 380 305 560 340 S980 365 1180 325 S1360 310 1440 325 L1440 400 L0 400 Z" />
-        <path d="M80 332 l10 -52 l10 52 Z M112 336 l8 -40 l8 40 Z M148 334 l9 -46 l9 46 Z M1010 352 l10 -52 l10 52 Z M1046 350 l8 -40 l8 40 Z M1082 346 l10 -48 l10 48 Z M1330 330 l9 -44 l9 44 Z M1362 332 l8 -38 l8 38 Z" />
-      </svg>
+        <g className="sun">
+          <circle cx={SUN.x} cy={SUN.y} r={SUN.r * 4.2} fill="url(#sun-glow)" />
+          <circle className="sun-disc" cx={SUN.x} cy={SUN.y} r={SUN.r} />
+        </g>
+
+        <g className="clouds" filter="url(#soft)">
+          {clouds.map((c, i) => (
+            <g key={i}>
+              <ellipse className="cloud" cx={c.x} cy={c.y} rx={c.w / 2} ry={7} />
+              <ellipse className="cloud" cx={c.x - c.w * 0.18} cy={c.y - 6} rx={c.w * 0.28} ry={7} />
+              <ellipse className="cloud" cx={c.x + c.w * 0.14} cy={c.y - 4} rx={c.w * 0.22} ry={6} />
+              <ellipse className="cloud-lit" cx={c.x + c.w * 0.05} cy={c.y + 4} rx={c.w * 0.4} ry={4.5} />
+            </g>
+          ))}
+        </g>
+
+        <g className="birds">
+          {birds.map((b, i) => (
+            <path
+              key={i}
+              d={`M ${b.x - 7 * b.s} ${b.y - 3 * b.s} Q ${b.x - 3 * b.s} ${b.y - 4 * b.s} ${b.x} ${b.y} Q ${b.x + 3 * b.s} ${b.y - 4 * b.s} ${b.x + 7 * b.s} ${b.y - 3 * b.s}`}
+            />
+          ))}
+        </g>
+      </Layer>
+
+      {/* Far range, with a haze band settling in front of it */}
+      <Layer className="layer-far">
+        <defs>
+          <linearGradient id="haze-far" x1="0" y1="430" x2="0" y2="640" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0 }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0.85 }} />
+          </linearGradient>
+        </defs>
+        <Range id="far" r={far} />
+        <rect x="-20" y="430" width={VB_W + 40} height={VB_H} fill="url(#haze-far)" />
+      </Layer>
+
+      {/* Mid range */}
+      <Layer className="layer-mid">
+        <defs>
+          <linearGradient id="haze-mid" x1="0" y1="560" x2="0" y2="700" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0 }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0.6 }} />
+          </linearGradient>
+        </defs>
+        <Range id="mid" r={mid} strataClip />
+        <rect x="-20" y="560" width={VB_W + 40} height={VB_H} fill="url(#haze-mid)" />
+      </Layer>
+
+      {/* Forested shoreline and the glacial lake */}
+      <Layer className="layer-forest">
+        <defs>
+          <linearGradient id="lake" x1="0" y1={SHORE} x2="0" y2="900" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style={{ stopColor: "rgb(var(--lake-top))" }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--lake-bottom))" }} />
+          </linearGradient>
+          <linearGradient id="shore-mist" x1="0" y1={SHORE - 30} x2="0" y2={SHORE + 14} gradientUnits="userSpaceOnUse">
+            <stop offset="0" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0 }} />
+            <stop offset="0.7" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0.45 }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--haze))", stopOpacity: 0 }} />
+          </linearGradient>
+          <linearGradient id="sun-path" x1="0" y1={SHORE} x2="0" y2="890" gradientUnits="userSpaceOnUse">
+            <stop offset="0" style={{ stopColor: "rgb(var(--shine))", stopOpacity: 0.9 }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--shine))", stopOpacity: 0 }} />
+          </linearGradient>
+          <clipPath id="lake-clip">
+            <rect x="-20" y={SHORE} width={VB_W + 40} height={VB_H - SHORE} />
+          </clipPath>
+        </defs>
+
+        <path className="hill-back" d={backHill} />
+        <path className="trees-back" d={backTrees} />
+        <path className="hill-front" d={frontHill} />
+        <path className="trees-front" d={frontTrees} />
+
+        <rect x="-20" y={SHORE} width={VB_W + 40} height={VB_H - SHORE} fill="url(#lake)" />
+
+        {/* Mirror of the shoreline across the waterline */}
+        <g className="reflection" clipPath="url(#lake-clip)">
+          <g transform={`translate(0 ${SHORE * 2}) scale(1 -1)`}>
+            <path className="mid-rock" d={mid.silhouette} />
+            <path className="hill-back" d={backHill} />
+            <path className="trees-back" d={backTrees} />
+            <path className="hill-front" d={frontHill} />
+            <path className="trees-front" d={frontTrees} />
+          </g>
+        </g>
+
+        <g className="sun-path">
+          <rect x={SUN.x - 34} y={SHORE} width="68" height="150" fill="url(#sun-path)" opacity="0.35" />
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+            <rect
+              key={i}
+              x={SUN.x - (30 - i * 3) + ((i * 37) % 11) - 5}
+              y={SHORE + 6 + i * 15}
+              width={(30 - i * 3) * 2}
+              height="2"
+              rx="1"
+              fill="rgb(var(--shine))"
+              opacity={0.75 - i * 0.08}
+            />
+          ))}
+        </g>
+
+        <g className="shimmer">
+          {shimmer.map((s, i) => (
+            <rect key={i} x={s.x} y={s.y} width={10 + s.s * 46} height="1.4" rx="0.7" />
+          ))}
+        </g>
+
+        <rect x="-20" y={SHORE - 30} width={VB_W + 40} height="44" fill="url(#shore-mist)" />
+      </Layer>
+
+      {/* Foreground shore and framing spruces */}
+      <Layer className="layer-fore">
+        <path className="shore" d={shore} />
+        <path className="shore" d={shoreBrush} />
+        <path className="fore-trees" d={edgeTrees} />
+      </Layer>
+
+      <div className="dusk-tint" />
+      <div className="grain" />
     </div>
   );
 }

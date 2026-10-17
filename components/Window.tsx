@@ -103,9 +103,11 @@ export default function Window({ title, children, className = "" }: Props) {
           aria-label="Reset window position"
           onClick={() => setPos({ x: 0, y: 0 })}
         />
-        <span className="win-title">{title}</span>
+        <span className="win-title-wrap">
+          <span className="win-title">{title}</span>
+        </span>
         {/* spacer so the title stays centered between the dots and the edge */}
-        <span aria-hidden className="w-[3.3rem]" />
+        <span aria-hidden className="w-[3.1rem] flex-none" />
       </div>
 
       {!collapsed && <div>{children}</div>}

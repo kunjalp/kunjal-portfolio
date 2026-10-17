@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/bricolage-grotesque/standard.css";
+import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
 import Leaves from "@/components/Leaves";
 import Scenery from "@/components/Scenery";
