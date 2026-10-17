@@ -17,4 +17,4 @@ Open http://localhost:3000.
 - [x] Phase 2: Journey map / interactive timeline
 - [x] Phase 3: Project case studies
 - [x] Phase 4: About me & personal flair
-- [ ] Phase 5: Technical index, resume & contact
+- [x] Phase 5: Technical index, resume & contact
