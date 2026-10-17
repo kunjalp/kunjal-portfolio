@@ -14,7 +14,7 @@ Open http://localhost:3000.
 ## Build progress
 
 - [x] Phase 1: Setup, design system, navbar, hero, drifting leaves
-- [ ] Phase 2: Journey map / interactive timeline
+- [x] Phase 2: Journey map / interactive timeline
 - [ ] Phase 3: Project case studies
 - [ ] Phase 4: About me & personal flair
 - [ ] Phase 5: Technical index, resume & contact

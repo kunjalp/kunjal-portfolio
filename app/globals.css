@@ -4,44 +4,44 @@
 
 /* ---------- Design tokens (light = default, dark via data-theme) ---------- */
 :root {
-  /* earth palette: sand, umber, terracotta, ochre, moss */
-  --bg: 245 239 227;
-  --fg: 46 37 29;
-  --muted: 112 98 84;
-  --accent: 170 84 52;
-  --accent2: 98 112 64;
-  --leaf: 92 112 62;
-  --petal: 190 112 78;
-  /* warm earth gradient stops: ochre, terracotta, clay */
-  --g1: 196 138 52;
-  --g2: 176 84 50;
-  --g3: 128 62 44;
-  --glass: rgba(255, 252, 244, 0.55);
-  --glass-hover: rgba(255, 252, 244, 0.82);
-  --glass-border: rgba(70, 52, 34, 0.15);
-  --glow1: rgba(196, 138, 52, 0.3);
-  --glow2: rgba(98, 112, 64, 0.2);
+  /* earthy palette: olive, soft brown, coral-burgundy */
+  --bg: 240 237 224;
+  --fg: 40 38 27;
+  --muted: 105 100 78;
+  --accent: 158 52 58;
+  --accent2: 112 122 60;
+  --leaf: 104 116 56;
+  --petal: 204 96 86;
+  /* gradient stops: olive, coral, burgundy */
+  --g1: 116 128 58;
+  --g2: 204 98 84;
+  --g3: 134 40 56;
+  --glass: rgba(252 250 240 / 0.55);
+  --glass-hover: rgba(252 250 240 / 0.82);
+  --glass-border: rgba(60, 54, 32, 0.15);
+  --glow1: rgba(122, 132, 62, 0.26);
+  --glow2: rgba(204, 98, 84, 0.16);
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg: 24 20 15;
-  --fg: 240 232 218;
-  --muted: 172 160 142;
-  --accent: 214 140 82;
-  --accent2: 150 168 110;
-  --leaf: 140 166 100;
-  --petal: 214 140 110;
-  --g1: 224 172 92;
-  --g2: 206 116 72;
-  --g3: 150 170 110;
-  --glass: rgba(255, 245, 225, 0.07);
-  --glass-hover: rgba(255, 245, 225, 0.13);
-  --glass-border: rgba(255, 240, 215, 0.14);
-  --glow1: rgba(180, 100, 50, 0.2);
-  --glow2: rgba(90, 110, 60, 0.22);
+  --bg: 22 22 16;
+  --fg: 238 234 218;
+  --muted: 168 164 140;
+  --accent: 226 120 104;
+  --accent2: 160 176 98;
+  --leaf: 150 168 92;
+  --petal: 224 120 108;
+  --g1: 168 184 100;
+  --g2: 226 120 104;
+  --g3: 190 80 96;
+  --glass: rgba(240 240 215 / 0.07);
+  --glass-hover: rgba(240 240 215 / 0.13);
+  --glass-border: rgba(240 240 215 / 0.14);
+  --glow1: rgba(120, 130, 60, 0.2);
+  --glow2: rgba(170, 60, 70, 0.2);
   color-scheme: dark;
 }
 
@@ -176,6 +176,20 @@ body::before {
   animation: tooltip-in 0.2s ease-out;
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fade-up 0.28s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -185,6 +199,9 @@ body::before {
     top: var(--y);
   }
   .leaf-sway {
+    animation: none;
+  }
+  .fade-up {
     animation: none;
   }
 }
