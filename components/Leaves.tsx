@@ -75,6 +75,7 @@ function LeafShape({ shape }: { shape: Shape }) {
   if (shape === "fern") {
     return (
       <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden className="h-full w-full">
+        <ellipse cx="32" cy="33" rx="16" ry="29" fill="transparent" />
         <path d="M32 62 Q33 34 32 3" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" />
         {[0, 1, 2, 3, 4, 5].map((i) => {
           const y = 52 - i * 8;
@@ -92,6 +93,7 @@ function LeafShape({ shape }: { shape: Shape }) {
   if (shape === "vine") {
     return (
       <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden className="h-full w-full">
+        <ellipse cx="32" cy="32" rx="14" ry="30" fill="transparent" transform="rotate(30 32 32)" />
         <path
           d="M12 60 C6 42 40 40 30 24 S44 8 52 3"
           stroke="currentColor"
