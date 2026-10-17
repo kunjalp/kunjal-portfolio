@@ -19,7 +19,7 @@ export default function Hero() {
           I build where software meets hardware.
         </p>
 
-        <div className="mt-10 max-w-[560px]">
+        <div className="mt-10 max-w-[560px] xl:-mt-8 xl:ml-[40%]">
           <Window title="README.md">
             <div className="p-6 sm:p-7">
               <p className="text-[1.05rem] leading-relaxed">

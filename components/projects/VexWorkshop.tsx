@@ -366,7 +366,10 @@ function Motor({ x, y }: { x: number; y: number }) {
 }
 
 function Drivetrain() {
-  const [v, setV] = useState(0.45);
+  const [drive, setDrive] = useState(0.55);
+  const [torque, setTorque] = useState(0.3);
+  // Gearing trade-off: more torque means a lower top speed.
+  const v = drive * (1 - 0.6 * torque);
   return (
     <div>
       <svg viewBox="0 0 480 190" className="w-full overflow-hidden rounded-sm border-[3px] border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.45)]" role="img" aria-label="Drivetrain side view with spinning omni wheels">
@@ -397,11 +400,21 @@ function Drivetrain() {
         <OmniWheel cx={240} cy={132} r={27} v={v} />
         <OmniWheel cx={362} cy={132} r={27} v={v} />
       </svg>
-      <label className="mt-3 flex items-center gap-3 text-sm">
-        <span className="shrink-0 font-mono text-xs">drive speed</span>
-        <input type="range" min={0} max={100} value={Math.round(v * 100)} onChange={(e) => setV(+e.target.value / 100)} className="w-full accent-[rgb(var(--accent))]" />
-      </label>
-      <p className="mt-2 text-sm text-muted">The base everything else bolts to. Omni wheels let it turn without scrubbing.</p>
+      <div className="mt-3 space-y-2 text-sm">
+        <label className="flex items-center gap-3">
+          <span className="w-24 shrink-0 font-mono text-xs">drive speed</span>
+          <input type="range" min={0} max={100} value={Math.round(drive * 100)} onChange={(e) => setDrive(+e.target.value / 100)} className="w-full accent-[rgb(var(--accent))]" />
+          <span className="w-10 shrink-0 text-right font-mono text-xs">{Math.round(v * 100)}%</span>
+        </label>
+        <label className="flex items-center gap-3">
+          <span className="w-24 shrink-0 font-mono text-xs">torque</span>
+          <input type="range" min={0} max={100} value={Math.round(torque * 100)} onChange={(e) => setTorque(+e.target.value / 100)} className="w-full accent-[rgb(var(--accent2))]" />
+          <span className="w-10 shrink-0 text-right font-mono text-xs">{Math.round(torque * 100)}%</span>
+        </label>
+      </div>
+      <p className="mt-2 text-sm text-muted">
+        More torque pushes harder but lowers top speed. Drivetrains are always that gear-ratio trade-off.
+      </p>
     </div>
   );
 }
