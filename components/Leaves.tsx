@@ -63,12 +63,12 @@ const facts: Fact[] = [
 ];
 
 const leaves: LeafDef[] = [
-  { id: "l1", shape: "fern", tone: "leaf", x: 6, size: 46, dur: 38, delay: -6, sway: 6, staticY: 18, fact: facts[0] },
-  { id: "l2", shape: "petal", tone: "petal", x: 24, size: 38, dur: 46, delay: -24, sway: 8, staticY: 62, fact: facts[1] },
-  { id: "l3", shape: "vine", tone: "leaf", x: 40, size: 52, dur: 34, delay: -14, sway: 7, staticY: 36, fact: facts[2] },
-  { id: "l4", shape: "fern", tone: "leaf", x: 58, size: 42, dur: 52, delay: -36, sway: 9, staticY: 78, fact: facts[3] },
-  { id: "l5", shape: "petal", tone: "petal", x: 74, size: 40, dur: 42, delay: -3, sway: 6.5, staticY: 28, fact: facts[4] },
-  { id: "l6", shape: "vine", tone: "leaf", x: 88, size: 50, dur: 44, delay: -28, sway: 8, staticY: 54, fact: facts[5] },
+  { id: "l1", shape: "fern", tone: "leaf", x: 6, size: 62, dur: 58, delay: -9, sway: 8, staticY: 18, fact: facts[0] },
+  { id: "l2", shape: "petal", tone: "petal", x: 24, size: 52, dur: 70, delay: -36, sway: 10.5, staticY: 62, fact: facts[1] },
+  { id: "l3", shape: "vine", tone: "leaf", x: 40, size: 70, dur: 52, delay: -21, sway: 9, staticY: 36, fact: facts[2] },
+  { id: "l4", shape: "fern", tone: "leaf", x: 58, size: 58, dur: 78, delay: -54, sway: 12, staticY: 78, fact: facts[3] },
+  { id: "l5", shape: "petal", tone: "petal", x: 74, size: 54, dur: 64, delay: -5, sway: 8.5, staticY: 28, fact: facts[4] },
+  { id: "l6", shape: "vine", tone: "leaf", x: 88, size: 68, dur: 66, delay: -42, sway: 10.5, staticY: 54, fact: facts[5] },
 ];
 
 function LeafShape({ shape }: { shape: Shape }) {

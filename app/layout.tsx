@@ -5,7 +5,7 @@ import Leaves from "@/components/Leaves";
 export const metadata: Metadata = {
   title: "Kunjal Purohit | CS & Computer Engineering",
   description:
-    "Kunjal Purohit is a Computer Science student with a Computer Engineering minor at UC Santa Cruz, working across embedded firmware, autonomous systems, and full-stack software.",
+    "Kunjal Purohit is a Computer Science and Computer Engineering double major at UC Santa Cruz, working across embedded firmware, autonomous systems, and full-stack software.",
 };
 
 export const viewport: Viewport = {

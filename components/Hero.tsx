@@ -3,7 +3,7 @@ import { ArrowDown, GraduationCap, Leaf, Mail } from "lucide-react";
 const stats = [
   { value: "3.95 / 4.0", label: "Cumulative GPA" },
   { value: "June 2028", label: "Expected graduation" },
-  { value: "CS + CpE", label: "B.S. and minor" },
+  { value: "CS + CE", label: "Double major" },
 ];
 
 export default function Hero() {
@@ -15,7 +15,7 @@ export default function Hero() {
       <div className="mx-auto w-full max-w-5xl">
         <div className="glass mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm">
           <GraduationCap size={16} className="text-accent" aria-hidden />
-          <span className="text-muted">Computer Science B.S. · UC Santa Cruz</span>
+          <span className="text-muted">CS & CE Double Major · UC Santa Cruz</span>
         </div>
 
         <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-muted">
@@ -28,7 +28,7 @@ export default function Hero() {
         </h1>
 
         <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-          I&apos;m a Computer Science student with a Computer Engineering minor,
+          I&apos;m a Computer Science and Computer Engineering double major,
           building across embedded firmware, autonomous systems, and full-stack
           software.
         </p>
