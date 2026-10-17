@@ -1,6 +1,7 @@
 import Window from "./Window";
 import FormulaPanel from "./projects/FormulaPanel";
 import OccupancyGrid from "./projects/OccupancyGrid";
+import VexWorkshop from "./projects/VexWorkshop";
 
 function Tags({ items }: { items: string[] }) {
   return (
@@ -167,9 +168,10 @@ export default function Projects() {
                   </h3>
                   <p className="font-mono text-xs text-muted">Fremont, CA · Jul 2021 – May 2025 · Club President</p>
                   <p className="text-[1.05rem] leading-relaxed">
-                    Three seasons designing and programming robots as a technical team member,
-                    then elected president. Every year meant a new game and a robot built from
-                    scratch before the first qualifying tournament.
+                    I was a mechanical builder: I figured out the components and built
+                    drivetrains, flywheels and intake systems, and sometimes helped with
+                    autonomous code. After three seasons on the technical team I was elected
+                    president. Every year meant a new game and a robot built from scratch.
                   </p>
                   <Bullets
                     items={[
@@ -179,9 +181,11 @@ export default function Projects() {
                       "Stayed hands-on with hardware and software the whole time.",
                     ]}
                   />
-                  <Tags items={["Mechanical design", "Autonomous routines", "Budgeting", "Leadership"]} />
+                  <Tags items={["Mechanical design", "Drivetrains", "Flywheels", "Intakes", "Autonomous code", "Budgeting", "Leadership"]} />
                 </div>
-                <dl className="grid grid-cols-2 content-start gap-3 sm:grid-cols-4">
+                <div className="space-y-5">
+                  <VexWorkshop />
+                  <dl className="grid grid-cols-2 content-start gap-3 sm:grid-cols-4">
                   {[
                     ["~30", "members led"],
                     ["3", "competitive teams"],
@@ -197,6 +201,7 @@ export default function Projects() {
                     </div>
                   ))}
                 </dl>
+                </div>
               </div>
             </Window>
           </div>
