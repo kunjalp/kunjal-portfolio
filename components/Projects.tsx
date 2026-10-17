@@ -1,5 +1,5 @@
 import Window from "./Window";
-import CanTicker from "./projects/CanTicker";
+import FormulaPanel from "./projects/FormulaPanel";
 import OccupancyGrid from "./projects/OccupancyGrid";
 
 function Tags({ items }: { items: string[] }) {
@@ -44,21 +44,27 @@ export default function Projects() {
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
           {/* Formula Slug */}
           <div className="lg:col-span-2">
-            <Window title="formula-slug/accumulator-telemetry">
+            <Window title="formula-slug/vcu-firmware">
               <div className="grid gap-6 p-6 sm:p-7 lg:grid-cols-[1fr_1.1fr]">
                 <div className="space-y-4">
                   <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
-                    Formula Slug: accumulator telemetry and thermal safety
+                    Formula Slug: vehicle firmware
                   </h3>
-                  <p className="font-mono text-xs text-muted">FSAE · 2025 – Present</p>
+                  <p className="font-mono text-xs text-muted">FSAE · Embedded Software Engineer · Oct 2025 – Present</p>
                   <p className="text-[1.05rem] leading-relaxed">
-                    Embedded firmware that reads the race car&apos;s accumulator temperatures and
-                    reports them over CAN, so thermal problems show up before they become safety
-                    problems.
+                    I own the STM32 C/C++ firmware that takes sensor readings and reports them
+                    over the CAN bus, plus work on the throttle map in the vehicle control unit.
                   </p>
+                  <Bullets
+                    items={[
+                      "Built tray-temperature monitoring across 4 DS18B20 OneWire sensors, with automatic shutdown on safety-threshold faults.",
+                      "Redesigned the CAN protocol for a new battery and chip architecture. The electrical team now uses it for on-car telemetry.",
+                      "Replaced a discontinuous piecewise torque map with a smooth cubic-polynomial curve, now the default accelerator mapping. The chart shows the first revision, a 17-point lookup table.",
+                    ]}
+                  />
                   <Tags items={["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"]} />
                 </div>
-                <CanTicker />
+                <FormulaPanel />
               </div>
             </Window>
           </div>
@@ -85,12 +91,13 @@ export default function Projects() {
               <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
                 Sammy&apos;s Palate
               </h3>
-              <p className="font-mono text-xs text-muted">UCSC dining nutrition tracker · 2026 – Present</p>
+              <p className="font-mono text-xs text-muted">UCSC dining tracker · June 2026 – Present</p>
               <Bullets
                 items={[
-                  "An automated scraper runs daily and parses 14 dining menus.",
+                  "Live on the App Store with 60+ users, plus a web demo.",
+                  "A scheduled Python/Playwright scraper parses 14 campus dining menus, with a name-based fallback.",
                   "Row-level security (RLS) in the database keeps each person's data private.",
-                  "Shipped as an iOS app and distributed through TestFlight.",
+                  "A Codemagic CI/CD pipeline builds, code-signs and ships each iOS update.",
                 ]}
               />
               <Tags

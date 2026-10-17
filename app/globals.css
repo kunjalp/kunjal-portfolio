@@ -589,6 +589,17 @@ body {
 .car-rev { fill: #ffffff; opacity: 0; transition: opacity 0.1s ease; }
 .car.is-reversing .car-rev { opacity: 1; filter: drop-shadow(0 0 2px #ffffff); }
 
+/* Chart text */
+.chart-tick {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: rgb(var(--muted));
+}
+.chart-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
 /* Pulsing "live" indicator */
 .live-dot {
   width: 0.55rem;
