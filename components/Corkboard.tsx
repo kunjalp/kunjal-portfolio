@@ -34,6 +34,8 @@ const ITEMS: Item[] = [
   { id: "sticky", kind: "sticky", body: "Up next: learning embroidery so I can customize my own clothes!", w: 176, x: 70, y: 652, tilt: -4 },
 ];
 
+type Zoom = { id: string; cx: number; cy: number; w: number; h: number; tilt: number; phase: "start" | "open" | "out" };
+
 const DEFAULT_ORDER = ITEMS.map((i) => i.id);
 
 function PushPin({ color = RED }: { color?: string }) {
@@ -63,6 +65,36 @@ function Contents({ item }: { item: Item }) {
   return <p className="cork-sticky-body">{item.body}</p>;
 }
 
+
+function ZoomCard({ zoom, item, onClose, onDone }: { zoom: Zoom; item: Item; onClose: () => void; onDone: () => void }) {
+  const vw = typeof window === "undefined" ? 1200 : window.innerWidth;
+  const vh = typeof window === "undefined" ? 800 : window.innerHeight;
+  const k = Math.max(1, Math.min((vh * 0.78) / zoom.h, (vw * 0.9) / zoom.w, 2.8));
+  const open = zoom.phase === "open";
+  const transform = open
+    ? `perspective(1400px) translate(${vw / 2 - zoom.cx}px, ${vh / 2 - zoom.cy}px) rotate(0deg) rotateY(360deg) scale(${k})`
+    : `perspective(1400px) translate(0px, 0px) rotate(${zoom.tilt}deg) rotateY(0deg) scale(1)`;
+  const cls = item.kind === "photo" ? "cork-photo" : item.kind === "card" ? "cork-card" : "cork-sticky";
+  return (
+    <>
+      <div className={`cork-zoom-backdrop ${open ? "is-open" : ""}`} onClick={onClose} aria-hidden />
+      <div
+        role="dialog"
+        aria-label="Enlarged item. Click to put it back."
+        className={`cork-item cork-zoom ${cls} is-held`}
+        style={{ position: "fixed", left: zoom.cx - zoom.w / 2, top: zoom.cy - zoom.h / 2, width: zoom.w, zIndex: 3000, transform, cursor: "pointer" }}
+        onClick={onClose}
+        onTransitionEnd={(e) => {
+          if (e.propertyName === "transform" && zoom.phase === "out") onDone();
+        }}
+      >
+        {item.kind !== "sticky" && (item.pin === "pin" ? <PushPin color={item.pinColor} /> : <span aria-hidden className="cork-tape" />)}
+        <Contents item={item} />
+      </div>
+    </>
+  );
+}
+
 export default function Corkboard() {
   const board = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -71,7 +103,7 @@ export default function Corkboard() {
   );
   const [order, setOrder] = useState<string[]>(DEFAULT_ORDER);
   const [held, setHeld] = useState<string | null>(null);
-  const [flip, setFlip] = useState<{ id: string; n: number } | null>(null);
+  const [zoom, setZoom] = useState<Zoom | null>(null);
   const drag = useRef<{ id: string; sx: number; sy: number; ox: number; oy: number; scale: number; moved: boolean } | null>(null);
 
   useEffect(() => {
@@ -82,6 +114,13 @@ export default function Corkboard() {
     setWidth(el.clientWidth);
     return () => ro.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!zoom) return;
+    const k = (e: KeyboardEvent) => e.key === "Escape" && closeZoom();
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, [zoom]);
 
   const free = width >= FREE_MIN_W;
   // Positions are stored in the reference layout's coordinates and scaled to the live board width.
@@ -110,17 +149,27 @@ export default function Corkboard() {
     const ny = d.oy + (e.clientY - d.sy) / d.scale;
     setPos((ps) => ({ ...ps, [it.id]: clamp(it, nx, ny) }));
   };
-  const onUp = (it: Item) => () => {
+  const openZoom = (it: Item, el: HTMLElement) => {
+    const r = el.getBoundingClientRect();
+    front(it.id);
+    setZoom({ id: it.id, cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: el.offsetWidth, h: el.offsetHeight, tilt: it.tilt, phase: "start" });
+    requestAnimationFrame(() => requestAnimationFrame(() => setZoom((z) => (z ? { ...z, phase: "open" } : z))));
+  };
+  const closeZoom = () => setZoom((z) => (z && z.phase !== "out" ? { ...z, phase: "out" } : z));
+
+  const onUp = (it: Item) => (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     drag.current = null;
     setHeld(null);
-    // a plain click (no drag): flip the piece over and land it on top
-    if (d && d.id === it.id && !d.moved) {
-      front(it.id);
-      setFlip((f) => ({ id: it.id, n: (f?.n ?? 0) + 1 }));
-    }
+    // a plain click (no drag): flip it up to the middle of the screen
+    if (d && d.id === it.id && !d.moved) openZoom(it, e.currentTarget);
   };
   const onKey = (it: Item) => (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openZoom(it, e.currentTarget);
+      return;
+    }
     const step = e.shiftKey ? 48 : 16;
     const m: Record<string, [number, number]> = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
     const d = m[e.key];
@@ -138,7 +187,7 @@ export default function Corkboard() {
     <div>
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
         <p className="cork-hint">
-          {free ? "Drag anything around. Click a photo to bring it to the front." : "A few favorites."}
+          {free ? "Drag anything around. Click one to take a closer look." : "A few favorites."}
         </p>
         {free && (
           <button type="button" className="glass-btn !min-h-[34px] !px-3 !text-[0.8rem]" onClick={tidy}>
@@ -158,7 +207,7 @@ export default function Corkboard() {
           {ITEMS.map((it) => {
             const p = pos[it.id];
             const isHeld = held === it.id;
-            const isFlip = flip?.id === it.id;
+            const hidden = zoom?.id === it.id;
             const z = order.indexOf(it.id) + 1;
             const cls =
               it.kind === "photo" ? "cork-photo" : it.kind === "card" ? "cork-card" : "cork-sticky";
@@ -168,17 +217,17 @@ export default function Corkboard() {
                   left: p.x * scale,
                   top: p.y * scale,
                   width: it.w * scale,
-                  zIndex: isHeld || isFlip ? 999 : z,
-                  ['--tilt' as string]: `${it.tilt}deg`,
+                  zIndex: isHeld ? 999 : z,
                   transform: `rotate(${isHeld ? it.tilt * 0.3 : it.tilt}deg) scale(${isHeld ? 1.05 : 1})`,
                 }
               : { transform: `rotate(${it.tilt * 0.5}deg)` };
+            if (hidden) style.visibility = "hidden";
             const label =
               it.kind === "photo" ? `${it.caption}. ${it.alt}` : it.kind === "card" ? it.title : it.body;
             return (
               <div
                 key={it.id}
-                className={`cork-item ${cls} ${isHeld ? "is-held" : ""} ${isFlip ? (flip!.n % 2 ? "cork-flip-a" : "cork-flip-b") : ""} ${free ? "cursor-grab" : ""}`}
+                className={`cork-item ${cls} ${isHeld ? "is-held" : ""} ${free ? "cursor-grab" : ""}`}
                 style={style}
                 tabIndex={free ? 0 : undefined}
                 aria-label={free ? `${label}. Use arrow keys to move.` : undefined}
@@ -186,7 +235,7 @@ export default function Corkboard() {
                 onPointerMove={onMove(it)}
                 onPointerUp={onUp(it)}
                 onPointerCancel={() => { drag.current = null; setHeld(null); }}
-                onAnimationEnd={() => setFlip((f) => (f && f.id === it.id ? null : f))}
+                onClick={free ? undefined : (e) => openZoom(it, e.currentTarget)}
                 onKeyDown={free ? onKey(it) : undefined}
               >
                 {it.kind !== "sticky" && (it.pin === "pin" ? <PushPin color={it.pinColor} /> : <span aria-hidden className="cork-tape" />)}
@@ -196,6 +245,8 @@ export default function Corkboard() {
           })}
         </div>
       </div>
+
+      {zoom && <ZoomCard zoom={zoom} item={ITEMS.find((i) => i.id === zoom.id)!} onClose={closeZoom} onDone={() => setZoom(null)} />}
     </div>
   );
 }

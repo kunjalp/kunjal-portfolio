@@ -952,21 +952,6 @@ body {
   outline: 3px solid rgb(var(--accent));
   outline-offset: 3px;
 }
-.cork-flip-a { animation: cork-flip-a 0.75s cubic-bezier(0.3, 0.9, 0.3, 1); }
-.cork-flip-b { animation: cork-flip-b 0.75s cubic-bezier(0.3, 0.9, 0.3, 1); }
-@keyframes cork-flip-a {
-  0% { transform: perspective(900px) rotate(var(--tilt)) rotateY(0) scale(1); }
-  45% { transform: perspective(900px) rotate(0deg) rotateY(180deg) scale(1.16); }
-  100% { transform: perspective(900px) rotate(var(--tilt)) rotateY(360deg) scale(1); }
-}
-@keyframes cork-flip-b {
-  0% { transform: perspective(900px) rotate(var(--tilt)) rotateY(0) scale(1); }
-  45% { transform: perspective(900px) rotate(0deg) rotateY(180deg) scale(1.16); }
-  100% { transform: perspective(900px) rotate(var(--tilt)) rotateY(360deg) scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .cork-flip-a, .cork-flip-b { animation: none; }
-}
 .cork-item.is-held {
   cursor: grabbing;
 }
@@ -1249,3 +1234,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .vex-spin, .vex-feed, .vex-scroll, .vex-belt, .vex-pop { animation: none; }
 }
+
+.cork-zoom { transition: transform 0.8s cubic-bezier(0.3, 0.9, 0.3, 1); box-shadow: 8px 18px 0 rgb(0 0 0 / 0.2), 0 24px 50px rgb(0 0 0 / 0.35); }
+.cork-zoom-backdrop { position: fixed; inset: 0; z-index: 2999; background: rgb(20 12 6 / 0); transition: background 0.5s ease; }
+.cork-zoom-backdrop.is-open { background: rgb(20 12 6 / 0.55); }
+@media (prefers-reduced-motion: reduce) { .cork-zoom { transition-duration: 0.01s; } }
