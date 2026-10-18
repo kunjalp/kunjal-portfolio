@@ -931,14 +931,14 @@ body {
 .cork-board {
   overflow: hidden;
   border-radius: 4px;
-  background-color: #c79a68;
+  background-color: #c4915a;
+  /* cork: random granules from layered noise, not a dot grid */
   background-image:
-    radial-gradient(rgb(110 70 34 / 0.35) 1px, transparent 1.4px),
-    radial-gradient(rgb(255 236 200 / 0.28) 1px, transparent 1.6px),
-    radial-gradient(rgb(90 54 24 / 0.22) 1.6px, transparent 2.2px);
-  background-size: 7px 7px, 11px 11px, 17px 17px;
-  background-position: 0 0, 3px 5px, 8px 2px;
-  box-shadow: inset 0 0 0 2px rgb(60 36 16 / 0.35), inset 0 6px 18px rgb(60 36 16 / 0.35);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E %3Cfilter id='m' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.25 0 0 0 0 0.1 2.2 0 0 0 -1.05'/%3E%3C/filter%3E %3Cfilter id='d' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.17 0 0 0 0 0.06 4.2 0 0 0 -2.35'/%3E%3C/filter%3E %3Cfilter id='l' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.96 0 0 0 0 0.84 0 0 0 0 0.62 0 4.6 0 0 -2.75'/%3E%3C/filter%3E %3Cfilter id='g' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='1' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.24 0 0 0 0 0.13 0 0 0 0 0.05 0 0 5 0 -2.9'/%3E%3C/filter%3E %3Crect width='100%25' height='100%25' filter='url%28%23m%29'/%3E %3Crect width='100%25' height='100%25' filter='url%28%23l%29'/%3E %3Crect width='100%25' height='100%25' filter='url%28%23d%29'/%3E %3Crect width='100%25' height='100%25' filter='url%28%23g%29'/%3E %3C/svg%3E"),
+    radial-gradient(ellipse at 30% 20%, rgb(255 230 190 / 0.18), transparent 60%),
+    radial-gradient(ellipse at 80% 85%, rgb(90 50 20 / 0.2), transparent 55%);
+  background-size: 260px 260px, 100% 100%, 100% 100%;
+  box-shadow: inset 0 0 0 2px rgb(60 36 16 / 0.35), inset 0 6px 18px rgb(60 36 16 / 0.35), inset 0 0 60px rgb(70 40 15 / 0.25);
 }
 :root[data-theme="dark"] .cork-board {
   filter: brightness(0.82) saturate(0.9);
