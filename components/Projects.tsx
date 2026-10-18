@@ -2,34 +2,7 @@ import Window from "./Window";
 import FormulaPanel from "./projects/FormulaPanel";
 import OccupancyGrid from "./projects/OccupancyGrid";
 import VexWorkshop from "./projects/VexWorkshop";
-
-function Tags({ items }: { items: string[] }) {
-  return (
-    <ul className="flex flex-wrap gap-2">
-      {items.map((t) => (
-        <li
-          key={t}
-          className="rounded-md border-[1.5px] border-[rgb(var(--edge)/0.5)] bg-[rgb(var(--paper2)/0.5)] px-2.5 py-0.5 font-mono text-xs"
-        >
-          {t}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function Bullets({ items }: { items: string[] }) {
-  return (
-    <ul className="space-y-2 text-[1rem] leading-relaxed">
-      {items.map((t) => (
-        <li key={t} className="flex gap-3">
-          <span aria-hidden className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-          <span>{t}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
+import { Bullets, Metrics, Tags } from "./projects/shared";
 
 export default function Projects() {
   return (
@@ -43,6 +16,40 @@ export default function Projects() {
         </p>
 
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
+          {/* Heirloom */}
+          <div className="lg:col-span-2">
+            <Window title="heirloom/README.md">
+              <div className="grid gap-6 p-6 sm:p-7 lg:grid-cols-[1fr_1.1fr]">
+                <div className="space-y-4">
+                  <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">Heirloom</h3>
+                  <p className="font-mono text-xs text-muted">AI multi-generational wealth platform · October 2026</p>
+                  <p className="inline-block rounded-md border-2 border-[rgb(var(--edge))] bg-[rgb(var(--accent)/0.15)] px-3 py-1 text-sm font-bold">
+                    1st place, Daytona track · SF Tech Week
+                  </p>
+                  <Bullets
+                    items={[
+                      "Team of 3 won the Daytona track (20 teams, 12 hours), iterating on feedback from finance professionals.",
+                      "Designed AI agents that flag family goal conflicts for wealth advisors.",
+                      "Multi-tenant data isolation with row-level security.",
+                    ]}
+                  />
+                </div>
+                <div className="space-y-5">
+                  <Metrics
+                    cols="sm:grid-cols-2"
+                    items={[
+                      ["1st", "Daytona track"],
+                      ["20", "teams competing"],
+                      ["12 hrs", "to build it"],
+                      ["3", "person team"],
+                    ]}
+                  />
+                  <Tags items={["Next.js", "FastAPI", "PostgreSQL", "Neo4j", "Clerk", "Plaid", "Bright Data", "Daytona"]} />
+                </div>
+              </div>
+            </Window>
+          </div>
+
           {/* Formula Slug */}
           <div className="lg:col-span-2">
             <Window title="formula-slug/vcu-firmware">
@@ -61,6 +68,14 @@ export default function Projects() {
                       "Built tray-temperature monitoring across 4 DS18B20 OneWire sensors, with automatic shutdown on safety-threshold faults.",
                       "Redesigned the CAN protocol for a new battery and chip architecture. The electrical team now uses it for on-car telemetry.",
                       "Replaced a discontinuous piecewise torque map with a smooth cubic-polynomial curve, now the default accelerator mapping. The chart shows the first revision, a 17-point lookup table.",
+                    ]}
+                  />
+                  <Metrics
+                    cols="sm:grid-cols-3"
+                    items={[
+                      ["4", "temperature sensors"],
+                      ["Cubic", "default throttle curve"],
+                      ["CAN", "protocol redesigned"],
                     ]}
                   />
                   <Tags items={["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"]} />
@@ -82,6 +97,7 @@ export default function Projects() {
                 below: the way a robot builds a map is by clearing the space it has seen.
               </p>
               <OccupancyGrid />
+              <Metrics cols="sm:grid-cols-2" items={[["3", "autonomous laps"], ["5", "person team"]]} />
               <Tags items={["Python", "OpenCV", "ROS", "LiDAR", "GNSS", "Jetson Nano"]} />
             </div>
           </Window>
@@ -93,6 +109,7 @@ export default function Projects() {
                 Sammy&apos;s Palate
               </h3>
               <p className="font-mono text-xs text-muted">UCSC dining tracker · June 2026 – Present</p>
+              <Metrics cols="sm:grid-cols-2" items={[["60+", "App Store users"], ["14", "dining menus scraped"]]} />
               <Bullets
                 items={[
                   "Live on the App Store with 60+ users, plus a web demo.",
@@ -115,28 +132,8 @@ export default function Projects() {
             </div>
           </Window>
 
-          {/* Heirloom */}
-          <Window title="heirloom/README.md">
-            <div className="space-y-4 p-6 sm:p-7">
-              <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
-                Heirloom
-              </h3>
-              <p className="font-mono text-xs text-muted">AI multi-generational wealth platform · October 2026</p>
-              <p className="inline-block rounded-md border-2 border-[rgb(var(--edge))] bg-[rgb(var(--accent)/0.15)] px-3 py-1 text-sm font-bold">
-                1st place, Daytona track · SF Tech Week
-              </p>
-              <Bullets
-                items={[
-                  "Team of 3 won the Daytona track (20 teams, 12 hours), iterating on feedback from finance professionals.",
-                  "Designed AI agents that flag family goal conflicts for wealth advisors.",
-                  "Multi-tenant data isolation with row-level security.",
-                ]}
-              />
-              <Tags items={["Next.js", "FastAPI", "PostgreSQL", "Neo4j", "Clerk", "Plaid", "Bright Data", "Daytona"]} />
-            </div>
-          </Window>
-
           {/* ACM */}
+          <div className="lg:col-span-2">
           <Window title="acm-ucsc/web-lead.md">
             <div className="space-y-4 p-6 sm:p-7">
               <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
@@ -154,9 +151,11 @@ export default function Projects() {
                   "Weekly meetings to assign tasks and keep releases on schedule, with progress reported to the executive board.",
                 ]}
               />
+              <Metrics cols="sm:grid-cols-2" items={[["4", "developers led"], ["5", "features directed"]]} />
               <Tags items={["Team leadership", "Authentication", "Responsive UI"]} />
             </div>
           </Window>
+          </div>
 
           {/* VEX */}
           <div className="lg:col-span-2">
@@ -185,22 +184,14 @@ export default function Projects() {
                 </div>
                 <div className="space-y-5">
                   <VexWorkshop />
-                  <dl className="grid grid-cols-2 content-start gap-3 sm:grid-cols-4">
-                  {[
-                    ["~30", "members led"],
-                    ["3", "competitive teams"],
-                    ["$3,000+", "annual budget"],
-                    ["2", "teams qualified for State"],
-                  ].map(([v, l]) => (
-                    <div
-                      key={l}
-                      className="rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] p-4"
-                    >
-                      <dd className="text-[1.7rem] font-extrabold leading-none">{v}</dd>
-                      <dt className="mt-1.5 text-sm text-muted">{l}</dt>
-                    </div>
-                  ))}
-                </dl>
+                  <Metrics
+                    items={[
+                      ["~30", "members led"],
+                      ["3", "competitive teams"],
+                      ["$3,000+", "annual budget"],
+                      ["2", "teams qualified for State"],
+                    ]}
+                  />
                 </div>
               </div>
             </Window>
