@@ -245,7 +245,9 @@ body {
   opacity: var(--moon-op);
 }
 .sun {
-  transform: translateY(calc(var(--p) * 120px));
+  /* --sun-y comes from the sky clock: high at midday, low at sunset */
+  transform: translateY(calc(var(--sun-y, 0px) + var(--p) * 120px));
+  transition: transform 1.2s ease;
   opacity: calc(var(--sun-op) * (1 - var(--p) * 0.55));
 }
 .sun-disc {
@@ -673,7 +675,6 @@ body {
 .hero-name {
   font-stretch: 78%;
   letter-spacing: -0.035em;
-  color: rgb(var(--fg));
   text-wrap: balance;
 }
 
@@ -1392,4 +1393,74 @@ body {
 @keyframes barrel-roll {
   from { rotate: 0deg; }
   to { rotate: 360deg; }
+}
+
+/* ---- Journey: drivable scene ---------------------------------------------- */
+.drive-scene:focus-visible {
+  outline: 2px dashed rgb(var(--accent) / 0.7);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+.mini-ridge { fill: rgb(var(--edge) / 0.07); }
+.mini-pine { fill: rgb(var(--edge) / 0.16); }
+.mini-mark { fill: rgb(var(--edge) / 0.26); }
+.mini-mark .mini-cut { fill: rgb(var(--paper)); }
+.mini-sweep {
+  fill: rgb(var(--accent2) / 0.45);
+  transform-box: view-box;
+  transform-origin: 0 -26.5px;
+  animation: mini-sweep 3.2s linear infinite;
+}
+@keyframes mini-sweep {
+  to { transform: rotate(360deg); }
+}
+.drive-hud {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: rgb(var(--muted));
+  white-space: pre;
+}
+
+/* LiDAR fan off the nose: only while you're driving */
+.lidar { opacity: 0; transition: opacity 0.25s ease; pointer-events: none; }
+.lidar path { fill: rgb(var(--accent2) / 0.16); }
+.lidar-ray {
+  stroke: rgb(var(--accent2) / 0.85);
+  stroke-width: 1;
+  stroke-linecap: round;
+  transform-box: view-box;
+  transform-origin: 42px -13px;
+}
+.car.is-driving .lidar { opacity: 1; }
+.car.is-driving .lidar-ray { animation: lidar-scan 0.9s ease-in-out infinite alternate; }
+@keyframes lidar-scan {
+  from { transform: rotate(-14deg); }
+  to { transform: rotate(13deg); }
+}
+
+/* the stop card pops open like a window launched from its checkpoint */
+.stop-win {
+  transform-origin: var(--from, 50%) -40px;
+  animation: stop-pop 0.38s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+@keyframes stop-pop {
+  from { opacity: 0; transform: scale(0.82) translateY(-14px); }
+  to { opacity: 1; transform: none; }
+}
+.pedal:active { transform: translate(2px, 2px); box-shadow: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-sweep,
+  .car.is-driving .lidar-ray,
+  .stop-win { animation: none; }
+}
+
+/* Text drawn straight on the scenery follows the sky's brightness, not the theme:
+   the sky clock sets --on-sky to dark ink on bright skies and light ink on dark ones. */
+.on-sky {
+  color: rgb(var(--on-sky, var(--fg)));
+  text-shadow:
+    0 0 2px rgb(var(--on-sky-halo, var(--bg)) / calc(var(--on-sky-halo-a, 0.55) * 0.5)),
+    0 1px 14px rgb(var(--on-sky-halo, var(--bg)) / var(--on-sky-halo-a, 0.55));
+  transition: color 0.6s ease;
 }

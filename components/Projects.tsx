@@ -17,10 +17,10 @@ export default function Projects() {
   return (
     <section id="projects" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
       <div className="mx-auto w-full max-w-[1100px]">
-        <h2 className="text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
+        <h2 className="on-sky text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
           Projects
         </h2>
-        <p className="mt-3 max-w-xl text-[1.05rem]">
+        <p className="on-sky mt-3 max-w-xl text-[1.05rem]">
           Drag any window by its title bar. All of them respond to you.
         </p>
 

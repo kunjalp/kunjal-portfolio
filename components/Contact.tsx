@@ -185,10 +185,10 @@ export default function Contact() {
   return (
     <section id="contact" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
       <div className="mx-auto w-full max-w-[780px]">
-        <h2 className="text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
+        <h2 className="on-sky text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
           Contact
         </h2>
-        <p className="mt-3 text-[1.05rem]">Click the terminal and type, or use the buttons.</p>
+        <p className="on-sky mt-3 text-[1.05rem]">Click the terminal and type, or use the buttons.</p>
 
         <div className="mt-8">
           <Window title="kunjal@portfolio: ~/contact">

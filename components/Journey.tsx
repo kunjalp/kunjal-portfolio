@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, Car, Code, Cpu, Radar, type LucideIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Car, ChevronLeft, ChevronRight, Code, Cpu, Radar, type LucideIcon } from "lucide-react";
 import Window from "./Window";
-import Track from "./journey/Track";
+import Track, { type TrackHandle } from "./journey/Track";
+import { jumpTo } from "./ProjectIndex";
 import Patch, { type PatchKind } from "./journey/Patch";
 import { Tags } from "./projects/shared";
 
@@ -16,6 +17,8 @@ type Milestone = {
   tags: string[];
   icon: LucideIcon;
   patches: PatchKind[];
+  /** project windows this stop opens onto: [label, element id] */
+  projects: [string, string][];
 };
 
 const milestones: Milestone[] = [
@@ -28,6 +31,7 @@ const milestones: Milestone[] = [
     tags: ["VEX VRC", "Autonomous vehicles", "Leadership"],
     icon: Car,
     patches: ["vex"],
+    projects: [["VEX VRC Robotics", "project-vex"]],
   },
   {
     id: "cosmos",
@@ -38,6 +42,7 @@ const milestones: Milestone[] = [
     tags: ["Python", "OpenCV", "ROS", "LiDAR", "GNSS", "Jetson Nano"],
     icon: Radar,
     patches: ["cosmos"],
+    projects: [["Scaled Autonomous Vehicle", "project-cosmos"]],
   },
   {
     id: "formula-slug",
@@ -48,6 +53,7 @@ const milestones: Milestone[] = [
     tags: ["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"],
     icon: Cpu,
     patches: ["fsae"],
+    projects: [["Formula Slug firmware", "project-formula-slug"]],
   },
   {
     id: "ucsc",
@@ -58,11 +64,18 @@ const milestones: Milestone[] = [
     tags: ["Next.js", "TypeScript", "Supabase", "Capacitor"],
     icon: Code,
     patches: ["acm", "daytona"],
+    projects: [
+      ["Heirloom", "project-heirloom"],
+      ["Sammy's Palate", "project-sammys"],
+      ["ACM Web Redesign", "project-acm"],
+    ],
   },
 ];
 
 export default function Journey() {
   const [active, setActive] = useState(0);
+  const [engaged, setEngaged] = useState(false);
+  const track = useRef<TrackHandle>(null);
   const last = milestones.length - 1;
   const current = milestones[active];
 
@@ -77,12 +90,19 @@ export default function Journey() {
               How I got here
             </h2>
             <p className="mt-3 max-w-xl text-muted">
-              Four stops that shaped how I build. Pick a checkpoint and the car drives you there.
+              Four stops that shaped how I build. Take the wheel and drive: each checkpoint pops open as you
+              reach it. Or just pick one and the car drives itself.
             </p>
 
             {/* Road with the car, then the checkpoint buttons */}
             <div className="mt-6">
-              <Track active={active} />
+              <Track
+                ref={track}
+                active={active}
+                labels={milestones.map((m) => m.short)}
+                onArrive={setActive}
+                onEngage={setEngaged}
+              />
 
               <ol
                 className="relative grid grid-cols-4"
@@ -128,14 +148,47 @@ export default function Journey() {
                   );
                 })}
               </ol>
+
+              {/* hold-to-drive pedals; the hint changes once the scene has focus */}
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <Pedal dir={-1} track={track} label="Reverse">
+                  <ChevronLeft size={18} aria-hidden />
+                </Pedal>
+                <p className="text-center font-mono text-[0.72rem] leading-snug text-muted" aria-live="polite">
+                  {engaged ? (
+                    <>
+                      Driving. Hold <kbd className="pidx-kbd">→</kbd> / <kbd className="pidx-kbd">←</kbd> or scroll over the road.
+                    </>
+                  ) : (
+                    <>
+                      <span className="hidden sm:inline">Click the road to take the wheel, or hold a pedal.</span>
+                      <span className="sm:hidden">Hold a pedal to drive.</span>
+                    </>
+                  )}
+                </p>
+                <Pedal dir={1} track={track} label="Gas">
+                  <ChevronRight size={18} aria-hidden />
+                </Pedal>
+              </div>
             </div>
 
             {/* Detail for the selected stop */}
             <div
               key={current.id}
               aria-live="polite"
-              className="fade-up mt-6 rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.45)] p-5 sm:p-7"
+              className="stop-win mt-6 overflow-hidden rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.45)] shadow-[4px_4px_0_rgb(var(--shadow)/0.85)]"
+              style={{ ["--from" as string]: `${((active + 0.5) / milestones.length) * 100}%` }}
             >
+              <div className="win-bar !cursor-default">
+                <span aria-hidden className="win-dot win-dot-close !cursor-default" />
+                <span aria-hidden className="win-dot win-dot-min !cursor-default" />
+                <span aria-hidden className="win-dot win-dot-reset !cursor-default" />
+                <span className="win-title-wrap">
+                  <span className="win-title">{`stop-${active + 1}/${current.id}.md`}</span>
+                </span>
+                <span aria-hidden className="w-[3.1rem] flex-none" />
+              </div>
+              <div className="p-5 sm:p-7">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 pt-1">
                   <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">{current.title}</h3>
@@ -159,6 +212,16 @@ export default function Journey() {
               <div className="mt-5">
                 <Tags items={current.tags} label={current.id === "high-school" ? "Focus" : "Stack"} />
               </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {current.projects.map(([label, id]) => (
+                  <button key={id} type="button" onClick={() => jumpTo(id)} className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]">
+                    Open {label}
+                    <ArrowUpRight size={14} aria-hidden />
+                  </button>
+                ))}
+              </div>
+              </div>
             </div>
 
             <div className="mt-5 flex items-center justify-between gap-3">
@@ -169,7 +232,9 @@ export default function Journey() {
                 className="glass-btn disabled:pointer-events-none disabled:opacity-40"
               >
                 <ArrowLeft size={16} aria-hidden />
-                Previous stop
+                <span>
+                  Prev<span className="hidden sm:inline">ious stop</span>
+                </span>
               </button>
               <span className="font-mono text-sm tabular-nums text-muted">
                 {active + 1} of {milestones.length}
@@ -180,7 +245,9 @@ export default function Journey() {
                 disabled={active === last}
                 className="glass-btn disabled:pointer-events-none disabled:opacity-40"
               >
-                Next stop
+                <span>
+                  Next<span className="hidden sm:inline"> stop</span>
+                </span>
                 <ArrowRight size={16} aria-hidden />
               </button>
             </div>
@@ -188,5 +255,49 @@ export default function Journey() {
         </Window>
       </div>
     </section>
+  );
+}
+
+/** Hold to drive. Pointer events so it works the same with a mouse, a pen or a thumb. */
+function Pedal({
+  dir,
+  track,
+  label,
+  children,
+}: {
+  dir: number;
+  track: React.RefObject<TrackHandle>;
+  label: string;
+  children: React.ReactNode;
+}) {
+  const off = () => track.current?.press(0);
+  return (
+    <button
+      type="button"
+      aria-label={`${label} (hold)`}
+      title={`${label} (hold)`}
+      onPointerDown={(e) => {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        track.current?.press(dir);
+      }}
+      onPointerUp={off}
+      onPointerCancel={off}
+      onLostPointerCapture={off}
+      onKeyDown={(e) => {
+        if ((e.key === " " || e.key === "Enter") && !e.repeat) {
+          e.preventDefault();
+          track.current?.press(dir);
+        }
+      }}
+      onKeyUp={(e) => {
+        if (e.key === " " || e.key === "Enter") off();
+      }}
+      onContextMenu={(e) => e.preventDefault()}
+      className="pedal glass-btn !min-h-[40px] shrink-0 !px-3 select-none"
+    >
+      {dir < 0 && children}
+      <span className="text-[0.8rem]">{label}</span>
+      {dir > 0 && children}
+    </button>
   );
 }

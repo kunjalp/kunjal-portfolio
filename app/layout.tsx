@@ -9,6 +9,8 @@ import ProjectIndex from "@/components/ProjectIndex";
 import Toaster, { Konami } from "@/components/Toaster";
 import Leaves from "@/components/Leaves";
 import Scenery from "@/components/Scenery";
+import SkyClock from "@/components/SkyClock";
+import { SKY_JS } from "@/components/skyPalette";
 
 // Absolute URL that social cards resolve against. Set NEXT_PUBLIC_SITE_URL once the domain is final;
 // on Vercel the production URL is picked up automatically.
@@ -52,9 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: SKY_JS }} />
       </head>
       <body>
         <Scenery />
+        <SkyClock />
         {children}
         <Dock />
         <ProjectIndex />

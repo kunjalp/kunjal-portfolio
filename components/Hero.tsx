@@ -12,10 +12,10 @@ export default function Hero() {
   return (
     <section id="top" className="relative px-4 pb-24 pt-28 sm:px-8 lg:pt-32">
       <div className="mx-auto w-full max-w-[1100px]">
-        <h1 className="hero-name text-[clamp(3.4rem,10vw,8.5rem)] font-extrabold leading-[0.86]">
+        <h1 className="on-sky hero-name text-[clamp(3.4rem,10vw,8.5rem)] font-extrabold leading-[0.86]">
           Kunjal Purohit
         </h1>
-        <p className="mt-4 max-w-xl text-[clamp(1.15rem,1.8vw,1.45rem)] font-medium leading-snug">
+        <p className="on-sky mt-4 max-w-xl text-[clamp(1.15rem,1.8vw,1.45rem)] font-medium leading-snug">
           I build where software meets hardware.
         </p>
 

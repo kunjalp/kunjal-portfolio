@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Car, { CAR } from "./Car";
 
-const H = 96; // height of the road band in px
-const Y0 = 70; // road level at the checkpoints
+const H = 140; // height of the scene band in px
+const Y0 = 112; // road level at the checkpoints
 const FLAG_H = 50;
 const N = 4;
 
@@ -73,11 +73,119 @@ function makeTrack(W: number) {
 
 type Track = ReturnType<typeof makeTrack>;
 
+// Manual driving, in px/s and px/s².
+const ACC = 420;
+const BRAKE = 980;
+const DRAG = 1.6; // coasting air drag, per second
+const ROLL = 90; // rolling resistance, px/s², so it settles instead of creeping
+const MAX_FWD = 270;
+const MAX_REV = 130;
+const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/** Tiny landscape behind the road: a far ridge, pines, and a landmark at each stop. */
+function Landscape({ W, xs }: { W: number; xs: number[] }) {
+  const ridge = useMemo(() => {
+    const pts: string[] = [`M 0 ${Y0 - 18}`];
+    const n = Math.max(6, Math.round(W / 70));
+    for (let i = 0; i <= n; i++) {
+      const x = (W * i) / n;
+      // deterministic bumps, no Math.random so server and client agree
+      const y = Y0 - 34 - 18 * Math.abs(Math.sin(i * 1.7 + 0.6)) - 8 * Math.sin(i * 0.9);
+      pts.push(`L ${x.toFixed(1)} ${y.toFixed(1)}`);
+    }
+    pts.push(`L ${W} ${Y0 - 18}`, "Z");
+    return pts.join(" ");
+  }, [W]);
+
+  const pines = useMemo(() => {
+    const out: { x: number; h: number }[] = [];
+    for (let x = 10, i = 0; x < W - 6; i++) {
+      const near = xs.some((c) => x > c - 30 && x < c + 78);
+      if (!near) out.push({ x, h: 11 + 9 * Math.abs(Math.sin(i * 2.3)) });
+      x += 16 + 14 * Math.abs(Math.sin(i * 1.3));
+    }
+    return out;
+  }, [W, xs]);
+
+  const base = Y0 - 6;
+  return (
+    <g aria-hidden>
+      <path className="mini-ridge" d={ridge} />
+      {pines.map((p, i) => (
+        <path
+          key={i}
+          className="mini-pine"
+          d={`M ${p.x} ${base - p.h} L ${p.x + p.h * 0.32} ${base} L ${p.x - p.h * 0.32} ${base} Z`}
+        />
+      ))}
+      {xs.map((x, i) => (
+        <g key={i} className="mini-mark" transform={`translate(${x + 40} ${base})`}>
+          {i === 0 && (
+            // high school: gabled building with a gear on the front
+            <g>
+              <path d="M -16 0 V -16 L 0 -26 L 16 -16 V 0 Z" />
+              <circle cx="0" cy="-12" r="4.2" className="mini-cut" />
+              <path d="M 10 -20 V -33 L 16 -31 L 10 -29" />
+            </g>
+          )}
+          {i === 1 && (
+            // COSMOS: a LiDAR mast with a spinning sweep
+            <g>
+              <path d="M -2 0 L -1 -24 H 1 L 2 0 Z" />
+              <rect x="-5" y="-29" width="10" height="5" rx="1.5" />
+              <g className="mini-sweep">
+                <path d="M 0 -26.5 L 22 -33 A 23 23 0 0 1 22 -20 Z" />
+              </g>
+            </g>
+          )}
+          {i === 2 && (
+            // Formula Slug: pit garage with a checkered stripe
+            <g>
+              <path d="M -18 0 V -17 H 18 V 0 Z" />
+              <rect x="-11" y="-11" width="22" height="11" className="mini-cut" />
+              {Array.from({ length: 9 }, (_, c) => (
+                <rect key={c} x={-18 + c * 4} y={-21 + (c % 2) * 2} width="4" height="2" />
+              ))}
+            </g>
+          )}
+          {i === 3 && (
+            // UCSC: redwoods
+            <g>
+              <path d="M -10 0 L -6 -40 L -2 0 Z" />
+              <path d="M 0 0 L 5 -50 L 10 0 Z" />
+              <path d="M 12 0 L 15 -30 L 18 0 Z" />
+            </g>
+          )}
+        </g>
+      ))}
+    </g>
+  );
+}
+
+export type TrackHandle = {
+  /** -1 reverse, 0 off, 1 forward: hold-to-drive input (pedals, keys) */
+  press: (dir: number) => void;
+};
+
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const SVGNS = "http://www.w3.org/2000/svg";
 
-export default function Track({ active }: { active: number }) {
+type Props = {
+  active: number;
+  labels: string[];
+  /** called when the car drives itself onto a checkpoint */
+  onArrive: (i: number) => void;
+  onEngage?: (on: boolean) => void;
+};
+
+const Track = forwardRef<TrackHandle, Props>(function Track({ active, labels, onArrive, onEngage }, handle) {
   const wrap = useRef<HTMLDivElement>(null);
+  const hudRef = useRef<SVGTextElement>(null);
+  const arriveRef = useRef(onArrive);
+  arriveRef.current = onArrive;
+  const labelsRef = useRef(labels);
+  labelsRef.current = labels;
   const [W, setW] = useState(0);
   const track = useMemo(() => (W > 0 ? makeTrack(W) : null), [W]);
   const trackRef = useRef<Track | null>(null);
@@ -276,6 +384,7 @@ export default function Track({ active }: { active: number }) {
       token,
     );
     car.classList.remove("is-braking", "is-reversing");
+    hud();
     (brake as { el: SVGGElement | null }[] | null)?.forEach((m) => fade(m.el));
     return ok;
   };
@@ -305,6 +414,182 @@ export default function Track({ active }: { active: number }) {
     return ok;
   };
 
+  // ---- manual driving ------------------------------------------------------
+
+  type Mark = { from: number; offset: number; el: SVGGElement | null };
+  const man = useRef({ input: 0, v: 0, raf: 0, last: 0, brake: null as Mark[] | null, hud: "" });
+
+  const hud = () => {
+    const T = trackRef.current;
+    const el = hudRef.current;
+    if (!T || !el) return;
+    const S = st.current;
+    const m = man.current;
+    const dir = m.v < -1 ? -1 : 1;
+    const ahead =
+      dir > 0
+        ? T.stops.findIndex((cp) => cp > S.s + 3)
+        : T.stops.map((cp, i) => (cp < S.s - 3 ? i : -1)).filter((i) => i >= 0).pop() ?? -1;
+    const spd = `${String(Math.round(Math.abs(m.v) * 0.18)).padStart(2, " ")} km/h`;
+    const next =
+      ahead >= 0
+        ? `${dir > 0 ? "next" : "back to"} ${labelsRef.current[ahead]} · ${Math.round(Math.abs(T.stops[ahead] - S.s) / 3)} m`
+        : dir > 0
+          ? "end of the road"
+          : "start of the road";
+    const text = `${spd}   ${next}`;
+    if (text !== m.hud) {
+      m.hud = text;
+      el.textContent = text;
+    }
+  };
+
+  const endBrake = () => {
+    const m = man.current;
+    m.brake?.forEach((b) => fade(b.el));
+    m.brake = null;
+  };
+
+  const stopManual = () => {
+    const m = man.current;
+    cancelAnimationFrame(m.raf);
+    m.raf = 0;
+    m.v = 0;
+    m.input = 0;
+    endBrake();
+    carRef.current?.classList.remove("is-driving", "is-braking", "is-reversing");
+  };
+
+  const tick = (now: number) => {
+    const m = man.current;
+    const S = st.current;
+    const T = trackRef.current;
+    const car = carRef.current;
+    if (!T || !car) {
+      m.raf = 0;
+      return;
+    }
+    const dt = Math.min(0.033, (now - m.last) / 1000) || 0.016;
+    m.last = now;
+    const half = (CAR.wheelbase / 2) * T.scale;
+
+    const opposing = m.input !== 0 && Math.abs(m.v) > 1 && Math.sign(m.input) !== Math.sign(m.v);
+    if (opposing) m.v -= Math.sign(m.v) * Math.min(Math.abs(m.v), BRAKE * dt);
+    else if (m.input) m.v += m.input * ACC * dt;
+    else {
+      m.v -= m.v * Math.min(1, DRAG * dt);
+      m.v -= Math.sign(m.v) * Math.min(Math.abs(m.v), ROLL * dt);
+    }
+    m.v = clamp(m.v, -MAX_REV, MAX_FWD);
+
+    const prev = S.s;
+    let s = prev + m.v * dt;
+    if (s <= half || s >= T.total - half) {
+      s = clamp(s, half, T.total - half);
+      m.v = 0;
+    }
+    S.odo += (s - prev) * S.face;
+    S.s = s;
+
+    // crossing a checkpoint opens it
+    T.stops.forEach((cp, i) => {
+      const crossed = (prev < cp && s >= cp) || (prev > cp && s <= cp);
+      if (crossed && S.idx !== i) {
+        S.idx = i;
+        arriveRef.current(i);
+      }
+    });
+
+    // hard braking lays rubber behind both tires
+    if (opposing && Math.abs(m.v) > 90 && !m.brake && !reducedMotion()) {
+      m.brake = [-half, half].map((offset) => ({ from: s + offset, offset, el: addMark(s + offset, s + offset, 0.7) }));
+    }
+    if (m.brake) {
+      if (!opposing) endBrake();
+      else
+        m.brake.forEach((b) => {
+          const d = T.sub(b.from, s + b.offset);
+          b.el?.querySelectorAll("path").forEach((p) => p.setAttribute("d", d));
+        });
+    }
+
+    car.classList.toggle("is-braking", opposing);
+    car.classList.toggle("is-reversing", m.v < -1);
+    draw();
+    if (!reducedMotion()) exhaust(m.input > 0 && !opposing);
+    hud();
+
+    if (m.input === 0 && Math.abs(m.v) < 2) {
+      m.v = 0;
+      m.raf = 0;
+      endBrake();
+      car.classList.remove("is-driving", "is-braking", "is-reversing");
+      hud();
+      return;
+    }
+    m.raf = requestAnimationFrame(tick);
+  };
+
+  const startManual = () => {
+    const m = man.current;
+    const S = st.current;
+    if (m.raf || !trackRef.current) return;
+    // take the wheel from the autopilot
+    S.token++;
+    cancelAnimationFrame(S.raf);
+    if (S.face < 0 || Math.abs(S.flip) < 1) {
+      S.face = S.flip = 1;
+    }
+    carRef.current?.classList.add("is-driving");
+    m.last = performance.now();
+    m.raf = requestAnimationFrame(tick);
+  };
+
+  const press = (dir: number) => {
+    man.current.input = dir;
+    if (dir) startManual();
+  };
+  useImperativeHandle(handle, () => ({ press }));
+
+  // keys: hold → / ← (or D / A) while the scene has focus
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const k = e.key.toLowerCase();
+    const dir = k === "arrowright" || k === "d" ? 1 : k === "arrowleft" || k === "a" ? -1 : 0;
+    if (!dir) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (!e.repeat || man.current.input !== dir) press(dir);
+  };
+  const onKeyUp = (e: React.KeyboardEvent) => {
+    const k = e.key.toLowerCase();
+    const dir = k === "arrowright" || k === "d" ? 1 : k === "arrowleft" || k === "a" ? -1 : 0;
+    if (dir && man.current.input === dir) press(0);
+  };
+
+  // scroll over the road drives, but only once you've taken the wheel (focused the scene),
+  // so passing through the page never gets stuck here
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (document.activeElement !== el) return;
+      const T = trackRef.current;
+      if (!T) return;
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const half = (CAR.wheelbase / 2) * T.scale;
+      const S = st.current;
+      const atEnd = (delta > 0 && S.s >= T.total - half - 1) || (delta < 0 && S.s <= half + 1);
+      if (atEnd) return; // let the page scroll on
+      e.preventDefault();
+      const m = man.current;
+      m.v = clamp(m.v + clamp(delta * 1.4, -110, 110), -MAX_REV, MAX_FWD);
+      startManual();
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // ---- placement and planning -------------------------------------------------
 
   useLayoutEffect(() => {
@@ -315,7 +600,9 @@ export default function Track({ active }: { active: number }) {
     cancelAnimationFrame(S.raf);
     S.s = track.stops[S.idx];
     S.face = S.flip = 1;
+    stopManual();
     draw();
+    hud();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [track]);
 
@@ -327,6 +614,7 @@ export default function Track({ active }: { active: number }) {
     if (!T || fromIdx === active) return;
 
     cancelAnimationFrame(S.raf);
+    stopManual();
     const token = ++S.token;
     if (Math.abs(S.flip) < 1) {
       S.flip = S.face = S.flip >= 0 ? 1 : -1;
@@ -359,14 +647,32 @@ export default function Track({ active }: { active: number }) {
 
   useEffect(() => {
     const S = st.current;
+    const m = man.current;
     return () => {
       S.token++;
       cancelAnimationFrame(S.raf);
+      cancelAnimationFrame(m.raf);
     };
   }, []);
 
   return (
-    <div ref={wrap} className="relative" style={{ height: H }}>
+    <div
+      ref={wrap}
+      tabIndex={0}
+      role="group"
+      aria-label="Drive the car: hold the right or left arrow key. Each checkpoint opens as you reach it."
+      aria-roledescription="driving scene"
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
+      onBlur={() => {
+        press(0);
+        onEngage?.(false);
+      }}
+      onFocus={() => onEngage?.(true)}
+      onPointerDown={(e) => e.currentTarget.focus({ preventScroll: true })}
+      className="drive-scene relative cursor-pointer touch-pan-y outline-none"
+      style={{ height: H }}
+    >
       {track && (
         <svg
           width={W}
@@ -382,6 +688,10 @@ export default function Track({ active }: { active: number }) {
               <stop offset="1" style={{ stopColor: "rgb(var(--g3))" }} />
             </linearGradient>
           </defs>
+
+          <Landscape W={W} xs={track.xs} />
+
+          <text ref={hudRef} className="drive-hud" x="2" y="12" />
 
           {/* links down to the checkpoint buttons */}
           {track.xs.map((x) => (
@@ -426,6 +736,11 @@ export default function Track({ active }: { active: number }) {
           <g ref={marksRef} />
 
           <g ref={carRef} className="car">
+            {/* LiDAR sweep off the nose while you drive */}
+            <g className="lidar" aria-hidden>
+              <path d="M 42 -13 L 112 -34 A 74 74 0 0 1 112 4 Z" />
+              <line className="lidar-ray" x1="42" y1="-13" x2="114" y2="-15" />
+            </g>
             <Car
               setWheelRef={(i, el) => {
                 wheelRefs.current[i] = el;
@@ -436,4 +751,6 @@ export default function Track({ active }: { active: number }) {
       )}
     </div>
   );
-}
+});
+
+export default Track;

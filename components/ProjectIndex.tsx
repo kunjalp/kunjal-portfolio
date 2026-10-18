@@ -23,7 +23,7 @@ export const PROJECTS: Entry[] = [
   { id: "project-vex", name: "VEX VRC Robotics", what: "Club President, mechanical builder", when: "2021 – 2025", line: "Drivetrains, flywheels and intakes, 3 teams.", keys: "robotics mechanical vex" },
 ];
 
-function jumpTo(id: string) {
+export function jumpTo(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
