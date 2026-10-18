@@ -230,7 +230,6 @@ export default function Leaves() {
   };
 
   const activeLeaf = active ? leaves.find((l) => l.id === active.id) : undefined;
-  const ActiveIcon = activeLeaf?.fact.icon;
 
   return (
     <>
@@ -274,11 +273,11 @@ export default function Leaves() {
         })}
       </div>
 
-      {active && activeLeaf && ActiveIcon && (
+      {active && activeLeaf && (
         <div
           role="dialog"
           aria-label={activeLeaf.fact.title}
-          className="polaroid fixed z-40 max-sm:!inset-x-4 max-sm:!bottom-6 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
+          className="polaroid fixed z-[2000] max-sm:!inset-x-4 max-sm:!bottom-6 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
           style={{
             left: active.left,
             top: active.top,
@@ -290,23 +289,13 @@ export default function Leaves() {
           <button type="button" onClick={close} aria-label="Close" className="polaroid-x">
             <X size={14} />
           </button>
-          <div key={active.id} className="polaroid-print">
-            {activeLeaf.fact.photo ? (
-              // eslint-disable-next-line @next/next/no-img-element
+          {activeLeaf.fact.photo && (
+            <div key={active.id} className="polaroid-print">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={activeLeaf.fact.photo.src} alt={activeLeaf.fact.photo.alt} className="h-full w-full object-cover" />
-            ) : (
-              <div className="grid h-full w-full place-items-center" style={{ background: activeLeaf.fact.tint }}>
-                <ActiveIcon size={74} strokeWidth={1.3} className="text-[#3a2f22]" aria-hidden />
-                <svg aria-hidden viewBox="0 0 100 100" className="pointer-events-none absolute inset-0 h-full w-full" fill="none" stroke="#3a2f22" strokeWidth="1.2" strokeLinecap="round" opacity="0.5">
-                  <path d="M14 20 l4 4 M18 20 l-4 4" />
-                  <path d="M60 14 q4 -4 8 0" />
-                  <path d="M80 82 l5 0 M82.5 79.5 l0 5" />
-                  <path d="M12 78 q5 -5 10 0 t10 0" />
-                </svg>
-              </div>
-            )}
-          </div>
-          <p className="polaroid-title">{activeLeaf.fact.title}</p>
+            </div>
+          )}
+          <p className={`polaroid-title ${activeLeaf.fact.photo ? "" : "polaroid-title-bare"}`}>{activeLeaf.fact.title}</p>
           <p className="polaroid-text">{activeLeaf.fact.text}</p>
         </div>
       )}

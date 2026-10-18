@@ -1086,6 +1086,10 @@ body {
   font-size: 1.6rem;
   line-height: 1.1;
 }
+.polaroid-title-bare {
+  margin-top: 2px;
+  padding-right: 32px;
+}
 .polaroid-text {
   margin-top: 2px;
   font-family: "Caveat", cursive;
