@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import Corkboard from "./Corkboard";
 import Window from "./Window";
 
 const IMG = "/images/about/";
@@ -29,49 +29,6 @@ function Polaroid({
       <img src={IMG + src} alt={alt} loading="lazy" className={`w-full object-cover ${imgClass}`} />
       {caption && <figcaption className="mt-2 text-center font-mono text-xs text-muted">{caption}</figcaption>}
     </figure>
-  );
-}
-
-const SUNSETS = [
-  { src: "sunset-beach.jpg", alt: "Sun setting over ocean waves on a beach", cap: "beach" },
-  { src: "sunset-reflection.jpg", alt: "Pink and orange clouds reflected in still water", cap: "reflection" },
-  { src: "sunset-boardwalk.jpg", alt: "Golden sky over a wooden boardwalk", cap: "boardwalk" },
-  { src: "sunset-lake.jpg", alt: "Sun dipping behind hills over a lake", cap: "lake" },
-  { src: "sunset-meadow.jpg", alt: "Pink sky over a green meadow and distant hills", cap: "meadow" },
-];
-
-function Sunsets() {
-  const [i, setI] = useState(0);
-  const cur = SUNSETS[i];
-  return (
-    <div className="p-6 sm:p-7">
-      <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">I collect sunsets</h3>
-      <p className="mt-2 text-[1.05rem] leading-relaxed">
-        If the sky is doing something pretty, I stop and take a picture. A few favorites. Click one.
-      </p>
-      <div className="mt-4 overflow-hidden border-2 border-[rgb(var(--edge))] bg-[rgb(var(--tire))]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          key={cur.src}
-          src={IMG + cur.src}
-          alt={cur.alt}
-          className="fade-up mx-auto h-[340px] w-full object-contain sm:h-[420px]"
-        />
-      </div>
-      <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Choose a sunset">
-        {SUNSETS.map((s, n) => (
-          <button
-            key={s.src}
-            type="button"
-            onClick={() => setI(n)}
-            aria-pressed={n === i}
-            className={`glass-btn !min-h-[34px] !px-3 !text-[0.8rem] ${n === i ? "btn-primary" : ""}`}
-          >
-            {s.cap}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -145,52 +102,8 @@ export default function About() {
             </Window>
           </div>
 
-          {/* charcoal */}
-          <Window title="studio/charcoal.png">
-            <div className="p-6 sm:p-7">
-              <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">How I take breaks</h3>
-              <p className="mt-2 text-[1.05rem] leading-relaxed">
-                Sometimes I need a break from the tech, so I grab my charcoal. Flowers and
-                landscapes are my favorite to draw, and it&apos;s honestly so peaceful.
-              </p>
-              <div className="mt-5 grid grid-cols-3 gap-3">
-                <Polaroid src="charcoal-street.jpg" alt="Painting of a rainy cafe street at night" tilt={-2} imgClass="aspect-[3/4]" />
-                <Polaroid src="pencil-kitten.jpg" alt="Pencil drawing of a kitten mid-air" tilt={1.5} imgClass="aspect-[3/4]" />
-                <Polaroid src="charcoal-buddha.jpg" alt="Charcoal drawing of a Buddha face" tilt={-1} imgClass="aspect-[3/4]" />
-              </div>
-              <p className="mt-4 font-mono text-xs text-muted">Up next: learning embroidery to customize my own clothes.</p>
-            </div>
-          </Window>
-
-          <Window title="photos/sunsets">
-            <Sunsets />
-          </Window>
-
-          {/* outdoors */}
           <div className="lg:col-span-2">
-            <Window title="places/with-a-view.txt">
-              <div className="grid gap-6 p-6 sm:p-7 lg:grid-cols-[1fr_1fr_1fr]">
-                <div>
-                  <Polaroid src="mount-tam.jpg" alt="Green hills and clouds from the Mount Tamalpais trail" caption="Mt. Tam" tilt={-1.5} imgClass="aspect-[4/5]" />
-                  <p className="mt-3 font-bold">Mount Tam</p>
-                  <p className="text-[0.95rem] leading-relaxed">
-                    My favorite hike. I&apos;m a mountain person and the views are worth it.
-                  </p>
-                </div>
-                <div>
-                  <Polaroid src="ski.jpg" alt="Two skiers heading down a snowy run at sunset" caption="skiing" tilt={1} imgClass="aspect-[4/5]" />
-                  <p className="mt-3 font-bold">Skiing since I was 6</p>
-                  <p className="text-[0.95rem] leading-relaxed">A family thing since I was little, and I still love it.</p>
-                </div>
-                <div>
-                  <Polaroid src="banff.jpg" alt="Mountain valley with a lodge and gardens in Banff" caption="Banff" tilt={-0.5} imgClass="aspect-[4/5]" />
-                  <p className="mt-3 font-bold">Favorite places</p>
-                  <p className="text-[0.95rem] leading-relaxed">
-                    Canada and both coasts. I love when nature and cool infrastructure meet.
-                  </p>
-                </div>
-              </div>
-            </Window>
+            <Corkboard />
           </div>
 
           <Window title="on-repeat.txt">
