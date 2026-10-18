@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Apple } from "lucide-react";
+import { ArrowDownToLine } from "lucide-react";
 import { toggleGravity, useGravity } from "./gravity";
 
-/** Navbar switch for gravity mode. A nod to Newton: the apple. */
+/** Navbar switch for gravity mode: a down arrow plus the word, so it explains itself. */
 export default function GravityToggle() {
   const on = useGravity();
   const [hint, setHint] = useState(false);
@@ -30,9 +30,10 @@ export default function GravityToggle() {
         aria-pressed={on}
         aria-label={on ? "Turn gravity mode off" : "Turn gravity mode on: windows hang and swing"}
         title={on ? "Gravity: on" : "Gravity mode"}
-        className={`menu-link grid h-9 w-9 place-items-center !p-0 ${on ? "gravity-on" : ""}`}
+        className={`menu-link flex h-9 items-center gap-1.5 !px-2.5 ${on ? "gravity-on" : ""}`}
       >
-        <Apple size={17} />
+        <ArrowDownToLine size={16} strokeWidth={2.2} aria-hidden />
+        <span className="hidden text-sm font-semibold lg:inline">Gravity</span>
       </button>
       {hint && (
         <p role="status" className="gravity-hint">

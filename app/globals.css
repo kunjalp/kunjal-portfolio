@@ -1246,9 +1246,9 @@ body {
 /* Gravity mode toggle */
 .gravity-on {
   color: rgb(var(--accent));
-  animation: apple-bob 2.4s ease-in-out infinite;
+  animation: gravity-bob 2.4s ease-in-out infinite;
 }
-@keyframes apple-bob {
+@keyframes gravity-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(2px); }
 }

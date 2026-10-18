@@ -8,10 +8,33 @@ import Dock from "@/components/Dock";
 import Leaves from "@/components/Leaves";
 import Scenery from "@/components/Scenery";
 
+// Absolute URL that social cards resolve against. Set NEXT_PUBLIC_SITE_URL once the domain is final;
+// on Vercel the production URL is picked up automatically.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
+const TITLE = "Kunjal Purohit | CS & Computer Engineering";
+const DESCRIPTION =
+  "Kunjal Purohit is a Computer Science and Computer Engineering double major at UC Santa Cruz, working across embedded firmware, autonomous systems, and full-stack software.";
+
 export const metadata: Metadata = {
-  title: "Kunjal Purohit | CS & Computer Engineering",
-  description:
-    "Kunjal Purohit is a Computer Science and Computer Engineering double major at UC Santa Cruz, working across embedded firmware, autonomous systems, and full-stack software.",
+  metadataBase: new URL(siteUrl),
+  title: TITLE,
+  description: DESCRIPTION,
+  authors: [{ name: "Kunjal Purohit" }],
+  openGraph: {
+    type: "website",
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: "Kunjal Purohit",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport: Viewport = {
