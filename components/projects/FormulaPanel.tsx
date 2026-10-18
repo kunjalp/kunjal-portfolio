@@ -64,7 +64,7 @@ export default function FormulaPanel() {
             <p className="font-mono text-xs text-muted">vcu/etc/etc_controller.cpp</p>
             <pre
               tabIndex={0}
-              className="fade-up mt-2 overflow-x-auto rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--tire))] p-4 font-mono text-[0.76rem] leading-relaxed text-[rgb(var(--paper))]"
+              className="fade-up mt-2 overflow-x-auto rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--tire))] p-4 font-mono text-[0.76rem] leading-relaxed text-[rgb(var(--term-fg))]"
             >
               <code>{CODE}</code>
             </pre>

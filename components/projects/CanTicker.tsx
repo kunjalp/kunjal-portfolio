@@ -29,7 +29,7 @@ export default function CanTicker() {
       <div
         role="log"
         aria-label="Simulated CAN telemetry"
-        className="mt-3 rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--tire))] p-4 font-mono text-[0.82rem] leading-7 text-[rgb(var(--paper))]"
+        className="mt-3 rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--tire))] p-4 font-mono text-[0.82rem] leading-7 text-[rgb(var(--term-fg))]"
       >
         {frames.map((f, i) => (
           <p key={f.n} style={{ opacity: i === frames.length - 1 ? 1 : 0.3 + (i / frames.length) * 0.4 }}>

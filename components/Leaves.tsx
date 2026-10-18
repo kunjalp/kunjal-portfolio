@@ -8,7 +8,6 @@ import {
   Palette,
   Scissors,
   Sunset,
-  X,
   type LucideIcon,
 } from "lucide-react";
 
@@ -173,6 +172,29 @@ function LeafShape({ shape }: { shape: Shape }) {
   return <Cone />;
 }
 
+const fileName = (title: string) =>
+  title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".txt";
+
+/** Types the text out like a terminal, unless the visitor prefers reduced motion. */
+function Typed({ text }: { text: string }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setN(text.length);
+      return;
+    }
+    setN(0);
+    const id = setInterval(() => setN((v) => (v >= text.length ? v : v + 1)), 18);
+    return () => clearInterval(id);
+  }, [text]);
+  return (
+    <>
+      <span aria-label={text}>{text.slice(0, n)}</span>
+      <span aria-hidden className="cursor" />
+    </>
+  );
+}
+
 type Active = {
   id: string;
   left: number;
@@ -263,7 +285,7 @@ export default function Leaves() {
         <div
           role="dialog"
           aria-label={activeLeaf.fact.title}
-          className="glass tooltip-in fixed z-40 rounded-2xl p-4 max-sm:!inset-x-4 max-sm:!bottom-6 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
+          className="win tooltip-in fixed z-40 max-sm:!inset-x-4 max-sm:!bottom-6 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
           style={{
             left: active.left,
             top: active.top,
@@ -271,22 +293,23 @@ export default function Leaves() {
             transform: active.flip ? "translateY(-100%)" : undefined,
           }}
         >
-          <div className="flex items-start gap-3">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent/15 text-accent">
-              <ActiveIcon size={18} aria-hidden />
+          <div className="win-bar" style={{ cursor: "default" }}>
+            <button type="button" className="win-dot win-dot-close" aria-label="Close" onClick={close} />
+            <span className="win-dot win-dot-min" aria-hidden />
+            <span className="win-dot win-dot-reset" aria-hidden />
+            <span className="win-title-wrap">
+              <span className="win-title">{fileName(activeLeaf.fact.title)}</span>
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="font-semibold tracking-tight">{activeLeaf.fact.title}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{activeLeaf.fact.text}</p>
-            </div>
-            <button
-              type="button"
-              onClick={close}
-              aria-label="Close"
-              className="-mr-1 -mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full text-muted transition hover:bg-fg/5 hover:text-fg"
-            >
-              <X size={16} />
-            </button>
+            <span aria-hidden className="w-[3.1rem] flex-none" />
+          </div>
+          <div className="bg-[rgb(var(--tire))] p-4 font-mono text-[0.82rem] leading-6 text-[rgb(var(--term-fg))]">
+            <p className="flex items-center gap-2 text-[rgb(var(--g1))]">
+              <ActiveIcon size={14} aria-hidden />
+              <span>$ cat {fileName(activeLeaf.fact.title)}</span>
+            </p>
+            <p key={active.id} className="mt-2 text-[rgb(var(--term-fg)/0.9)]">
+              <Typed text={activeLeaf.fact.text} />
+            </p>
           </div>
         </div>
       )}
