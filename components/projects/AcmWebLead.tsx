@@ -12,7 +12,7 @@ export default function AcmWebLead() {
         </p>
         <Bullets
           items={[
-            "Directing 5 features: member login with sessions, a unified nav bar, a mobile-responsive layout, a redesigned events page, and a refreshed Meet the Board section.",
+            "Directing the redesign's features: member login with sessions, a unified nav bar, a mobile-responsive layout, a redesigned events page, and a refreshed Meet the Board section.",
             "Weekly meetings to assign tasks and keep releases on schedule, with progress reported to the executive board.",
           ]}
         />

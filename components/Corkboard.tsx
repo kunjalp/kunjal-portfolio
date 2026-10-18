@@ -50,7 +50,7 @@ function Contents({ item }: { item: Item }) {
       <>
         <div className="cork-print" style={{ aspectRatio: String(item.ar) }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={IMG + item.src} alt={item.alt} draggable={false} loading="lazy" className="h-full w-full object-cover" />
+          <img src={IMG + item.src} alt={item.alt} draggable={false} loading="lazy" decoding="async" className="h-full w-full object-cover" />
         </div>
         <p className="cork-caption">{item.caption}</p>
       </>

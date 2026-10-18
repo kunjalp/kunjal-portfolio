@@ -12,7 +12,7 @@ export default function Heirloom() {
           </p>
           <Bullets
             items={[
-              "Team of 3 won the Daytona track (20 teams, 12 hours), iterating on feedback from finance professionals.",
+              "Won the Daytona track by iterating on live feedback from finance professionals.",
               "Designed AI agents that flag family goal conflicts for wealth advisors.",
               "Multi-tenant data isolation with row-level security.",
             ]}

@@ -26,7 +26,7 @@ function Polaroid({
       style={{ transform: `rotate(${tilt}deg)` }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={IMG + src} alt={alt} loading="lazy" className={`w-full object-cover ${imgClass}`} />
+      <img src={IMG + src} alt={alt} loading="lazy" decoding="async" className={`w-full object-cover ${imgClass}`} />
       {caption && <figcaption className="mt-2 text-center font-mono text-xs text-muted">{caption}</figcaption>}
     </figure>
   );

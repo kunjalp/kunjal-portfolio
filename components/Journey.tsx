@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Car, Code, Cpu, Radar, type LucideIcon } from "l
 import Window from "./Window";
 import Track from "./journey/Track";
 import Patch, { type PatchKind } from "./journey/Patch";
+import { Tags } from "./projects/shared";
 
 type Milestone = {
   id: string;
@@ -155,16 +156,9 @@ export default function Journey() {
 
               <p className="mt-4 text-[1.05rem] leading-relaxed">{current.blurb}</p>
 
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {current.tags.map((t) => (
-                  <li
-                    key={t}
-                    className="rounded-md border-[1.5px] border-[rgb(var(--edge)/0.5)] bg-[rgb(var(--paper))] px-2.5 py-0.5 font-mono text-xs"
-                  >
-                    {t}
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-5">
+                <Tags items={current.tags} label={current.id === "high-school" ? "Focus" : "Stack"} />
+              </div>
             </div>
 
             <div className="mt-5 flex items-center justify-between gap-3">

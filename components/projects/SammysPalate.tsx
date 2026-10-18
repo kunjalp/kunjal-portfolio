@@ -15,8 +15,8 @@ export default function SammysPalate() {
         />
         <Bullets
           items={[
-            "Live on the App Store with 60+ users, plus a web demo.",
-            "A scheduled Python/Playwright scraper parses 14 campus dining menus, with a name-based fallback.",
+            "Live on the App Store, plus a web demo.",
+            "A scheduled Python/Playwright scraper parses every campus dining menu, with a name-based fallback.",
             "Row-level security (RLS) in the database keeps each person's data private.",
             "A Codemagic CI/CD pipeline builds, code-signs and ships each iOS update.",
           ]}
