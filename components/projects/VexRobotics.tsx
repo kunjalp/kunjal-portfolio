@@ -34,14 +34,14 @@ export default function VexRobotics() {
             ]}
           />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <VexWorkshop />
           <Metrics
             items={[
               ["~30", "members led"],
               ["3", "competitive teams"],
               ["$3,000+", "annual budget"],
-              ["2", "teams qualified for State"],
+              ["2", "State qualifiers"],
             ]}
           />
         </div>

@@ -13,14 +13,6 @@ function Wide({ id, children }: { id: string; children: React.ReactNode }) {
     </div>
   );
 }
-function Slot({ id, children }: { id: string; children: React.ReactNode }) {
-  return (
-    <div id={id} className="scroll-mt-24">
-      {children}
-    </div>
-  );
-}
-
 export default function Projects() {
   return (
     <section id="projects" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
@@ -39,12 +31,12 @@ export default function Projects() {
           <Wide id="project-formula-slug">
             <FormulaSlug />
           </Wide>
-          <Slot id="project-cosmos">
+          <Wide id="project-cosmos">
             <Cosmos />
-          </Slot>
-          <Slot id="project-sammys">
+          </Wide>
+          <Wide id="project-sammys">
             <SammysPalate />
-          </Slot>
+          </Wide>
           <Wide id="project-acm">
             <AcmWebLead />
           </Wide>

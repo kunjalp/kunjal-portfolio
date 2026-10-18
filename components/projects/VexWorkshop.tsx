@@ -22,8 +22,8 @@ export default function VexWorkshop() {
         size="md"
         nowrap
       />
-      <div className="mt-4">{tab === "field" ? <GameField /> : <Mechanisms />}</div>
-      <p className="mt-3 font-mono text-xs text-muted">Simplified drawings, not my actual robots.</p>
+      <div className="mt-3">{tab === "field" ? <GameField /> : <Mechanisms />}</div>
+      <p className="mt-2 font-mono text-xs text-muted">Simplified drawings, not my actual robots.</p>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export function Tags({ items, label = "Stack" }: { items: string[]; label?: stri
 
 export function Bullets({ items }: { items: string[] }) {
   return (
-    <ul className="space-y-2 text-[1rem] leading-relaxed">
+    <ul className="space-y-1.5 text-[0.95rem] leading-snug">
       {items.map((t) => (
         <li key={t} className="flex gap-3">
           <span aria-hidden className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
@@ -34,16 +34,16 @@ export function Bullets({ items }: { items: string[] }) {
 }
 
 /** Row of headline numbers. Every value must come from the resume or portfolio. */
-export function Metrics({ items, cols = "sm:grid-cols-4" }: { items: [string, string][]; cols?: string }) {
+export function Metrics({ items, cols = "sm:grid-cols-4", dense = false }: { items: [string, string][]; cols?: string; dense?: boolean }) {
   return (
-    <dl className={`grid grid-cols-2 content-start gap-3 ${cols}`}>
+    <dl className={`grid grid-cols-2 content-start gap-2.5 ${cols}`}>
       {items.map(([v, l]) => (
         <div
           key={l}
-          className="rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] px-3 py-2.5 sm:py-3"
+          className={`rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] px-3 py-2 ${dense ? "flex items-baseline gap-2" : ""}`}
         >
-          <dd className="text-[1.3rem] font-extrabold leading-none">{v}</dd>
-          <dt className="mt-1.5 text-sm text-muted">{l}</dt>
+          <dd className="text-[1.2rem] font-extrabold leading-none">{v}</dd>
+          <dt className={`${dense ? "" : "mt-1 "}text-[0.8rem] leading-snug text-muted`}>{l}</dt>
         </div>
       ))}
     </dl>

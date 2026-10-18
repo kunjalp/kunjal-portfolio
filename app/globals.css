@@ -161,6 +161,12 @@
 html {
   scroll-behavior: smooth;
 }
+/* Laptop-sized screens: a slightly smaller base so each window fits on one screen. */
+@media (min-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+}
 
 body {
   background-color: rgb(var(--bg));

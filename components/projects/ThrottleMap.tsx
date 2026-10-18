@@ -57,7 +57,7 @@ export default function ThrottleMap() {
 
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="mt-2 w-full cursor-crosshair touch-pan-y"
+        className="mx-auto mt-2 max-h-[270px] w-full cursor-crosshair touch-pan-y"
         onPointerMove={scrub}
         onPointerDown={scrub}
         role="img"

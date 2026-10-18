@@ -4,8 +4,8 @@ import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 export default function Heirloom() {
   return (
     <Window title="heirloom/README.md">
-      <div className="grid gap-6 p-6 sm:p-7 lg:grid-cols-[1fr_1.1fr]">
-        <div className="space-y-4">
+      <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_1.1fr]">
+        <div className="space-y-3">
           <ProjectTitle title="Heirloom" meta={["AI multi-generational wealth platform", "October 2026"]} />
           <p className="inline-block rounded-md border-2 border-[rgb(var(--edge))] bg-[rgb(var(--accent)/0.15)] px-3 py-1 text-sm font-bold">
             1st place, Daytona track · SF Tech Week

@@ -5,13 +5,13 @@ import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 export default function FormulaSlug() {
   return (
     <Window title="formula-slug/vcu-firmware">
-      <div className="grid gap-6 p-6 sm:p-7 lg:grid-cols-[1fr_1.1fr]">
-        <div className="space-y-4">
+      <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
+        <div className="space-y-3">
           <ProjectTitle
             title="Formula Slug: vehicle firmware"
             meta={["Embedded Software Engineer, FSAE", "Oct 2025 – Present"]}
           />
-          <p className="text-[1.05rem] leading-relaxed">
+          <p className="text-base leading-relaxed">
             I own the STM32 C/C++ firmware that takes sensor readings and reports them over the CAN bus, plus
             work on the throttle map in the vehicle control unit.
           </p>
@@ -23,7 +23,8 @@ export default function FormulaSlug() {
             ]}
           />
           <Metrics
-            cols="sm:grid-cols-3"
+            dense
+            cols="grid-cols-1 sm:grid-cols-3"
             items={[
               ["4", "temperature sensors"],
               ["Cubic", "default throttle curve"],
