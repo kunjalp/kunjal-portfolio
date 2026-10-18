@@ -42,3 +42,13 @@ export function Metrics({ items, cols = "sm:grid-cols-4" }: { items: [string, st
     </dl>
   );
 }
+
+/** Heading plus the small mono "role · dates" line that opens every project window. */
+export function ProjectTitle({ title, meta }: { title: string; meta: string }) {
+  return (
+    <>
+      <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">{title}</h3>
+      <p className="font-mono text-xs text-muted">{meta}</p>
+    </>
+  );
+}

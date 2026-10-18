@@ -46,7 +46,6 @@ export default function Window({ title, children, className = "" }: Props) {
     seed.current = ((Math.abs(h) % 1000) / 1000) * 1.4 - 0.7 || 0.3; // -0.7..0.7, which way it hangs off-center
   }
   const front = () => setZ(++topZ);
-  const minimized = minState === "going" || minState === "on";
 
   /* ---------- red: playful refusal ---------- */
   const pokeClose = () => {
