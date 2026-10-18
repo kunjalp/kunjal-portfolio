@@ -5,8 +5,8 @@ import { Menu, Mountain, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 
 const links = [
-  { href: "#journey", label: "Journey" },
   { href: "#projects", label: "Projects" },
+  { href: "#journey", label: "Journey" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
   { href: "#contact", label: "Contact" },
