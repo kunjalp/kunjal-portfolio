@@ -9,18 +9,29 @@ const GROUPS: { label: string; items: string[] }[] = [
   { label: "Software engineering", items: ["Object-oriented programming", "System design", "Testing", "Data pipelines", "CI/CD"] },
 ];
 
-function Tags({ items }: { items: string[] }) {
+const slug = (t: string) =>
+  t
+    .toLowerCase()
+    .replace(/&/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+
+/** One group, written the way a terminal would print it: `$ ls languages/` then the entries. */
+function Listing({ dir, items }: { dir: string; items: string[] }) {
   return (
-    <ul className="mt-2 flex flex-wrap gap-2">
-      {items.map((t) => (
-        <li
-          key={t}
-          className="rounded-md border-[1.5px] border-[rgb(var(--edge)/0.5)] bg-[rgb(var(--paper2)/0.5)] px-2.5 py-0.5 font-mono text-xs"
-        >
-          {t}
-        </li>
-      ))}
-    </ul>
+    <div className="font-mono text-[0.82rem] leading-relaxed">
+      <p className="font-bold">
+        <span aria-hidden className="mr-2 text-accent">
+          $
+        </span>
+        ls {dir}/
+      </p>
+      <ul className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1 pl-4">
+        {items.map((t) => (
+          <li key={t}>{/\s/.test(t) ? `'${t}'` : t}</li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -36,8 +47,7 @@ export default function Skills() {
             <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-7">
               {GROUPS.map((g) => (
                 <div key={g.label}>
-                  <h3 className="text-[0.95rem] font-bold leading-tight">{g.label}</h3>
-                  <Tags items={g.items} />
+                  <Listing dir={slug(g.label)} items={g.items} />
                 </div>
               ))}
             </div>
@@ -48,12 +58,10 @@ export default function Skills() {
               <div className="space-y-4 p-6 sm:p-7">
                 <p className="text-sm text-muted">UC Santa Cruz, CS + CE double major, GPA 3.95 / 4.0</p>
                 <div>
-                  <h3 className="text-[0.95rem] font-bold leading-tight">Completed</h3>
-                  <Tags items={["Computer Systems & C", "Assembly Language", "Discrete Mathematics", "Linear Algebra", "Differential Equations"]} />
+                  <Listing dir="completed" items={["Computer Systems & C", "Assembly Language", "Discrete Mathematics", "Linear Algebra", "Differential Equations"]} />
                 </div>
                 <div>
-                  <h3 className="text-[0.95rem] font-bold leading-tight">Upcoming</h3>
-                  <Tags items={["Data Structures & Algorithms", "Probability & Statistics"]} />
+                  <Listing dir="upcoming" items={["Data Structures & Algorithms", "Probability & Statistics"]} />
                 </div>
               </div>
             </Window>
