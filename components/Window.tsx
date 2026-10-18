@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { dockAdd, dockRemove } from "./windowDock";
 import { useGravity } from "./gravity";
 import { useSwing } from "./useSwing";
+import { useSpringPosition } from "./useSpringPosition";
 
 // Shared across all windows so whichever you touch last sits on top.
 let topZ = 1;
@@ -20,7 +21,6 @@ type Props = {
 
 export default function Window({ title, children, className = "" }: Props) {
   const id = useId();
-  const [pos, setPos] = useState({ x: 0, y: 0 });
   const [z, setZ] = useState(1);
   const [dragging, setDragging] = useState(false);
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
@@ -37,8 +37,18 @@ export default function Window({ title, children, className = "" }: Props) {
 
   // Gravity mode: each window hangs from its title bar and swings.
   const gravity = useGravity();
-  const pivotX = useRef(0);
-  pivotX.current = pos.x;
+  // Spring-driven position: trails the pointer a little, leans while carried, settles on release.
+  // In gravity mode the pendulum does the swinging, so the carry-lean is switched off.
+  const spring = useSpringPosition(win, !gravity);
+  const pivotX = useMemo(
+    () => ({
+      get current() {
+        return spring.state.current.x;
+      },
+    }) as React.MutableRefObject<number>,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
   const seed = useRef(0);
   if (seed.current === 0) {
     let h = 7;
@@ -100,15 +110,17 @@ export default function Window({ title, children, className = "" }: Props) {
   const onBarPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (expanded || (e.target as HTMLElement).closest("button")) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { sx: e.clientX, sy: e.clientY, ox: pos.x, oy: pos.y };
+    const o = spring.grab();
+    drag.current = { sx: e.clientX, sy: e.clientY, ox: o.x, oy: o.y };
     setDragging(true);
   };
   const onBarPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d) return;
-    setPos({ x: d.ox + e.clientX - d.sx, y: d.oy + e.clientY - d.sy });
+    spring.moveTo(d.ox + e.clientX - d.sx, d.oy + e.clientY - d.sy);
   };
   const endDrag = () => {
+    if (drag.current) spring.release();
     drag.current = null;
     setDragging(false);
   };
@@ -124,10 +136,10 @@ export default function Window({ title, children, className = "" }: Props) {
     const m = moves[e.key];
     if (!m) return;
     e.preventDefault();
-    setPos((p) => ({ x: p.x + m[0], y: p.y + m[1] }));
+    spring.nudge(m[0], m[1]);
   };
   const resetPlacement = () => {
-    setPos({ x: 0, y: 0 });
+    spring.reset();
     setSize(null);
   };
 
@@ -203,7 +215,8 @@ export default function Window({ title, children, className = "" }: Props) {
           fixed
             ? { zIndex: 70 }
             : {
-                transform: `translate(${pos.x}px, ${pos.y}px) translateY(var(--drop, 0px)) rotate(var(--swing, 0rad))`,
+                transform:
+                  "translate(var(--tx, 0px), var(--ty, 0px)) translateY(var(--drop, 0px)) rotate(calc(var(--swing, 0rad) + var(--lean, 0deg)))",
                 transformOrigin: "50% 0",
                 zIndex: z,
                 ...(size ? { width: size.w, height: size.h, maxWidth: "none" } : {}),

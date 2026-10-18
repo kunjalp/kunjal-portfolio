@@ -88,7 +88,8 @@ function Sandbox({ s }: { s: (typeof SEASONS)[number] }) {
           transition: dragging === i ? "none" : "transform 320ms cubic-bezier(.3,1.5,.5,1)",
         }}
       >
-        <circle r="22" fill="transparent" />
+        {/* generous invisible hit area so pieces are easy to grab with a finger */}
+        <circle r="30" fill="transparent" />
         {side ? <PieceSide kind={s.piece} c={c} /> : <PieceTop kind={s.piece} c={c} />}
       </g>
     );

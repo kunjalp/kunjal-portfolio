@@ -104,16 +104,17 @@ export default function OccupancyGrid() {
         width={COLS * CELL}
         height={ROWS * CELL}
         onPointerMove={scan}
+        onPointerDown={scan}
         onPointerLeave={() => {
           cursor.current = null;
           draw();
         }}
         role="img"
         aria-label="Interactive occupancy grid. Move the pointer over it to map free space and obstacles."
-        className="w-full cursor-crosshair touch-none rounded-lg border-2 border-[rgb(var(--edge))]"
+        className="w-full cursor-crosshair touch-pan-y rounded-lg border-2 border-[rgb(var(--edge))]"
       />
       <div className="mt-3 flex items-center justify-between gap-3">
-        <p className="font-mono text-xs text-muted">Move over the grid to scan free space.</p>
+        <p className="font-mono text-xs text-muted">Move across the grid to scan free space.</p>
         <button
           type="button"
           onClick={() => {

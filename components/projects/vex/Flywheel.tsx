@@ -83,10 +83,15 @@ export default function Flywheel() {
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <button
           type="button"
-          className="glass-btn shrink-0 select-none"
-          onPointerDown={press(true)}
+          className="glass-btn shrink-0 touch-none select-none [-webkit-touch-callout:none]"
+          onPointerDown={(e) => {
+            e.currentTarget.setPointerCapture(e.pointerId);
+            press(true)();
+          }}
           onPointerUp={press(false)}
+          onPointerCancel={press(false)}
           onPointerLeave={press(false)}
+          onContextMenu={(e) => e.preventDefault()}
           onKeyDown={(e) => (e.key === " " || e.key === "Enter") && (hold.current = true)}
           onKeyUp={() => (hold.current = false)}
         >

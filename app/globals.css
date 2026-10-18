@@ -1275,3 +1275,21 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .gravity-on, .gravity-hint { animation: none; }
 }
+
+/* Touch screens: bigger targets for fingers (about 44px where it matters). */
+@media (pointer: coarse) {
+  .win-grip {
+    width: 36px;
+    height: 36px;
+    opacity: 0.8;
+  }
+  .glass-btn {
+    min-height: 42px !important;
+  }
+  input[type="range"] {
+    height: 34px;
+  }
+  .win-bar {
+    min-height: 44px;
+  }
+}
