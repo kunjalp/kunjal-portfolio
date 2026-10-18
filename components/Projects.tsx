@@ -5,9 +5,20 @@ import Heirloom from "./projects/Heirloom";
 import SammysPalate from "./projects/SammysPalate";
 import VexRobotics from "./projects/VexRobotics";
 
-/** Spans both columns on large screens. */
-function Wide({ children }: { children: React.ReactNode }) {
-  return <div className="lg:col-span-2">{children}</div>;
+/** Spans both columns on large screens. The id is the jump target for the project index. */
+function Wide({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <div id={id} className="scroll-mt-24 lg:col-span-2">
+      {children}
+    </div>
+  );
+}
+function Slot({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <div id={id} className="scroll-mt-24">
+      {children}
+    </div>
+  );
 }
 
 export default function Projects() {
@@ -22,18 +33,22 @@ export default function Projects() {
         </p>
 
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
-          <Wide>
+          <Wide id="project-heirloom">
             <Heirloom />
           </Wide>
-          <Wide>
+          <Wide id="project-formula-slug">
             <FormulaSlug />
           </Wide>
-          <Cosmos />
-          <SammysPalate />
-          <Wide>
+          <Slot id="project-cosmos">
+            <Cosmos />
+          </Slot>
+          <Slot id="project-sammys">
+            <SammysPalate />
+          </Slot>
+          <Wide id="project-acm">
             <AcmWebLead />
           </Wide>
-          <Wide>
+          <Wide id="project-vex">
             <VexRobotics />
           </Wide>
         </div>

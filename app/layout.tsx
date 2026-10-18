@@ -5,6 +5,8 @@ import "@fontsource/caveat/500.css";
 import "@fontsource/caveat/700.css";
 import "./globals.css";
 import Dock from "@/components/Dock";
+import ProjectIndex from "@/components/ProjectIndex";
+import Toaster, { Konami } from "@/components/Toaster";
 import Leaves from "@/components/Leaves";
 import Scenery from "@/components/Scenery";
 
@@ -55,6 +57,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Scenery />
         {children}
         <Dock />
+        <ProjectIndex />
+        <Toaster />
+        <Konami />
         <Leaves />
       </body>
     </html>

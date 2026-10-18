@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Window from "./Window";
 import { setGravity, useGravity } from "./gravity";
+import { openProjectIndex } from "./ProjectIndex";
+import { copyText, toast } from "./Toaster";
 
 const EMAIL = "kunjalp126@gmail.com";
 const LINKS = {
@@ -11,7 +13,8 @@ const LINKS = {
   resume: "/Kunjal_Purohit_Resume.pdf",
 };
 
-type Line = { kind: "cmd" | "out" | "link" | "err"; text: string; href?: string };
+// "copy" lines copy their value to the clipboard when clicked
+type Line = { kind: "cmd" | "out" | "link" | "err" | "copy"; text: string; href?: string; value?: string };
 type Mode = "cmd" | "name" | "email" | "msg";
 
 const WHOAMI =
@@ -23,7 +26,7 @@ const INITIAL: Line[] = [
   { kind: "cmd", text: "ls links" },
   { kind: "link", text: "linkedin  → linkedin.com/in/kunjalpurohit", href: LINKS.linkedin },
   { kind: "link", text: "github    → github.com/kunjalp", href: LINKS.github },
-  { kind: "link", text: `email     → ${EMAIL}`, href: `mailto:${EMAIL}` },
+  { kind: "copy", text: `email     → ${EMAIL}`, value: EMAIL },
   { kind: "link", text: "resume    → Kunjal_Purohit_Resume.pdf", href: LINKS.resume },
   { kind: "out", text: "Type `contact` to write me a message, or `help` for all commands." },
 ];
@@ -51,8 +54,13 @@ export default function Contact() {
 
   const add = (...l: Line[]) => setLines((p) => [...p, ...l]);
 
+  const copyEmail = async (v = EMAIL) => {
+    const ok = await copyText(v);
+    toast(ok ? `Copied! ${v}` : `Couldn't copy. My email is ${v}`);
+  };
+
   const run = (raw: string) => {
-    const cmd = raw.trim().toLowerCase();
+    const cmd = raw.trim().toLowerCase().replace(/\s+/g, " ");
     add({ kind: "cmd", text: raw });
     switch (cmd) {
       case "":
@@ -62,8 +70,10 @@ export default function Contact() {
           { kind: "out", text: "whoami    short intro" },
           { kind: "out", text: "linkedin  github  email  resume" },
           { kind: "out", text: "contact   write me a message" },
+          { kind: "out", text: "projects  open the project index (or press ⌘K / Ctrl K)" },
           { kind: "out", text: "gravity   turn physics on or off (try it)" },
           { kind: "out", text: "clear     clear the screen" },
+          { kind: "out", text: "...and a few commands I didn't list. Recruiters may want to try sudo." },
         );
         break;
       case "whoami":
@@ -76,7 +86,27 @@ export default function Contact() {
         add({ kind: "link", text: "github.com/kunjalp", href: LINKS.github });
         break;
       case "email":
-        add({ kind: "link", text: EMAIL, href: `mailto:${EMAIL}` });
+        add({ kind: "copy", text: `${EMAIL}  (click to copy)`, value: EMAIL });
+        copyEmail();
+        break;
+      case "projects":
+        add({ kind: "out", text: "Opening the project index..." });
+        openProjectIndex();
+        break;
+      case "hire kunjal":
+        add({ kind: "err", text: "hire: permission denied. You'll need elevated privileges. Try `sudo hire kunjal`." });
+        break;
+      case "sudo hire kunjal":
+        add(
+          { kind: "out", text: "[sudo] password for recruiter: ********" },
+          { kind: "out", text: "Verifying credentials... ok" },
+          { kind: "out", text: "Checking skills: C/C++ ok, Python ok, TypeScript ok, CAN bus ok, chai ok" },
+          { kind: "out", text: "Permission granted. Next step: say hi. Run `contact` to write me, or click below to copy my email." },
+          { kind: "copy", text: `${EMAIL}  (click to copy)`, value: EMAIL },
+        );
+        break;
+      case "sudo":
+        add({ kind: "out", text: "usage: sudo hire kunjal" });
         break;
       case "resume":
         add({ kind: "link", text: "Kunjal_Purohit_Resume.pdf (download)", href: LINKS.resume });
@@ -148,6 +178,7 @@ export default function Contact() {
     cmd: "text-[rgb(var(--term-fg))]",
     out: "text-[rgb(var(--term-fg)/0.75)]",
     link: "text-[rgb(var(--g1))] underline underline-offset-2 hover:text-[rgb(var(--term-fg))]",
+    copy: "text-[rgb(var(--g1))]",
     err: "text-[rgb(var(--accent))]",
   };
 
@@ -171,7 +202,19 @@ export default function Contact() {
                     {l.kind === "cmd" && !/^(name|your email|message):/.test(l.text) && (
                       <span className="text-[rgb(var(--g1))]">$ </span>
                     )}
-                    {l.kind === "link" && l.href ? (
+                    {l.kind === "copy" ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyEmail(l.value);
+                        }}
+                        title="Copy to clipboard"
+                        className="text-left underline decoration-dotted underline-offset-2 hover:text-[rgb(var(--term-fg))]"
+                      >
+                        {l.text}
+                      </button>
+                    ) : l.kind === "link" && l.href ? (
                       <a
                         href={l.href}
                         {...(l.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}

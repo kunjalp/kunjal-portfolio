@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, ArrowRight, Car, Code, Cpu, Radar, type LucideIcon } from "lucide-react";
 import Window from "./Window";
 import Track from "./journey/Track";
+import Patch, { type PatchKind } from "./journey/Patch";
 
 type Milestone = {
   id: string;
@@ -13,6 +14,7 @@ type Milestone = {
   blurb: string;
   tags: string[];
   icon: LucideIcon;
+  patches: PatchKind[];
 };
 
 const milestones: Milestone[] = [
@@ -24,6 +26,7 @@ const milestones: Milestone[] = [
     blurb: "Got hooked on autonomous vehicles, and spent four years in VEX robotics, ending as president of a 30-member club.",
     tags: ["VEX VRC", "Autonomous vehicles", "Leadership"],
     icon: Car,
+    patches: ["vex"],
   },
   {
     id: "cosmos",
@@ -33,6 +36,7 @@ const milestones: Milestone[] = [
     blurb: "Autonomous perception and mapping on a scaled autonomous vehicle.",
     tags: ["Python", "OpenCV", "ROS", "LiDAR", "GNSS", "Jetson Nano"],
     icon: Radar,
+    patches: ["cosmos"],
   },
   {
     id: "formula-slug",
@@ -42,6 +46,7 @@ const milestones: Milestone[] = [
     blurb: "STM32 firmware for accumulator temperatures, CAN telemetry and the throttle map.",
     tags: ["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"],
     icon: Cpu,
+    patches: ["fsae"],
   },
   {
     id: "ucsc",
@@ -51,6 +56,7 @@ const milestones: Milestone[] = [
     blurb: "ACM Web Dev Lead, Sammy's Palate on the App Store, and 1st place in the Daytona track at SF Tech Week with Heirloom.",
     tags: ["Next.js", "TypeScript", "Supabase", "Capacitor"],
     icon: Code,
+    patches: ["acm", "daytona"],
   },
 ];
 
@@ -58,7 +64,6 @@ export default function Journey() {
   const [active, setActive] = useState(0);
   const last = milestones.length - 1;
   const current = milestones[active];
-  const Icon = current.icon;
 
   const go = (i: number) => setActive(Math.min(Math.max(i, 0), last));
 
@@ -130,13 +135,21 @@ export default function Journey() {
               aria-live="polite"
               className="fade-up mt-6 rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.45)] p-5 sm:p-7"
             >
-              <div className="flex items-start gap-4">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper))] text-accent">
-                  <Icon size={22} aria-hidden />
-                </span>
-                <div className="min-w-0">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 pt-1">
                   <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">{current.title}</h3>
                   <p className="font-mono text-xs text-muted">{current.period}</p>
+                </div>
+                {/* earned patches, pressed on like iron-ons */}
+                <div className="-mr-1 -mt-2 flex shrink-0 sm:-mr-2 sm:-mt-4">
+                  {current.patches.map((k, i) => (
+                    <Patch
+                      key={k}
+                      kind={k}
+                      tilt={i % 2 ? 7 : -6}
+                      className={`h-[68px] w-[68px] sm:h-[92px] sm:w-[92px] ${i ? "-ml-3" : ""}`}
+                    />
+                  ))}
                 </div>
               </div>
 

@@ -1293,3 +1293,97 @@ body {
     min-height: 44px;
   }
 }
+
+/* Journey patches: pressed onto the card like iron-ons */
+.patch {
+  transform: rotate(var(--tilt, 0deg));
+  filter: drop-shadow(2px 3px 0 rgb(0 0 0 / 0.22));
+  animation: patch-press 0.5s cubic-bezier(0.25, 1.4, 0.45, 1) both;
+}
+.patch + .patch {
+  animation-delay: 0.08s;
+}
+@keyframes patch-press {
+  from { opacity: 0; transform: rotate(calc(var(--tilt, 0deg) - 14deg)) scale(1.35); filter: drop-shadow(8px 12px 0 rgb(0 0 0 / 0.12)); }
+  to { opacity: 1; transform: rotate(var(--tilt, 0deg)) scale(1); filter: drop-shadow(2px 3px 0 rgb(0 0 0 / 0.22)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .patch { animation: none; }
+}
+
+/* Project index (Cmd/Ctrl+K) */
+.pidx-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3500;
+  display: grid;
+  place-items: start center;
+  padding: 12vh 16px 16px;
+  background: rgb(var(--edge) / 0.45);
+  animation: fade-up 0.18s ease-out;
+}
+.pidx {
+  width: min(760px, 100%);
+  overflow: hidden;
+  animation: win-grow 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+.pidx-item {
+  cursor: pointer;
+  border: 2px solid rgb(var(--edge) / 0.35);
+  border-radius: 10px;
+  padding: 0.8rem 0.95rem;
+  background: rgb(var(--paper2) / 0.4);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+.pidx-item.is-sel {
+  border-color: rgb(var(--edge));
+  box-shadow: 4px 4px 0 rgb(var(--accent));
+  transform: translate(-2px, -2px);
+}
+.pidx-kbd {
+  display: inline-block;
+  min-width: 1.4em;
+  padding: 0.05rem 0.4rem;
+  border: 1.5px solid rgb(var(--edge) / 0.5);
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  font-family: "JetBrains Mono Variable", ui-monospace, monospace;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  text-align: center;
+  color: rgb(var(--fg));
+  background: rgb(var(--paper));
+}
+/* the window you jumped to flashes once */
+.win.win-flash {
+  animation: win-flash 1.5s ease-out;
+}
+@keyframes win-flash {
+  0%, 30% { box-shadow: 0 0 0 4px rgb(var(--accent)), 5px 5px 0 rgb(var(--shadow)); }
+  100% { box-shadow: 5px 5px 0 rgb(var(--shadow)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pidx-backdrop, .pidx { animation: none; }
+  .pidx-item.is-sel { transform: none; }
+}
+
+/* Toast (copy email, cheat codes) */
+.kp-toast {
+  padding: 0.55rem 0.95rem;
+  background: rgb(var(--paper));
+  color: rgb(var(--fg));
+  border: 2px solid rgb(var(--edge));
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 rgb(var(--accent));
+  font-weight: 600;
+  font-size: 0.92rem;
+  animation: toast-pop-down 0.28s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+/* Konami code: every window does a barrel roll (rotate composes with the drag transform) */
+.konami .win {
+  animation: barrel-roll 1.1s cubic-bezier(0.5, 0, 0.3, 1);
+}
+@keyframes barrel-roll {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
