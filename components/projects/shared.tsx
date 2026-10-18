@@ -40,9 +40,9 @@ export function Metrics({ items, cols = "sm:grid-cols-4" }: { items: [string, st
       {items.map(([v, l]) => (
         <div
           key={l}
-          className="rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] px-4 py-3"
+          className="rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] px-3 py-2.5 sm:py-3"
         >
-          <dd className="text-[1.5rem] font-extrabold leading-none">{v}</dd>
+          <dd className="text-[1.3rem] font-extrabold leading-none">{v}</dd>
           <dt className="mt-1.5 text-sm text-muted">{l}</dt>
         </div>
       ))}
