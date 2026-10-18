@@ -39,7 +39,7 @@ export default function Projects() {
           Projects
         </h2>
         <p className="mt-3 max-w-xl text-[1.05rem]">
-          Drag any window by its title bar. Some of them respond to you.
+          Drag any window by its title bar. All of them respond to you.
         </p>
 
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
