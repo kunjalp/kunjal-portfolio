@@ -71,7 +71,8 @@ export default function Corkboard() {
   );
   const [order, setOrder] = useState<string[]>(DEFAULT_ORDER);
   const [held, setHeld] = useState<string | null>(null);
-  const drag = useRef<{ id: string; sx: number; sy: number; ox: number; oy: number; scale: number } | null>(null);
+  const [flip, setFlip] = useState<{ id: string; n: number } | null>(null);
+  const drag = useRef<{ id: string; sx: number; sy: number; ox: number; oy: number; scale: number; moved: boolean } | null>(null);
 
   useEffect(() => {
     const el = board.current;
@@ -98,19 +99,26 @@ export default function Corkboard() {
     e.currentTarget.setPointerCapture(e.pointerId);
     front(it.id);
     const p = pos[it.id];
-    drag.current = { id: it.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y, scale };
+    drag.current = { id: it.id, sx: e.clientX, sy: e.clientY, ox: p.x, oy: p.y, scale, moved: false };
     setHeld(it.id);
   };
   const onMove = (it: Item) => (e: React.PointerEvent<HTMLDivElement>) => {
     const d = drag.current;
     if (!d || d.id !== it.id) return;
+    if (Math.abs(e.clientX - d.sx) + Math.abs(e.clientY - d.sy) > 5) d.moved = true;
     const nx = d.ox + (e.clientX - d.sx) / d.scale;
     const ny = d.oy + (e.clientY - d.sy) / d.scale;
     setPos((ps) => ({ ...ps, [it.id]: clamp(it, nx, ny) }));
   };
-  const onUp = () => {
+  const onUp = (it: Item) => () => {
+    const d = drag.current;
     drag.current = null;
     setHeld(null);
+    // a plain click (no drag): flip the piece over and land it on top
+    if (d && d.id === it.id && !d.moved) {
+      front(it.id);
+      setFlip((f) => ({ id: it.id, n: (f?.n ?? 0) + 1 }));
+    }
   };
   const onKey = (it: Item) => (e: React.KeyboardEvent<HTMLDivElement>) => {
     const step = e.shiftKey ? 48 : 16;
@@ -150,6 +158,7 @@ export default function Corkboard() {
           {ITEMS.map((it) => {
             const p = pos[it.id];
             const isHeld = held === it.id;
+            const isFlip = flip?.id === it.id;
             const z = order.indexOf(it.id) + 1;
             const cls =
               it.kind === "photo" ? "cork-photo" : it.kind === "card" ? "cork-card" : "cork-sticky";
@@ -159,7 +168,8 @@ export default function Corkboard() {
                   left: p.x * scale,
                   top: p.y * scale,
                   width: it.w * scale,
-                  zIndex: isHeld ? 999 : z,
+                  zIndex: isHeld || isFlip ? 999 : z,
+                  ['--tilt' as string]: `${it.tilt}deg`,
                   transform: `rotate(${isHeld ? it.tilt * 0.3 : it.tilt}deg) scale(${isHeld ? 1.05 : 1})`,
                 }
               : { transform: `rotate(${it.tilt * 0.5}deg)` };
@@ -168,14 +178,15 @@ export default function Corkboard() {
             return (
               <div
                 key={it.id}
-                className={`cork-item ${cls} ${isHeld ? "is-held" : ""} ${free ? "cursor-grab" : ""}`}
+                className={`cork-item ${cls} ${isHeld ? "is-held" : ""} ${isFlip ? (flip!.n % 2 ? "cork-flip-a" : "cork-flip-b") : ""} ${free ? "cursor-grab" : ""}`}
                 style={style}
                 tabIndex={free ? 0 : undefined}
                 aria-label={free ? `${label}. Use arrow keys to move.` : undefined}
                 onPointerDown={onDown(it)}
                 onPointerMove={onMove(it)}
-                onPointerUp={onUp}
-                onPointerCancel={onUp}
+                onPointerUp={onUp(it)}
+                onPointerCancel={() => { drag.current = null; setHeld(null); }}
+                onAnimationEnd={() => setFlip((f) => (f && f.id === it.id ? null : f))}
                 onKeyDown={free ? onKey(it) : undefined}
               >
                 {it.kind !== "sticky" && (it.pin === "pin" ? <PushPin color={it.pinColor} /> : <span aria-hidden className="cork-tape" />)}
