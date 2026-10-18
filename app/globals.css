@@ -913,6 +913,81 @@ body {
     transform: translateX(20px) rotate(16deg);
   }
 }
+/* ---- Polaroid fun-fact card ---- */
+.polaroid {
+  padding: 12px 12px 14px;
+  background: #f7f2e6;
+  border: 1.5px solid #3a2f22;
+  box-shadow: 4px 6px 0 rgb(0 0 0 / 0.28);
+  color: #2b2418;
+  animation: polaroid-in 0.34s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.polaroid-print {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #cfc6b0;
+  border: 1px solid rgb(58 47 34 / 0.35);
+  animation: develop 1.3s ease-out forwards;
+}
+.polaroid-title {
+  margin-top: 10px;
+  font-family: "Caveat", cursive;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+.polaroid-text {
+  margin-top: 2px;
+  font-family: "Caveat", cursive;
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: #4a3e2d;
+}
+.polaroid-tape {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 92px;
+  height: 26px;
+  transform: translateX(-50%) rotate(3deg);
+  background: rgb(232 205 120 / 0.78);
+  border-left: 2px dotted rgb(0 0 0 / 0.12);
+  border-right: 2px dotted rgb(0 0 0 / 0.12);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.18);
+}
+.polaroid-x {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #2b2418;
+  background: rgb(247 242 230 / 0.9);
+  border: 1.5px solid #3a2f22;
+  cursor: pointer;
+}
+.polaroid-x:hover {
+  background: #f0c9a4;
+}
+@keyframes polaroid-in {
+  from { opacity: 0; margin-top: 14px; }
+  to { opacity: 1; margin-top: 0; }
+}
+/* the print "develops": starts washed out and sepia */
+@keyframes develop {
+  from { filter: grayscale(1) sepia(0.7) brightness(1.5) blur(2px); opacity: 0.55; }
+  to { filter: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .polaroid, .polaroid-print { animation: none; }
+}
+
 @keyframes tooltip-in {
   from {
     opacity: 0;

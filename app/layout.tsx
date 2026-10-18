@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/bricolage-grotesque/standard.css";
 import "@fontsource-variable/jetbrains-mono";
+import "@fontsource/caveat/500.css";
+import "@fontsource/caveat/700.css";
 import "./globals.css";
 import Dock from "@/components/Dock";
 import Leaves from "@/components/Leaves";

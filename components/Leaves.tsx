@@ -8,12 +8,19 @@ import {
   Palette,
   Scissors,
   Sunset,
+  X,
   type LucideIcon,
 } from "lucide-react";
 
 type Shape = "sprig" | "bundle" | "cone";
 
-type Fact = { title: string; text: string; icon: LucideIcon };
+type Fact = {
+  title: string;
+  text: string;
+  icon: LucideIcon;
+  photo?: { src: string; alt: string };
+  tint: string; // background of the drawn-icon print when there is no photo
+};
 
 type LeafDef = {
   id: string;
@@ -33,31 +40,40 @@ const facts: Fact[] = [
     title: "Chai",
     text: "I love making chai, and drinking it even more.",
     icon: Coffee,
+    tint: "#e8c9a0",
   },
   {
     title: "Golden hour",
     text: "I'm obsessed with golden hour sunsets.",
     icon: Sunset,
+    tint: "#f0c9a4",
+    photo: { src: "/images/about/sunset-beach.jpg", alt: "Sun setting over the ocean" },
   },
   {
     title: "Charcoal art",
     text: "I sketch flowers and landscapes in charcoal.",
     icon: Palette,
+    tint: "#d9d4c4",
+    photo: { src: "/images/about/charcoal-buddha.jpg", alt: "Charcoal drawing of a Buddha face" },
   },
   {
     title: "Travel memories",
     text: "Hiking Mt. Tamalpais and skiing trips are some of the memories I collect.",
     icon: Mountain,
+    tint: "#cfd8b8",
+    photo: { src: "/images/about/mount-tam.jpg", alt: "Green hills and clouds seen from Mount Tamalpais" },
   },
   {
     title: "Almost a barber",
     text: "I once wanted to be a barber, and I've cut hair for friends.",
     icon: Scissors,
+    tint: "#e6b9ad",
   },
   {
     title: "Pet peeve",
     text: "Slow walkers. Please keep moving.",
     icon: Footprints,
+    tint: "#d6dca8",
   },
 ];
 
@@ -172,29 +188,6 @@ function LeafShape({ shape }: { shape: Shape }) {
   return <Cone />;
 }
 
-const fileName = (title: string) =>
-  title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".txt";
-
-/** Types the text out like a terminal, unless the visitor prefers reduced motion. */
-function Typed({ text }: { text: string }) {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setN(text.length);
-      return;
-    }
-    setN(0);
-    const id = setInterval(() => setN((v) => (v >= text.length ? v : v + 1)), 18);
-    return () => clearInterval(id);
-  }, [text]);
-  return (
-    <>
-      <span aria-label={text}>{text.slice(0, n)}</span>
-      <span aria-hidden className="cursor" />
-    </>
-  );
-}
-
 type Active = {
   id: string;
   left: number;
@@ -285,32 +278,36 @@ export default function Leaves() {
         <div
           role="dialog"
           aria-label={activeLeaf.fact.title}
-          className="win tooltip-in fixed z-40 max-sm:!inset-x-4 max-sm:!bottom-6 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
+          className="polaroid fixed z-40 max-sm:!inset-x-4 max-sm:!bottom-6 max-sm:!top-auto max-sm:!w-auto max-sm:!transform-none"
           style={{
             left: active.left,
             top: active.top,
-            width: active.width,
-            transform: active.flip ? "translateY(-100%)" : undefined,
+            width: Math.min(active.width, 270),
+            transform: `${active.flip ? "translateY(-100%) " : ""}rotate(-2deg)`,
           }}
         >
-          <div className="win-bar" style={{ cursor: "default" }}>
-            <button type="button" className="win-dot win-dot-close" aria-label="Close" onClick={close} />
-            <span className="win-dot win-dot-min" aria-hidden />
-            <span className="win-dot win-dot-reset" aria-hidden />
-            <span className="win-title-wrap">
-              <span className="win-title">{fileName(activeLeaf.fact.title)}</span>
-            </span>
-            <span aria-hidden className="w-[3.1rem] flex-none" />
+          <span aria-hidden className="polaroid-tape" />
+          <button type="button" onClick={close} aria-label="Close" className="polaroid-x">
+            <X size={14} />
+          </button>
+          <div key={active.id} className="polaroid-print">
+            {activeLeaf.fact.photo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={activeLeaf.fact.photo.src} alt={activeLeaf.fact.photo.alt} className="h-full w-full object-cover" />
+            ) : (
+              <div className="grid h-full w-full place-items-center" style={{ background: activeLeaf.fact.tint }}>
+                <ActiveIcon size={74} strokeWidth={1.3} className="text-[#3a2f22]" aria-hidden />
+                <svg aria-hidden viewBox="0 0 100 100" className="pointer-events-none absolute inset-0 h-full w-full" fill="none" stroke="#3a2f22" strokeWidth="1.2" strokeLinecap="round" opacity="0.5">
+                  <path d="M14 20 l4 4 M18 20 l-4 4" />
+                  <path d="M60 14 q4 -4 8 0" />
+                  <path d="M80 82 l5 0 M82.5 79.5 l0 5" />
+                  <path d="M12 78 q5 -5 10 0 t10 0" />
+                </svg>
+              </div>
+            )}
           </div>
-          <div className="bg-[rgb(var(--tire))] p-4 font-mono text-[0.82rem] leading-6 text-[rgb(var(--term-fg))]">
-            <p className="flex items-center gap-2 text-[rgb(var(--g1))]">
-              <ActiveIcon size={14} aria-hidden />
-              <span>$ cat {fileName(activeLeaf.fact.title)}</span>
-            </p>
-            <p key={active.id} className="mt-2 text-[rgb(var(--term-fg)/0.9)]">
-              <Typed text={activeLeaf.fact.text} />
-            </p>
-          </div>
+          <p className="polaroid-title">{activeLeaf.fact.title}</p>
+          <p className="polaroid-text">{activeLeaf.fact.text}</p>
         </div>
       )}
     </>
