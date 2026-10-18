@@ -69,8 +69,8 @@ export default function Journey() {
   const go = (i: number) => setActive(Math.min(Math.max(i, 0), last));
 
   return (
-    <section id="journey" className="scroll-mt-20 px-4 py-16 sm:px-8">
-      <div className="mx-auto w-full max-w-[1040px]">
+    <section id="journey" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
+      <div className="mx-auto w-full max-w-[940px]">
         <Window title="journey.map">
           <div className="px-5 pb-6 pt-7 sm:px-9 sm:pb-8 sm:pt-9">
             <h2 className="text-[clamp(2rem,4vw,3rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:85%]">

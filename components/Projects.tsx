@@ -23,8 +23,8 @@ function Slot({ id, children }: { id: string; children: React.ReactNode }) {
 
 export default function Projects() {
   return (
-    <section id="projects" className="scroll-mt-20 px-4 py-16 sm:px-8">
-      <div className="mx-auto w-full max-w-[1240px]">
+    <section id="projects" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
+      <div className="mx-auto w-full max-w-[1100px]">
         <h2 className="text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
           Projects
         </h2>

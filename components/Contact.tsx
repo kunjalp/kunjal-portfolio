@@ -183,8 +183,8 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="scroll-mt-20 px-4 py-16 sm:px-8">
-      <div className="mx-auto w-full max-w-[860px]">
+    <section id="contact" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
+      <div className="mx-auto w-full max-w-[780px]">
         <h2 className="text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
           Contact
         </h2>
