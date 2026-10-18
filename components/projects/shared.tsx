@@ -1,15 +1,22 @@
-export function Tags({ items }: { items: string[] }) {
+/**
+ * Datasheet-style "Stack" row: a ruled line, a small label, then the technologies
+ * separated by thin vertical dividers. The negative margin and clip hide the divider
+ * that would otherwise dangle at the start of each wrapped line.
+ */
+export function Tags({ items, label = "Stack" }: { items: string[]; label?: string }) {
   return (
-    <ul className="flex flex-wrap gap-2">
-      {items.map((t) => (
-        <li
-          key={t}
-          className="rounded-md border-[1.5px] border-[rgb(var(--edge)/0.5)] bg-[rgb(var(--paper2)/0.5)] px-2.5 py-0.5 font-mono text-xs"
-        >
-          {t}
-        </li>
-      ))}
-    </ul>
+    <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-4 border-t-[1.5px] border-[rgb(var(--edge)/0.45)] pt-3">
+      <span className="font-mono text-xs text-muted">{label}</span>
+      <div className="overflow-hidden">
+        <ul className="-ml-3 flex flex-wrap gap-y-1 font-mono text-[0.78rem] leading-5">
+          {items.map((t) => (
+            <li key={t} className="border-l border-[rgb(var(--edge)/0.4)] px-3">
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 

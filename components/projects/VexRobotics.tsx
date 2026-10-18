@@ -22,6 +22,7 @@ export default function VexRobotics() {
             ]}
           />
           <Tags
+            label="Skills"
             items={[
               "Mechanical design",
               "Drivetrains",

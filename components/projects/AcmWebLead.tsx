@@ -23,7 +23,7 @@ export default function AcmWebLead() {
             ["5", "features directed"],
           ]}
         />
-        <Tags items={["Team leadership", "Authentication", "Responsive UI"]} />
+        <Tags label="Skills" items={["Team leadership", "Authentication", "Responsive UI"]} />
       </div>
     </Window>
   );
