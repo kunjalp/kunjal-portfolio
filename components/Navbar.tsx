@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, Mountain, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import GravityToggle from "./GravityToggle";
 
 const links = [
   { href: "#projects", label: "Projects" },
@@ -62,6 +63,7 @@ export default function Navbar() {
 
         <div className="ml-auto flex items-center gap-3">
           <Clock />
+          <GravityToggle />
           <ThemeToggle />
           <button
             type="button"

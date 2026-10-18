@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Window from "./Window";
+import { setGravity, useGravity } from "./gravity";
 
 const EMAIL = "kunjalp126@gmail.com";
 const LINKS = {
@@ -36,6 +37,7 @@ const PROMPT: Record<Mode, string> = {
 
 export default function Contact() {
   const [lines, setLines] = useState<Line[]>(INITIAL);
+  const gravityOn = useGravity();
   const [mode, setMode] = useState<Mode>("cmd");
   const [value, setValue] = useState("");
   const draft = useRef({ name: "", email: "", msg: "" });
@@ -60,6 +62,7 @@ export default function Contact() {
           { kind: "out", text: "whoami    short intro" },
           { kind: "out", text: "linkedin  github  email  resume" },
           { kind: "out", text: "contact   write me a message" },
+          { kind: "out", text: "gravity   turn physics on or off (try it)" },
           { kind: "out", text: "clear     clear the screen" },
         );
         break;
@@ -82,6 +85,19 @@ export default function Contact() {
         add({ kind: "out", text: "Starting message. Press Enter after each answer." });
         setMode("name");
         break;
+      case "gravity":
+      case "gravity on":
+      case "gravity off": {
+        const next = cmd === "gravity" ? !gravityOn : cmd === "gravity on";
+        setGravity(next);
+        add({
+          kind: "out",
+          text: next
+            ? "gravity: on. Every window now hangs from its title bar. Drag one sideways, or scroll fast."
+            : "gravity: off. Windows settling back.",
+        });
+        break;
+      }
       case "clear":
         setLines([]);
         break;

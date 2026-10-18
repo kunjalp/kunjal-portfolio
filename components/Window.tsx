@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { dockAdd, dockRemove } from "./windowDock";
+import { useGravity } from "./gravity";
+import { useSwing } from "./useSwing";
 
 // Shared across all windows so whichever you touch last sits on top.
 let topZ = 1;
@@ -33,6 +35,16 @@ export default function Window({ title, children, className = "" }: Props) {
   const win = useRef<HTMLDivElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
 
+  // Gravity mode: each window hangs from its title bar and swings.
+  const gravity = useGravity();
+  const pivotX = useRef(0);
+  pivotX.current = pos.x;
+  const seed = useRef(0);
+  if (seed.current === 0) {
+    let h = 7;
+    for (const c of title) h = (h * 31 + c.charCodeAt(0)) | 0;
+    seed.current = ((Math.abs(h) % 1000) / 1000) * 1.4 - 0.7 || 0.3; // -0.7..0.7, which way it hangs off-center
+  }
   const front = () => setZ(++topZ);
   const minimized = minState === "going" || minState === "on";
 
@@ -168,6 +180,7 @@ export default function Window({ title, children, className = "" }: Props) {
 
   const fixed = expanded;
   const sized = !!size && !expanded;
+  useSwing(win, gravity && !expanded && minState === "off", pivotX, seed.current);
 
   return (
     <>
@@ -191,7 +204,8 @@ export default function Window({ title, children, className = "" }: Props) {
           fixed
             ? { zIndex: 70 }
             : {
-                transform: `translate(${pos.x}px, ${pos.y}px)`,
+                transform: `translate(${pos.x}px, ${pos.y}px) translateY(var(--drop, 0px)) rotate(var(--swing, 0rad))`,
+                transformOrigin: "50% 0",
                 zIndex: z,
                 ...(size ? { width: size.w, height: size.h, maxWidth: "none" } : {}),
               }

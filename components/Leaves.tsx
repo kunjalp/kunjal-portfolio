@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "./gravity";
 import {
   Coffee,
   Footprints,
@@ -85,6 +86,8 @@ const leaves: LeafDef[] = [
   { id: "l5", shape: "cone", tone: "cone", x: 74, size: 40, dur: 50, delay: -5, sway: 8.5, staticY: 28, fact: facts[4] },
   { id: "l6", shape: "bundle", tone: "pine", x: 88, size: 64, dur: 70, delay: -42, sway: 10.5, staticY: 54, fact: facts[5] },
 ];
+
+const LEAF_IDS = leaves.map((l) => l.id);
 
 // Short needles along a twig, pairs angled forward toward the tip.
 function Sprig() {
@@ -188,6 +191,110 @@ function LeafShape({ shape }: { shape: Shape }) {
   return <Cone />;
 }
 
+
+/* ---------- cursor wind ----------
+ * A fast cursor stirs the air. Each leaf gets pushed along the cursor's path and a
+ * little away from it, then a spring-damper pulls it back onto its falling path:
+ *   a = F_wind - k*offset - c*velocity
+ * Slow cursor movement does nothing, so the leaves stay easy to click.
+ */
+type Body = { x: number; y: number; vx: number; vy: number; r: number; vr: number };
+const WIND_RADIUS = 170; // px around the cursor path that feels the gust
+const WIND_MIN_SPEED = 550; // px/s before the cursor makes any wind
+const SPRING = 5.5;
+const DAMP = 2.6;
+const MAX_OFFSET = 130;
+const MAX_SPIN = 50; // deg
+
+function useCursorWind(count: number, frozen: React.MutableRefObject<string | null>, ids: string[]) {
+  const els = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const bodies: Body[] = Array.from({ length: count }, () => ({ x: 0, y: 0, vx: 0, vy: 0, r: 0, vr: 0 }));
+    let raf = 0;
+    let awake = false;
+    let last = 0;
+    let prev: { x: number; y: number; t: number } | null = null;
+
+    const step = (now: number) => {
+      const dt = Math.min(0.033, (now - last) / 1000) || 0.016;
+      last = now;
+      let moving = false;
+      bodies.forEach((b, i) => {
+        if (frozen.current === ids[i]) return; // its fact card is open; don't blow it away
+        b.vx += (-SPRING * b.x - DAMP * b.vx) * dt;
+        b.vy += (-SPRING * b.y - DAMP * b.vy) * dt;
+        b.vr += (-7 * b.r - 2.4 * b.vr) * dt;
+        b.x = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, b.x + b.vx * dt));
+        b.y = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, b.y + b.vy * dt));
+        b.r = Math.max(-MAX_SPIN, Math.min(MAX_SPIN, b.r + b.vr * dt));
+        const el = els.current[i];
+        if (el) el.style.transform = `translate(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px) rotate(${b.r.toFixed(1)}deg)`;
+        if (Math.abs(b.x) + Math.abs(b.y) > 0.3 || Math.abs(b.vx) + Math.abs(b.vy) > 2 || Math.abs(b.r) > 0.2) moving = true;
+      });
+      if (moving) raf = requestAnimationFrame(step);
+      else awake = false;
+    };
+    const wake = () => {
+      if (awake) return;
+      awake = true;
+      last = performance.now();
+      raf = requestAnimationFrame(step);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const t = e.timeStamp;
+      const p = { x: e.clientX, y: e.clientY, t };
+      if (!prev || t - prev.t > 120) {
+        prev = p;
+        return;
+      }
+      const dx = p.x - prev.x;
+      const dy = p.y - prev.y;
+      const dtp = Math.max(1, t - prev.t) / 1000;
+      const speed = Math.hypot(dx, dy) / dtp;
+      const a = prev;
+      prev = p;
+      if (speed < WIND_MIN_SPEED) return;
+      const len = Math.hypot(dx, dy) || 1;
+      const ux = dx / len;
+      const uy = dy / len;
+      let hit = false;
+      els.current.forEach((el, i) => {
+        if (!el || frozen.current === ids[i]) return;
+        // the leaf's resting spot on its fall path (parent isn't moved by the wind)
+        const r = (el.parentElement ?? el).getBoundingClientRect();
+        const b = bodies[i];
+        const cx = r.left + r.width / 2 + b.x;
+        const cy = r.top + r.height / 2 + b.y;
+        // distance from the leaf to the cursor's path this frame
+        const s = Math.max(0, Math.min(1, ((cx - a.x) * dx + (cy - a.y) * dy) / (len * len)));
+        const px = a.x + dx * s;
+        const py = a.y + dy * s;
+        const d = Math.hypot(cx - px, cy - py);
+        if (d > WIND_RADIUS) return;
+        const fall = (1 - d / WIND_RADIUS) ** 2;
+        const gust = Math.min(speed, 3000) * fall * 0.13;
+        // mostly along the swipe, partly away from it
+        const ax = (cx - px) / (d || 1);
+        const ay = (cy - py) / (d || 1);
+        b.vx += (ux * 0.7 + ax * 0.3) * gust;
+        b.vy += (uy * 0.7 + ay * 0.3) * gust - gust * 0.08; // a little lift
+        // which side of the path the leaf is on decides which way it spins
+        b.vr = Math.max(-240, Math.min(240, b.vr + Math.sign(ux * (cy - py) - uy * (cx - px) || 1) * gust * 0.35));
+        hit = true;
+      });
+      if (hit) wake();
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [count, frozen, ids]);
+  return els;
+}
+
 type Active = {
   id: string;
   left: number;
@@ -199,6 +306,9 @@ type Active = {
 export default function Leaves() {
   const [active, setActive] = useState<Active | null>(null);
   const close = useCallback(() => setActive(null), []);
+  const frozen = useRef<string | null>(null);
+  frozen.current = active?.id ?? null;
+  const windEls = useCursorWind(leaves.length, frozen, LEAF_IDS);
 
   useEffect(() => {
     if (!active) return;
@@ -238,7 +348,7 @@ export default function Leaves() {
       )}
 
       <div className="pointer-events-none fixed inset-0 z-20 overflow-hidden">
-        {leaves.map((leaf) => {
+        {leaves.map((leaf, i) => {
           const isActive = active?.id === leaf.id;
           return (
             <div
@@ -255,6 +365,7 @@ export default function Leaves() {
               }
             >
               <div className="leaf-sway">
+                <div className="leaf-wind" ref={(el) => { windEls.current[i] = el; }}>
                 <button
                   type="button"
                   onClick={(e) => open(leaf, e.currentTarget)}
@@ -267,6 +378,7 @@ export default function Leaves() {
                 >
                   <LeafShape shape={leaf.shape} />
                 </button>
+                </div>
               </div>
             </div>
           );

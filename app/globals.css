@@ -863,6 +863,9 @@ body {
 .leaf-sway {
   animation: sway var(--sway) ease-in-out infinite;
 }
+.leaf-wind {
+  will-change: transform;
+}
 .leaf.is-paused,
 .leaf.is-paused .leaf-sway {
   animation-play-state: paused;
@@ -1239,3 +1242,36 @@ body {
 .cork-zoom-backdrop { position: fixed; inset: 0; z-index: 2999; background: rgb(20 12 6 / 0); transition: background 0.5s ease; }
 .cork-zoom-backdrop.is-open { background: rgb(20 12 6 / 0.55); }
 @media (prefers-reduced-motion: reduce) { .cork-zoom { transition-duration: 0.01s; } }
+
+/* Gravity mode toggle */
+.gravity-on {
+  color: rgb(var(--accent));
+  animation: apple-bob 2.4s ease-in-out infinite;
+}
+@keyframes apple-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+}
+.gravity-hint {
+  position: absolute;
+  right: -8px;
+  top: calc(100% + 10px);
+  width: max-content;
+  max-width: 260px;
+  padding: 0.45rem 0.7rem;
+  background: rgb(var(--paper));
+  color: rgb(var(--fg));
+  border: 2px solid rgb(var(--edge));
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 rgb(var(--accent));
+  font-size: 0.85rem;
+  font-weight: 600;
+  animation: toast-pop-down 0.28s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+@keyframes toast-pop-down {
+  from { opacity: 0; transform: translateY(-6px) scale(0.95); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gravity-on, .gravity-hint { animation: none; }
+}
