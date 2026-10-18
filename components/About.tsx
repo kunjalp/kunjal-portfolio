@@ -129,10 +129,11 @@ export default function About() {
                     if not better.
                   </p>
                   <p className="border-l-4 border-[rgb(var(--accent))] pl-4 text-[1.05rem]">
-                    <span className="font-mono text-xs text-muted">THE DREAM JOB</span>
+                    <span className="font-mono text-xs text-muted">WHAT I&apos;M AFTER</span>
                     <br />
-                    Working on autonomous vehicles and building tech that actually solves real
-                    problems.
+                    Building technology that actually solves real problems, across software and
+                    hardware. Autonomous vehicles are what first hooked me, but I&apos;m excited by any
+                    team working on hard, real-world problems.
                   </p>
                   <p className="text-[1.05rem] leading-relaxed">
                     Sammy&apos;s Palate is the one I&apos;m proudest of. I made it because I wanted an
