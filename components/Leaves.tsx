@@ -12,14 +12,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-type Shape = "fern" | "vine" | "petal";
+type Shape = "sprig" | "bundle" | "cone";
 
 type Fact = { title: string; text: string; icon: LucideIcon };
 
 type LeafDef = {
   id: string;
   shape: Shape;
-  tone: "leaf" | "petal";
+  tone: "pine" | "cone";
   x: number; // vw
   size: number; // px
   dur: number; // s, fall duration
@@ -63,68 +63,114 @@ const facts: Fact[] = [
 ];
 
 const leaves: LeafDef[] = [
-  { id: "l1", shape: "fern", tone: "leaf", x: 6, size: 62, dur: 58, delay: -9, sway: 8, staticY: 18, fact: facts[0] },
-  { id: "l2", shape: "petal", tone: "petal", x: 24, size: 52, dur: 70, delay: -36, sway: 10.5, staticY: 62, fact: facts[1] },
-  { id: "l3", shape: "vine", tone: "leaf", x: 40, size: 70, dur: 52, delay: -21, sway: 9, staticY: 36, fact: facts[2] },
-  { id: "l4", shape: "fern", tone: "leaf", x: 58, size: 58, dur: 78, delay: -54, sway: 12, staticY: 78, fact: facts[3] },
-  { id: "l5", shape: "petal", tone: "petal", x: 74, size: 54, dur: 64, delay: -5, sway: 8.5, staticY: 28, fact: facts[4] },
-  { id: "l6", shape: "vine", tone: "leaf", x: 88, size: 68, dur: 66, delay: -42, sway: 10.5, staticY: 54, fact: facts[5] },
+  { id: "l1", shape: "sprig", tone: "pine", x: 6, size: 66, dur: 58, delay: -9, sway: 8, staticY: 18, fact: facts[0] },
+  { id: "l2", shape: "cone", tone: "cone", x: 24, size: 44, dur: 46, delay: -36, sway: 10.5, staticY: 62, fact: facts[1] },
+  { id: "l3", shape: "bundle", tone: "pine", x: 40, size: 70, dur: 66, delay: -21, sway: 9, staticY: 36, fact: facts[2] },
+  { id: "l4", shape: "sprig", tone: "pine", x: 58, size: 60, dur: 78, delay: -54, sway: 12, staticY: 78, fact: facts[3] },
+  { id: "l5", shape: "cone", tone: "cone", x: 74, size: 40, dur: 50, delay: -5, sway: 8.5, staticY: 28, fact: facts[4] },
+  { id: "l6", shape: "bundle", tone: "pine", x: 88, size: 64, dur: 70, delay: -42, sway: 10.5, staticY: 54, fact: facts[5] },
 ];
 
-function LeafShape({ shape }: { shape: Shape }) {
-  if (shape === "fern") {
-    return (
-      <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden className="h-full w-full">
-        <ellipse cx="32" cy="33" rx="16" ry="29" fill="transparent" />
-        <path d="M32 62 Q33 34 32 3" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-        {[0, 1, 2, 3, 4, 5].map((i) => {
-          const y = 52 - i * 8;
-          const w = 15 - i * 1.9;
-          return (
-            <g key={i}>
-              <ellipse cx={32 - w / 2} cy={y} rx={w / 2 + 1} ry={2.6} transform={`rotate(-26 32 ${y})`} />
-              <ellipse cx={32 + w / 2} cy={y} rx={w / 2 + 1} ry={2.6} transform={`rotate(26 32 ${y})`} />
-            </g>
-          );
-        })}
-      </svg>
-    );
-  }
-  if (shape === "vine") {
-    return (
-      <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden className="h-full w-full">
-        <ellipse cx="32" cy="32" rx="14" ry="30" fill="transparent" transform="rotate(30 32 32)" />
-        <path
-          d="M12 60 C6 42 40 40 30 24 S44 8 52 3"
+// Short needles along a twig, pairs angled forward toward the tip.
+function Sprig() {
+  const needles: JSX.Element[] = [];
+  // twig: quadratic from base (16,60) to tip (46,4), control (22,28)
+  const pt = (t: number) => ({
+    x: (1 - t) ** 2 * 16 + 2 * (1 - t) * t * 22 + t * t * 46,
+    y: (1 - t) ** 2 * 60 + 2 * (1 - t) * t * 28 + t * t * 4,
+  });
+  for (let i = 0; i < 15; i++) {
+    const t = 0.1 + i * 0.062;
+    const p = pt(t);
+    const q = pt(Math.min(1, t + 0.02));
+    const ang = Math.atan2(q.y - p.y, q.x - p.x);
+    const len = 13 - i * 0.45;
+    for (const side of [-1, 1]) {
+      const a = ang + side * 0.62;
+      needles.push(
+        <line
+          key={`${i}${side}`}
+          x1={p.x}
+          y1={p.y}
+          x2={p.x + Math.cos(a) * len}
+          y2={p.y + Math.sin(a) * len}
           stroke="currentColor"
-          strokeWidth="1.6"
-          fill="none"
+          strokeWidth="1.5"
           strokeLinecap="round"
-        />
-        <ellipse cx="14" cy="46" rx="8" ry="4" transform="rotate(-35 14 46)" />
-        <ellipse cx="36" cy="40" rx="8" ry="4" transform="rotate(25 36 40)" />
-        <ellipse cx="22" cy="28" rx="8" ry="4" transform="rotate(-40 22 28)" />
-        <ellipse cx="40" cy="18" rx="7" ry="3.6" transform="rotate(30 40 18)" />
-        <ellipse cx="50" cy="8" rx="6" ry="3.2" transform="rotate(-30 50 8)" />
-      </svg>
-    );
+        />,
+      );
+    }
   }
   return (
     <svg viewBox="0 0 64 64" aria-hidden className="h-full w-full">
-      <path
-        d="M32 4 C50 20 52 42 32 60 C12 42 14 20 32 4 Z"
-        fill="currentColor"
-        fillOpacity="0.9"
-      />
-      <path
-        d="M32 14 L32 52"
-        stroke="rgb(255 255 255 / 0.55)"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        fill="none"
-      />
+      <ellipse cx="30" cy="32" rx="17" ry="30" fill="transparent" transform="rotate(24 30 32)" />
+      {needles}
+      <path d="M16 60 Q22 28 46 4" fill="none" stroke="rgb(var(--cone))" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="46" cy="4" r="1.8" fill="rgb(var(--cone))" />
     </svg>
   );
+}
+
+// A fascicle: long needles fanning out from one papery sheath.
+function Bundle() {
+  const tips: [number, number, number][] = [
+    [8, 10, 26], [18, 4, 30], [32, 2, 32], [46, 6, 30], [56, 14, 26],
+  ];
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className="h-full w-full">
+      <path d="M32 60 L4 8 Q32 -6 60 10 Z" fill="transparent" />
+      {tips.map(([x, y, cx], i) => (
+        <path
+          key={i}
+          d={`M32 52 Q ${cx} ${(52 + y) / 2} ${x} ${y}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+        />
+      ))}
+      <path d="M29.5 50 L34.5 50 L33.5 60 L30.5 60 Z" fill="rgb(var(--cone))" />
+    </svg>
+  );
+}
+
+// Pinecone: rows of overlapping scales, a short stem on top.
+function Cone() {
+  const rows = [
+    { y: 16, xs: [32], w: 7 },
+    { y: 22, xs: [26, 38], w: 7.5 },
+    { y: 29, xs: [20, 32, 44], w: 7.5 },
+    { y: 36, xs: [22, 32, 42], w: 7.5 },
+    { y: 43, xs: [24, 33, 41], w: 6.8 },
+    { y: 50, xs: [28, 36], w: 6 },
+    { y: 56, xs: [32], w: 5 },
+  ];
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden className="h-full w-full">
+      <path d="M31 4 Q33 9 32 13" fill="none" stroke="rgb(var(--cone))" strokeWidth="2.4" strokeLinecap="round" />
+      <path d="M32 10 C47 14 54 30 47 46 C43 56 36 62 32 62 C28 62 21 56 17 46 C10 30 17 14 32 10 Z" fill="currentColor" />
+      {rows.map((r) =>
+        r.xs.map((x) => (
+          <g key={`${r.y}-${x}`}>
+            <path
+              d={`M${x - r.w} ${r.y - 2} Q ${x} ${r.y + r.w * 0.9} ${x + r.w} ${r.y - 2}`}
+              fill="rgb(255 255 255 / 0.2)"
+              stroke="rgb(var(--edge) / 0.7)"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+            />
+            <circle cx={x} cy={r.y + r.w * 0.35} r="0.9" fill="rgb(var(--edge) / 0.5)" />
+          </g>
+        )),
+      )}
+    </svg>
+  );
+}
+
+function LeafShape({ shape }: { shape: Shape }) {
+  if (shape === "sprig") return <Sprig />;
+  if (shape === "bundle") return <Bundle />;
+  return <Cone />;
 }
 
 type Active = {
@@ -198,10 +244,10 @@ export default function Leaves() {
                 <button
                   type="button"
                   onClick={(e) => open(leaf, e.currentTarget)}
-                  aria-label={`Drifting leaf: fun fact about ${leaf.fact.title.toLowerCase()}`}
+                  aria-label={`Falling ${leaf.tone === "cone" ? "pinecone" : "pine sprig"}: fun fact about ${leaf.fact.title.toLowerCase()}`}
                   aria-expanded={isActive}
                   className={`leaf-btn ${isActive ? "is-active" : ""} ${
-                    leaf.tone === "leaf" ? "leaf-green" : "leaf-petal"
+                    leaf.tone === "pine" ? "leaf-green" : "leaf-cone"
                   }`}
                   style={{ width: leaf.size, height: leaf.size }}
                 >

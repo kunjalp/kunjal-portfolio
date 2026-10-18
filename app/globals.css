@@ -17,7 +17,8 @@
   --paper2: 224 219 192;
   --edge: 52 42 28;
   --shadow: 52 42 28;
-  --leaf: 96 110 50;
+  --leaf: 72 98 56;
+  --cone: 120 78 46;
   --petal: 214 104 96;
   --g1: 116 128 58;
   --g2: 214 104 92;
@@ -95,7 +96,8 @@
   --paper2: 50 48 36;
   --edge: 172 164 132;
   --shadow: 0 0 0;
-  --leaf: 140 160 86;
+  --leaf: 128 158 104;
+  --cone: 176 128 86;
   --petal: 226 122 110;
   --g1: 160 176 98;
   --g2: 234 136 120;
@@ -890,8 +892,8 @@ body {
 .leaf-green {
   color: rgb(var(--leaf));
 }
-.leaf-petal {
-  color: rgb(var(--petal));
+.leaf-cone {
+  color: rgb(var(--cone));
 }
 
 @keyframes drift {

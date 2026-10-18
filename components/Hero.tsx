@@ -50,7 +50,7 @@ export default function Hero() {
 
               <p className="mt-5 flex items-center gap-2 text-sm text-muted">
                 <Leaf size={15} className="text-accent2" aria-hidden />
-                Click a drifting leaf for something non-technical about me.
+                Click a falling pine or pinecone for something non-technical about me.
               </p>
             </div>
           </Window>
