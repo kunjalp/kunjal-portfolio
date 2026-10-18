@@ -5,7 +5,7 @@ export default function AcmWebLead() {
   return (
     <Window title="acm-ucsc/web-lead.md">
       <div className="space-y-4 p-6 sm:p-7">
-        <ProjectTitle title="ACM at UCSC: Web Redesign" meta="Web Development Lead · August 2026 – Present" />
+        <ProjectTitle title="ACM at UCSC: Web Redesign" meta={["Web Development Lead", "August 2026 – Present"]} />
         <p className="text-[1.05rem] leading-relaxed">
           I lead a team of 4 developers through a full redesign of the club&apos;s website, splitting the work
           across content, navigation, responsive UI and backend authentication.

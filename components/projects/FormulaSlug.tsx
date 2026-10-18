@@ -9,7 +9,7 @@ export default function FormulaSlug() {
         <div className="space-y-4">
           <ProjectTitle
             title="Formula Slug: vehicle firmware"
-            meta="FSAE · Embedded Software Engineer · Oct 2025 – Present"
+            meta={["Embedded Software Engineer, FSAE", "Oct 2025 – Present"]}
           />
           <p className="text-[1.05rem] leading-relaxed">
             I own the STM32 C/C++ firmware that takes sensor readings and reports them over the CAN bus, plus

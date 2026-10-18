@@ -5,7 +5,7 @@ export default function SammysPalate() {
   return (
     <Window title="sammys-palate/README.md">
       <div className="space-y-4 p-6 sm:p-7">
-        <ProjectTitle title="Sammy's Palate" meta="UCSC dining tracker · June 2026 – Present" />
+        <ProjectTitle title="Sammy's Palate" meta={["UCSC dining tracker", "June 2026 – Present"]} />
         <Metrics
           cols="sm:grid-cols-2"
           items={[

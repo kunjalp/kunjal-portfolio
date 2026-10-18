@@ -43,12 +43,23 @@ export function Metrics({ items, cols = "sm:grid-cols-4" }: { items: [string, st
   );
 }
 
-/** Heading plus the small mono "role · dates" line that opens every project window. */
-export function ProjectTitle({ title, meta }: { title: string; meta: string }) {
+/**
+ * Heading plus the line under it. The first entry is the role or kind of project;
+ * the rest are dates and places, set apart in the mono face instead of strung together with dots.
+ */
+export function ProjectTitle({ title, meta }: { title: string; meta: string[] }) {
+  const [what, ...rest] = meta;
   return (
     <>
       <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">{title}</h3>
-      <p className="font-mono text-xs text-muted">{meta}</p>
+      <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+        <span className="text-[0.95rem] font-semibold">{what}</span>
+        {rest.map((r) => (
+          <span key={r} className="font-mono text-xs text-muted">
+            {r}
+          </span>
+        ))}
+      </p>
     </>
   );
 }

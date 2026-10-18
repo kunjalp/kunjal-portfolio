@@ -7,7 +7,7 @@ export default function VexRobotics() {
     <Window title="vex-vrc/leadership.txt">
       <div className="grid gap-6 p-6 sm:p-7 lg:grid-cols-[1fr_1.4fr]">
         <div className="space-y-3">
-          <ProjectTitle title="VEX VRC Robotics" meta="Fremont, CA · Jul 2021 – May 2025 · Club President" />
+          <ProjectTitle title="VEX VRC Robotics" meta={["Club President", "Fremont, CA", "Jul 2021 – May 2025"]} />
           <p className="text-[1.05rem] leading-relaxed">
             I was a mechanical builder: I figured out the components and built drivetrains, flywheels and
             intake systems, and sometimes helped with autonomous code. After three seasons on the technical

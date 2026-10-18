@@ -6,7 +6,7 @@ export default function Cosmos() {
   return (
     <Window title="cosmos/perception-and-mapping">
       <div className="space-y-4 p-6 sm:p-7">
-        <ProjectTitle title="Scaled Autonomous Vehicle" meta="UC San Diego COSMOS · 2024" />
+        <ProjectTitle title="Scaled Autonomous Vehicle" meta={["UC San Diego COSMOS", "July – August 2024"]} />
         <p className="text-[1.05rem] leading-relaxed">
           Perception and mapping for a scaled autonomous vehicle. Try the occupancy grid below: the way a
           robot builds a map is by clearing the space it has seen.

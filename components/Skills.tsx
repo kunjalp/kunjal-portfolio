@@ -36,7 +36,7 @@ export default function Skills() {
             <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-7">
               {GROUPS.map((g) => (
                 <div key={g.label}>
-                  <h3 className="font-mono text-xs uppercase tracking-wider text-muted">{g.label}</h3>
+                  <h3 className="text-[0.95rem] font-bold leading-tight">{g.label}</h3>
                   <Tags items={g.items} />
                 </div>
               ))}
@@ -46,13 +46,13 @@ export default function Skills() {
           <div className="space-y-8">
             <Window title="school/coursework.txt">
               <div className="space-y-4 p-6 sm:p-7">
-                <p className="text-sm text-muted">UC Santa Cruz · CS + CE double major · GPA 3.95 / 4.0</p>
+                <p className="text-sm text-muted">UC Santa Cruz, CS + CE double major, GPA 3.95 / 4.0</p>
                 <div>
-                  <h3 className="font-mono text-xs uppercase tracking-wider text-muted">Completed</h3>
+                  <h3 className="text-[0.95rem] font-bold leading-tight">Completed</h3>
                   <Tags items={["Computer Systems & C", "Assembly Language", "Discrete Mathematics", "Linear Algebra", "Differential Equations"]} />
                 </div>
                 <div>
-                  <h3 className="font-mono text-xs uppercase tracking-wider text-muted">Upcoming</h3>
+                  <h3 className="text-[0.95rem] font-bold leading-tight">Upcoming</h3>
                   <Tags items={["Data Structures & Algorithms", "Probability & Statistics"]} />
                 </div>
               </div>
@@ -61,7 +61,7 @@ export default function Skills() {
             <Window title="school/certification.txt">
               <div className="p-6 sm:p-7">
                 <p className="font-bold">Algorithmic Toolbox</p>
-                <p className="mt-1 text-[0.95rem] text-muted">UC San Diego on Coursera · August 2026</p>
+                <p className="mt-1 text-[0.95rem] text-muted">UC San Diego on Coursera, August 2026</p>
               </div>
             </Window>
           </div>
