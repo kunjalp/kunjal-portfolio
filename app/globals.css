@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   Tokens. Light = Banff at golden hour. Dark = the same valley after sunset.
+   Tokens. Light = Banff at golden hour. Dark = the same valley at sunset, deepening to twilight as you scroll.
    Colors are "R G B" triplets so Tailwind can add alpha.
    ========================================================================== */
 :root {
@@ -87,14 +87,14 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: 18 16 20;
-  --fg: 236 230 212;
-  --muted: 170 162 138;
+  --bg: 64 36 50;
+  --fg: 242 230 214;
+  --muted: 190 170 156;
   --accent: 234 136 120; /* coral reads better than burgundy on dark */
   --accent2: 160 176 98;
-  --paper: 33 32 25;
-  --paper2: 50 48 36;
-  --edge: 172 164 132;
+  --paper: 44 33 37;
+  --paper2: 62 46 49;
+  --edge: 196 166 146;
   --shadow: 0 0 0;
   --leaf: 128 158 104;
   --cone: 176 128 86;
@@ -103,44 +103,44 @@
   --g2: 234 136 120;
   --g3: 196 84 100;
 
-  --sky-top: 12 12 20;
-  --sky-mid: 30 24 40;
-  --sky-low: 76 38 52;
-  --dusk-top: 8 8 14;
-  --dusk-mid: 20 16 28;
-  --dusk-low: 46 22 36;
-  --sun: 214 110 92;
-  --sun-glow: 150 60 70;
-  --sun-op: 0;
+  --sky-top: 58 44 86;
+  --sky-mid: 172 78 94;
+  --sky-low: 240 132 86;
+  --dusk-top: 40 30 68;
+  --dusk-mid: 118 54 86;
+  --dusk-low: 198 88 74;
+  --sun: 255 146 88;
+  --sun-glow: 244 104 72;
+  --sun-op: 1;
   --moon: 236 228 208;
-  --moon-op: 0.95;
+  --moon-op: 0;
   --star: 255 246 230;
-  --stars-op: 0.9;
-  --cloud: 52 38 52;
-  --cloud-lit: 112 56 70;
-  --bird: 0 0 0;
+  --stars-op: 0.08;
+  --cloud: 198 104 118;
+  --cloud-lit: 255 168 116;
+  --bird: 44 20 32;
 
-  --far: 48 38 52;
-  --far-lit: 86 52 64;
-  --far-snow: 86 82 102;
-  --far-snow-lit: 140 112 128;
-  --haze: 54 32 46;
-  --mid: 32 28 32;
-  --mid-lit: 52 38 42;
-  --mid-snow: 62 60 76;
-  --mid-snow-lit: 106 92 104;
-  --strata: 0 0 0;
+  --far: 116 66 94;
+  --far-lit: 214 112 98;
+  --far-snow: 190 142 162;
+  --far-snow-lit: 255 176 140;
+  --haze: 206 104 94;
+  --mid: 66 38 58;
+  --mid-lit: 126 64 70;
+  --mid-snow: 146 112 134;
+  --mid-snow-lit: 226 146 128;
+  --strata: 24 10 18;
 
-  --hill-back: 30 32 26;
-  --trees-back: 24 28 20;
-  --hill-front: 20 24 16;
-  --trees-front: 16 20 12;
-  --lake-top: 34 40 50;
-  --lake-bottom: 16 20 24;
-  --shine: 220 210 190;
-  --shore: 12 14 10;
-  --fore: 6 8 5;
-  --dusk-tint: 10 6 20;
+  --hill-back: 52 44 44;
+  --trees-back: 40 34 34;
+  --hill-front: 44 36 36;
+  --trees-front: 34 28 28;
+  --lake-top: 196 104 104;
+  --lake-bottom: 66 42 68;
+  --shine: 255 196 146;
+  --shore: 38 26 32;
+  --fore: 30 20 26;
+  --dusk-tint: 60 24 60;
 
   --car: 52 52 56;
   --car-shade: 26 26 30;
