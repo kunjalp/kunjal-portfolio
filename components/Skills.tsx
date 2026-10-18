@@ -29,7 +29,7 @@ export default function Skills() {
     <section id="skills" className="scroll-mt-20 px-4 py-16 sm:px-8">
       <div className="mx-auto w-full max-w-[1240px]">
         <h2 className="text-[clamp(2.2rem,5vw,3.6rem)] font-extrabold leading-none tracking-[-0.02em] [font-stretch:80%]">
-          Technical index
+          Technical Index
         </h2>
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-[1.6fr_1fr]">
           <Window title="skills/index.md">
