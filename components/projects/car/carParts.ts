@@ -25,7 +25,7 @@ export const LIVERY = {
   blue: "#1d4fb3",
   black: "#151517",
   /** the tube space frame */
-  frame: "#5b5e68",
+  frame: "#8a8e99",
 };
 
 /** Racing number, drawn as a plain bold decal. */
