@@ -8,12 +8,14 @@ import {
   CatmullRomCurve3,
   DoubleSide,
   Group,
-  MeshLambertMaterial,
+  MeshStandardMaterial,
+  PMREMGenerator,
   Shape as Outline,
   SRGBColorSpace,
   Vector2,
   Vector3,
 } from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { CAR_NUMBER, COLORS, LIVERY, PARTS, type ColorRole, type Part, type Shape } from "./carParts";
 
 /**
@@ -38,27 +40,78 @@ const CALLOUT_FADE = [0.45, 0.8] as const;
 /** Max device pixel ratio for this canvas. */
 const MAX_DPR = 1.75;
 
+/**
+ * Shading. Paint is glossy and reflects a soft studio environment, so color shades
+ * across every panel instead of sitting flat. Roughness/metalness per color role (0..1).
+ */
+const FINISH: Record<ColorRole, { rough: number; metal: number }> = {
+  yellow: { rough: 0.32, metal: 0.05 },
+  blue: { rough: 0.32, metal: 0.05 },
+  black: { rough: 0.6, metal: 0 },
+  accent: { rough: 0.45, metal: 0.1 },
+  paper: { rough: 0.7, metal: 0 },
+  fg: { rough: 0.5, metal: 0.2 },
+  edge: { rough: 0.75, metal: 0 },
+  rim: { rough: 0.3, metal: 0.7 },
+};
+/** Strength of the studio reflections. */
+const ENV_INTENSITY = 0.55;
+/** Lights: warm sky above, dark ground bounce below, a key from the front, a cool rim from behind. */
+const LIGHTS = {
+  hemi: { sky: "#fff3df", ground: "#2a2230", intensity: 1.1 },
+  key: { position: [3, 5, 4] as const, intensity: 1.9 },
+  rim: { position: [-4, 2.5, -3] as const, intensity: 0.9, color: "#cfe0ff" },
+};
+/** Every surface darkens toward the ground: brightness at the floor vs. full brightness at `top` (world y). */
+const GRADIENT = { floor: 0.5, top: 0.8 };
+
 const ease = (t: number) => t * t * (3 - 2 * t);
 const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
+/** Darken each fragment toward the ground (world y), so surfaces get a soft vertical gradient. */
+function addHeightGradient(m: MeshStandardMaterial) {
+  m.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying float vGradY;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvGradY = (modelMatrix * vec4(transformed, 1.0)).y;");
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nvarying float vGradY;")
+      .replace(
+        "#include <dithering_fragment>",
+        `#include <dithering_fragment>
+gl_FragColor.rgb *= mix(${GRADIENT.floor.toFixed(3)}, 1.0, smoothstep(0.0, ${GRADIENT.top.toFixed(3)}, vGradY));`,
+      );
+  };
+}
+
+type CarMats = { flat: Record<ColorRole, MeshStandardMaterial>; smooth: Record<ColorRole, MeshStandardMaterial> };
+
 /**
- * One material per color role. Livery colors are fixed; site colors are re-read
+ * Materials per color role, in two flavors: faceted (boxes, plates) and smooth
+ * (tires, nose, helmet, wiring). Livery colors are fixed; site colors are re-read
  * from the CSS variables whenever the theme changes.
  */
-function useCarMaterials() {
+function useCarMaterials(): CarMats {
   const invalidate = useThree((s) => s.invalidate);
-  const mats = useMemo(
-    () =>
+  const mats = useMemo(() => {
+    const make = (flatShading: boolean) =>
       Object.fromEntries(
         (Object.keys(COLORS) as ColorRole[]).map((role) => {
           const c = COLORS[role];
-          const m = new MeshLambertMaterial({ flatShading: true, side: DoubleSide });
+          const m = new MeshStandardMaterial({
+            flatShading,
+            side: DoubleSide,
+            roughness: FINISH[role].rough,
+            metalness: FINISH[role].metal,
+            envMapIntensity: ENV_INTENSITY,
+          });
           if ("hex" in c) m.color.setStyle(c.hex);
+          addHeightGradient(m);
           return [role, m];
         }),
-      ) as Record<ColorRole, MeshLambertMaterial>,
-    [],
-  );
+      ) as Record<ColorRole, MeshStandardMaterial>;
+    return { flat: make(true), smooth: make(false) };
+  }, []);
   useEffect(() => {
     const apply = () => {
       const cs = getComputedStyle(document.documentElement);
@@ -66,7 +119,8 @@ function useCarMaterials() {
         const c = COLORS[role];
         if (!("cssVar" in c)) continue;
         const rgb = cs.getPropertyValue(c.cssVar).trim().split(/\s+/).join(", ");
-        mats[role].color.setStyle(`rgb(${rgb})`);
+        mats.flat[role].color.setStyle(`rgb(${rgb})`);
+        mats.smooth[role].color.setStyle(`rgb(${rgb})`);
       }
       invalidate();
     };
@@ -75,7 +129,7 @@ function useCarMaterials() {
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     return () => {
       mo.disconnect();
-      Object.values(mats).forEach((m) => m.dispose());
+      [...Object.values(mats.flat), ...Object.values(mats.smooth)].forEach((m) => m.dispose());
     };
   }, [mats, invalidate]);
   return mats;
@@ -113,7 +167,7 @@ function NumberDecal({ s }: { s: Extract<Shape, { kind: "decal" }> }) {
 }
 
 /** Flat plate from a smooth 2D outline (the rear wing endplates). */
-function Plate({ s, mat }: { s: Extract<Shape, { kind: "plate" }>; mat: MeshLambertMaterial }) {
+function Plate({ s, mat }: { s: Extract<Shape, { kind: "plate" }>; mat: MeshStandardMaterial }) {
   const outline = useMemo(() => {
     const o = new Outline();
     const pts = s.outline.map(([x, y]) => new Vector2(x, y));
@@ -129,7 +183,10 @@ function Plate({ s, mat }: { s: Extract<Shape, { kind: "plate" }>; mat: MeshLamb
   );
 }
 
-function ShapeMesh({ s, mat }: { s: Shape; mat: MeshLambertMaterial }) {
+/** Curved shapes get smooth shading so highlights roll across them; boxes stay faceted. */
+const SMOOTH_KINDS = new Set<Shape["kind"]>(["cyl", "cone", "sphere", "tube"]);
+
+function ShapeMesh({ s, mat }: { s: Shape; mat: MeshStandardMaterial }) {
   if (s.kind === "decal") return <NumberDecal s={s} />;
   if (s.kind === "plate") return <Plate s={s} mat={mat} />;
   if (s.kind === "sphere") {
@@ -164,7 +221,7 @@ function PartMesh({
   onFocusLabel,
 }: {
   part: Part;
-  mats: Record<ColorRole, MeshLambertMaterial>;
+  mats: CarMats;
   setRef: (g: Group | null) => void;
   labelRef: (el: HTMLButtonElement | null) => void;
   onFocusLabel: (note: string | null) => void;
@@ -172,7 +229,11 @@ function PartMesh({
   return (
     <group ref={setRef}>
       {part.shapes.map((s, i) => (
-        <ShapeMesh key={i} s={s} mat={mats[("color" in s && s.color) || part.color]} />
+        <ShapeMesh
+          key={i}
+          s={s}
+          mat={(SMOOTH_KINDS.has(s.kind) ? mats.smooth : mats.flat)[("color" in s && s.color) || part.color]}
+        />
       ))}
       {part.callout && (
         <Html position={part.callout.at} center zIndexRange={[20, 0]}>
@@ -201,10 +262,16 @@ function Car({ target, onNote }: { target: number; onNote: (n: string | null) =>
   const groups = useRef<(Group | null)[]>([]);
   const labels = useRef<(HTMLButtonElement | null)[]>([]);
   const shown = useRef(-1); // forces the first frame to lay everything out
+  // Labels (drei Html) read part positions before this frame moves them, so after the
+  // motion settles we render a couple more frames to let them catch up.
+  const settleFrames = useRef(0);
   const invalidate = useThree((s) => s.invalidate);
 
   // A new target only needs one frame to start; useFrame keeps going until it settles.
-  useEffect(() => invalidate(), [target, invalidate]);
+  useEffect(() => {
+    settleFrames.current = 0;
+    invalidate();
+  }, [target, invalidate]);
 
   useFrame((state, dt) => {
     const prev = shown.current;
@@ -225,6 +292,10 @@ function Car({ target, onNote }: { target: number; onNote: (n: string | null) =>
     });
 
     if (shown.current !== target) state.invalidate();
+    else if (settleFrames.current < 2) {
+      settleFrames.current++;
+      state.invalidate();
+    }
   });
 
   let li = 0;
@@ -279,6 +350,25 @@ function PauseWhenHidden({ el }: { el: React.RefObject<HTMLElement> }) {
   return null;
 }
 
+/** Soft studio reflections, generated in the browser (no HDR download). */
+function StudioEnvironment() {
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+  useEffect(() => {
+    const pmrem = new PMREMGenerator(gl);
+    const room = new RoomEnvironment();
+    const env = pmrem.fromScene(room, 0.04).texture;
+    scene.environment = env;
+    return () => {
+      scene.environment = null;
+      env.dispose();
+      room.dispose();
+      pmrem.dispose();
+    };
+  }, [gl, scene]);
+  return null;
+}
+
 function Aim() {
   const camera = useThree((s) => s.camera);
   useEffect(() => {
@@ -329,8 +419,10 @@ export default function CarCanvas({
       >
         <Aim />
         <PauseWhenHidden el={wrap} />
-        <ambientLight intensity={1.6} />
-        <directionalLight position={[3, 5, 4]} intensity={1.6} />
+        <StudioEnvironment />
+        <hemisphereLight args={[LIGHTS.hemi.sky, LIGHTS.hemi.ground, LIGHTS.hemi.intensity]} />
+        <directionalLight position={[...LIGHTS.key.position]} intensity={LIGHTS.key.intensity} />
+        <directionalLight position={[...LIGHTS.rim.position]} intensity={LIGHTS.rim.intensity} color={LIGHTS.rim.color} />
         <Car target={target} onNote={onNote} />
       </Canvas>
     </div>
