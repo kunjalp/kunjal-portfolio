@@ -704,7 +704,7 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
 /* Name set condensed and tight, like lettering on a trailhead sign. */
 .hero-name {
   font-stretch: 78%;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
