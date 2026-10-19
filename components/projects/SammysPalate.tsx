@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import Window from "../Window";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
@@ -15,6 +16,16 @@ export default function SammysPalate() {
               "A Codemagic CI/CD pipeline builds, code-signs and ships each iOS update.",
             ]}
           />
+          <a
+            href="https://apps.apple.com/app/sammys-palate/id6806954658"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Sammy's Palate on the App Store (opens in a new tab)"
+            className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+          >
+            App Store
+            <ArrowUpRight size={14} aria-hidden />
+          </a>
         </div>
         <div className="space-y-4">
           <Metrics
