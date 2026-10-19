@@ -1498,3 +1498,31 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
     0 1px 14px rgb(var(--on-sky-halo, var(--bg)) / var(--on-sky-halo-a, 0.55));
   transition: color 0.6s ease;
 }
+
+/* Exploded car (components/projects/car): callout labels pinned to parts. */
+.car-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  border: 1.5px solid rgb(var(--edge));
+  border-radius: 999px;
+  background: rgb(var(--paper));
+  color: rgb(var(--fg));
+  padding: 0.12rem 0.55rem 0.12rem 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  box-shadow: 2px 2px 0 rgb(var(--shadow) / 0.6);
+  transition: opacity 0.15s linear;
+}
+.car-callout:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+}
+.car-callout-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgb(var(--accent));
+}

@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import CanTicker from "./CanTicker";
 import ThrottleMap from "./ThrottleMap";
+
+// Loaded only when the tab is first opened (React.lazy adds nothing to the page bundle, unlike next/dynamic).
+// The tab only renders after a click, so this never runs on the server. The 3D code inside loads later still.
+const ExplodedView = lazy(() => import("./car/ExplodedView"));
 
 // From vcu/etc/etc_controller.cpp, PR #26 (first version of the change).
 const CODE = `float ETCController::accelerator_mapping(float pedal_travel) {
@@ -34,6 +38,7 @@ const TABS = [
   { id: "map", label: "Throttle map" },
   { id: "code", label: "C++" },
   { id: "can", label: "CAN telemetry" },
+  { id: "car", label: "Exploded view" },
 ] as const;
 
 export default function FormulaPanel() {
@@ -59,6 +64,11 @@ export default function FormulaPanel() {
       <div role="tabpanel" className="mt-4">
         {tab === "map" && <ThrottleMap />}
         {tab === "can" && <CanTicker />}
+        {tab === "car" && (
+          <Suspense fallback={<p className="font-mono text-xs text-muted">Loading…</p>}>
+            <ExplodedView />
+          </Suspense>
+        )}
         {tab === "code" && (
           <div>
             <p className="font-mono text-xs text-muted">vcu/etc/etc_controller.cpp</p>
