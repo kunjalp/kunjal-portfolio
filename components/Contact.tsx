@@ -193,10 +193,10 @@ export default function Contact() {
         <div className="mt-8">
           <Window title="kunjal@portfolio: ~/contact">
             <div
-              className="bg-[rgb(var(--tire))] p-4 font-mono text-[0.85rem] leading-7 sm:p-5"
+              className="flex min-h-full flex-col bg-[rgb(var(--tire))] p-4 font-mono text-[0.85rem] leading-7 sm:p-5"
               onClick={() => input.current?.focus()}
             >
-              <div ref={box} className="max-h-[420px] overflow-y-auto" role="log" aria-live="polite">
+              <div ref={box} className="max-h-[420px] flex-1 overflow-y-auto [.win-expanded_&]:max-h-none" role="log" aria-live="polite">
                 {lines.map((l, i) => (
                   <p key={i} className={`whitespace-pre-wrap break-words ${cls[l.kind]}`}>
                     {l.kind === "cmd" && !/^(name|your email|message):/.test(l.text) && (
