@@ -10,6 +10,7 @@ import {
   Group,
   MeshStandardMaterial,
   PMREMGenerator,
+  Quaternion,
   Shape as Outline,
   SRGBColorSpace,
   Vector2,
@@ -30,7 +31,7 @@ import { CAR_NUMBER, COLORS, LIVERY, PARTS, type ColorRole, type Part, type Shap
 // ---------------------------------------------------------------------------
 // Tweakables
 // ---------------------------------------------------------------------------
-const CAMERA = { position: [4.4, 2.9, 5.6] as const, lookAt: [0.1, 0.6, 0.2] as const, fov: 28 };
+const CAMERA = { position: [4.4, 2.9, 5.6] as const, lookAt: [0.05, 0.66, 0.2] as const, fov: 24 };
 /** How fast the shown explode amount follows the slider/drag (higher = snappier). */
 const EASE = 9;
 /** The car turns a little as it explodes, so the depth reads. Radians at full explode. */
@@ -48,6 +49,7 @@ const FINISH: Record<ColorRole, { rough: number; metal: number }> = {
   yellow: { rough: 0.32, metal: 0.05 },
   blue: { rough: 0.32, metal: 0.05 },
   black: { rough: 0.6, metal: 0 },
+  frame: { rough: 0.4, metal: 0.45 },
   accent: { rough: 0.45, metal: 0.1 },
   paper: { rough: 0.7, metal: 0 },
   fg: { rough: 0.5, metal: 0.2 },
@@ -184,11 +186,33 @@ function Plate({ s, mat }: { s: Extract<Shape, { kind: "plate" }>; mat: MeshStan
 }
 
 /** Curved shapes get smooth shading so highlights roll across them; boxes stay faceted. */
-const SMOOTH_KINDS = new Set<Shape["kind"]>(["cyl", "cone", "sphere", "tube"]);
+const SMOOTH_KINDS = new Set<Shape["kind"]>(["cyl", "cone", "sphere", "tube", "rod"]);
+
+const UP = new Vector3(0, 1, 0);
+
+/** A straight round tube between two points (frame members, A-arms, struts). */
+function Rod({ s, mat }: { s: Extract<Shape, { kind: "rod" }>; mat: MeshStandardMaterial }) {
+  const { mid, quat, len } = useMemo(() => {
+    const a = new Vector3(...s.a);
+    const b = new Vector3(...s.b);
+    const dir = b.clone().sub(a);
+    return {
+      mid: a.clone().add(b).multiplyScalar(0.5),
+      quat: new Quaternion().setFromUnitVectors(UP, dir.clone().normalize()),
+      len: dir.length(),
+    };
+  }, [s.a, s.b]);
+  return (
+    <mesh position={mid} quaternion={quat} material={mat}>
+      <cylinderGeometry args={[s.r, s.r, len, 6]} />
+    </mesh>
+  );
+}
 
 function ShapeMesh({ s, mat }: { s: Shape; mat: MeshStandardMaterial }) {
   if (s.kind === "decal") return <NumberDecal s={s} />;
   if (s.kind === "plate") return <Plate s={s} mat={mat} />;
+  if (s.kind === "rod") return <Rod s={s} mat={mat} />;
   if (s.kind === "sphere") {
     return (
       <mesh position={s.pos} material={mat}>
