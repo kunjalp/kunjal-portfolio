@@ -1,13 +1,22 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { buildRange, scatter, treeLine, underCurve, VB_H, VB_W } from "./scenery/geometry";
+import { isMotionPaused } from "./motion";
+import { buildRange, rng, scatter, treeLine, treeList, underCurve, VB_H, VB_W } from "./scenery/geometry";
 
 // ---------------------------------------------------------------------------
 // Scene geometry, generated once at module load from fixed seeds.
 // ---------------------------------------------------------------------------
 
 const SHORE = 742; // waterline of the lake
+
+// Ambient motion. Amplitudes live in globals.css (search "Ambient motion").
+/** Pine sway: each tree's cycle length is picked between these (seconds). */
+const SWAY = { minS: 7, maxS: 12 };
+/** Lake shimmer: each glint drifts and fades on a cycle between these (seconds). */
+const SHIMMER = { minS: 5, maxS: 9 };
+/** Mouse parallax: how quickly layers ease toward the cursor (0..1 per frame). */
+const PARALLAX_EASE = 0.06;
 const SUN = { x: 1182, y: 384, r: 50 };
 
 // Far range: a Three Sisters-style trio on the right, the sun setting between them.
@@ -61,14 +70,21 @@ const frontHill = underCurve(frontGround, -20, 1620, SHORE + 4);
 const frontTrees = treeLine({ seed: 37, from: -20, to: 1620, ground: frontGround, minH: 24, maxH: 56, spacing: 7, density: 0.95 });
 
 const shore = underCurve(shoreGround, -20, 1620, VB_H + 10, 6);
+// The big framing spruces sway one by one, each pivoting at its base on its own slow cycle.
+const swayRand = rng(53);
 const edgeTrees = [
-  treeLine({ seed: 41, from: -30, to: 300, ground: shoreGround, minH: 120, maxH: 330, spacing: 30, density: 1 }),
-  treeLine({ seed: 43, from: 1330, to: 1640, ground: shoreGround, minH: 140, maxH: 360, spacing: 32, density: 1 }),
-].join(" ");
+  ...treeList({ seed: 41, from: -30, to: 300, ground: shoreGround, minH: 120, maxH: 330, spacing: 30, density: 1 }),
+  ...treeList({ seed: 43, from: 1330, to: 1640, ground: shoreGround, minH: 140, maxH: 360, spacing: 32, density: 1 }),
+].map((t) => ({ ...t, dur: SWAY.minS + swayRand() * (SWAY.maxS - SWAY.minS), delay: -swayRand() * SWAY.maxS }));
 const shoreBrush = treeLine({ seed: 47, from: 260, to: 1350, ground: shoreGround, minH: 10, maxH: 30, spacing: 9, density: 0.5 });
 
 const stars = scatter(7, 110, 0, VB_W, 0, 520);
-const shimmer = scatter(13, 46, 60, 1540, SHORE + 8, 880);
+const shimmerRand = rng(59);
+const shimmer = scatter(13, 46, 60, 1540, SHORE + 8, 880).map((g) => ({
+  ...g,
+  dur: SHIMMER.minS + shimmerRand() * (SHIMMER.maxS - SHIMMER.minS),
+  delay: -shimmerRand() * SHIMMER.maxS,
+}));
 
 // Thin stratus clouds catching the low sun on their undersides.
 const clouds: { x: number; y: number; w: number }[] = [
@@ -149,6 +165,37 @@ export default function Scenery() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Mouse parallax: --mx / --my (-1..1) ease toward the cursor; CSS moves near layers more than far ones.
+  // Only with a fine pointer that can hover (not touch), and never with reduced motion or while paused.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fine = matchMedia("(hover: hover) and (pointer: fine)");
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const target = { x: 0, y: 0 };
+    const cur = { x: 0, y: 0 };
+    let raf = 0;
+    const step = () => {
+      cur.x += (target.x - cur.x) * PARALLAX_EASE;
+      cur.y += (target.y - cur.y) * PARALLAX_EASE;
+      el.style.setProperty("--mx", cur.x.toFixed(4));
+      el.style.setProperty("--my", cur.y.toFixed(4));
+      const settled = Math.abs(target.x - cur.x) < 0.001 && Math.abs(target.y - cur.y) < 0.001;
+      raf = settled ? 0 : requestAnimationFrame(step);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse" || !fine.matches || reduced.matches || isMotionPaused()) return;
+      target.x = (e.clientX / window.innerWidth) * 2 - 1;
+      target.y = (e.clientY / window.innerHeight) * 2 - 1;
+      if (!raf) raf = requestAnimationFrame(step);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
@@ -294,20 +341,46 @@ export default function Scenery() {
           ))}
         </g>
 
+        <rect x="-20" y={SHORE - 30} width={VB_W + 40} height="44" fill="url(#shore-mist)" />
+      </Layer>
+
+      {/* Lake glints on their own layer, so their animation doesn't repaint the forest and reflection */}
+      <Layer className="layer-forest layer-shimmer">
         <g className="shimmer">
           {shimmer.map((s, i) => (
-            <rect key={i} x={s.x} y={s.y} width={10 + s.s * 46} height="1.4" rx="0.7" />
+            <rect
+              key={i}
+              x={s.x}
+              y={s.y}
+              width={10 + s.s * 46}
+              height="1.4"
+              rx="0.7"
+              style={{ animationDuration: `${s.dur.toFixed(2)}s`, animationDelay: `${s.delay.toFixed(2)}s` }}
+            />
           ))}
         </g>
-
-        <rect x="-20" y={SHORE - 30} width={VB_W + 40} height="44" fill="url(#shore-mist)" />
       </Layer>
 
       {/* Foreground shore and framing spruces */}
       <Layer className="layer-fore">
         <path className="shore" d={shore} />
         <path className="shore" d={shoreBrush} />
-        <path className="fore-trees" d={edgeTrees} />
+      </Layer>
+
+      {/* Framing spruces, on their own layer so swaying repaints only them */}
+      <Layer className="layer-fore layer-pines">
+        {edgeTrees.map((t, i) => (
+          <path
+            key={i}
+            className="fore-trees pine-sway"
+            d={t.d}
+            style={{
+              transformOrigin: `${t.x}px ${t.y}px`,
+              animationDuration: `${t.dur.toFixed(2)}s`,
+              animationDelay: `${t.delay.toFixed(2)}s`,
+            }}
+          />
+        ))}
       </Layer>
 
       <div className="dusk-tint" />
