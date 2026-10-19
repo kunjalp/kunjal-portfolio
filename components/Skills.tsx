@@ -58,10 +58,10 @@ export default function Skills() {
               <div className="space-y-4 p-6 sm:p-7">
                 <p className="text-sm text-muted">UC Santa Cruz, CS + CE double major, GPA 3.95 / 4.0</p>
                 <div>
-                  <Listing dir="completed" items={["Computer Systems & C", "Assembly Language", "Discrete Mathematics", "Linear Algebra", "Differential Equations"]} />
+                  <Listing dir="completed" items={["Computer Systems & C", "Assembly Language", "Discrete Mathematics", "Linear Algebra", "Multivariable Calculus", "Differential Equations"]} />
                 </div>
                 <div>
-                  <Listing dir="upcoming" items={["Data Structures & Algorithms", "Probability & Statistics"]} />
+                  <Listing dir="in-progress" items={["Data Structures & Algorithms", "Probability & Statistics"]} />
                 </div>
               </div>
             </Window>

@@ -12,20 +12,32 @@ export default function SammysPalate() {
             items={[
               "Live on the App Store, plus a web demo.",
               "A scheduled Python/Playwright scraper parses every campus dining menu, with a name-based fallback.",
-              "Row-level security (RLS) in the database keeps each person's data private.",
+              "I designed the PostgreSQL schema and the Supabase row-level security (RLS) policies that keep each person's data private.",
               "A Codemagic CI/CD pipeline builds, code-signs and ships each iOS update.",
             ]}
           />
-          <a
-            href="https://apps.apple.com/app/sammys-palate/id6806954658"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Sammy's Palate on the App Store (opens in a new tab)"
-            className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
-          >
-            App Store
-            <ArrowUpRight size={14} aria-hidden />
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="https://apps.apple.com/app/sammys-palate/id6806954658"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sammy's Palate on the App Store (opens in a new tab)"
+              className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+            >
+              App Store
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
+            <a
+              href="https://ucsc-dining-tracker.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sammy's Palate live web demo (opens in a new tab)"
+              className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+            >
+              Live Web Demo
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
+          </div>
         </div>
         <div className="space-y-4">
           <Metrics
@@ -36,7 +48,7 @@ export default function SammysPalate() {
             ]}
           />
           <Tags
-            items={["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Python", "Playwright", "Capacitor (iOS)"]}
+            items={["Next.js", "React", "TypeScript", "Supabase", "PostgreSQL", "Python", "Playwright", "Swift", "Capacitor (iOS)"]}
           />
         </div>
       </div>
