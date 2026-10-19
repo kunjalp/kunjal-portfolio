@@ -12,6 +12,8 @@ function Polaroid({
   tilt = 0,
   className = "",
   imgClass = "aspect-[4/5]",
+  zoom = 1,
+  origin = "50% 50%",
 }: {
   src: string;
   alt: string;
@@ -19,6 +21,9 @@ function Polaroid({
   tilt?: number;
   className?: string;
   imgClass?: string;
+  /** scale the photo inside its frame, around `origin` (a CSS transform-origin) */
+  zoom?: number;
+  origin?: string;
 }) {
   return (
     <figure
@@ -26,7 +31,16 @@ function Polaroid({
       style={{ transform: `rotate(${tilt}deg)` }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={IMG + src} alt={alt} loading="lazy" decoding="async" className={`w-full object-cover ${imgClass}`} />
+      <div className={`overflow-hidden ${imgClass}`}>
+        <img
+          src={IMG + src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+          style={zoom !== 1 ? { transform: `scale(${zoom})`, transformOrigin: origin } : undefined}
+        />
+      </div>
       {caption && <figcaption className="mt-2 text-center font-mono text-xs text-muted">{caption}</figcaption>}
     </figure>
   );
@@ -71,6 +85,8 @@ export default function About() {
                   caption="golden hour, always"
                   tilt={-2}
                   imgClass="aspect-[4/3] lg:aspect-[4/5]"
+                  zoom={1.4}
+                  origin="51% 52%"
                 />
                 <div className="space-y-4">
                   <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">
