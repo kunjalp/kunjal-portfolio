@@ -8,7 +8,7 @@ export const VB_H = 960;
 
 type Pt = [number, number];
 
-function rng(seed: number) {
+export function rng(seed: number) {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) >>> 0;
@@ -185,8 +185,7 @@ function spruce(x: number, base: number, h: number, w: number, rand: () => numbe
   return closed([[x, top], ...right, [x + trunk, base], [x - trunk, base], ...left]);
 }
 
-/** A band of trees following a ground curve, with natural clumps and gaps. */
-export function treeLine(opts: {
+type TreeLineOpts = {
   seed: number;
   from: number;
   to: number;
@@ -195,19 +194,33 @@ export function treeLine(opts: {
   maxH: number;
   spacing: number;
   density?: number;
-}) {
+};
+
+/**
+ * A band of trees following a ground curve, with natural clumps and gaps.
+ * One entry per spruce, with its base point, so each tree can sway on its own.
+ */
+export function treeList(opts: TreeLineOpts) {
   const rand = rng(opts.seed);
-  const out: string[] = [];
+  const out: { d: string; x: number; y: number }[] = [];
   let x = opts.from;
   while (x < opts.to) {
     const clump = 0.5 + 0.5 * Math.sin(x / 47 + opts.seed) * Math.sin(x / 131);
     if (rand() < (opts.density ?? 0.85) * (0.45 + clump * 0.75)) {
       const h = opts.minH + (opts.maxH - opts.minH) * (0.35 + 0.65 * rand()) * (0.7 + clump * 0.45);
-      out.push(spruce(x, opts.ground(x) + 2, h, h * (0.17 + rand() * 0.06), rand));
+      const y = opts.ground(x) + 2;
+      out.push({ d: spruce(x, y, h, h * (0.17 + rand() * 0.06), rand), x: r1(x), y: r1(y) });
     }
     x += opts.spacing * (0.6 + rand() * 0.8);
   }
-  return out.join(" ");
+  return out;
+}
+
+/** The same band of trees as a single path. */
+export function treeLine(opts: TreeLineOpts) {
+  return treeList(opts)
+    .map((t) => t.d)
+    .join(" ");
 }
 
 /** Closed shape under a curve, for hills and shorelines. */

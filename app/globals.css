@@ -185,6 +185,8 @@ body {
    ========================================================================== */
 .scenery {
   --p: 0;
+  --mx: 0;
+  --my: 0;
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -212,26 +214,54 @@ body {
 }
 
 /* Every layer shares one viewBox and is 60px taller than the screen, so
-   layers stay aligned and parallax never exposes an empty bottom edge. */
+   layers stay aligned and parallax never exposes an empty bottom edge.
+   Layers also bleed 16px past each side so mouse parallax never shows an edge. */
 .scene-layer {
   position: absolute;
-  left: 0;
+  left: -16px;
   bottom: -60px;
-  width: 100%;
+  width: calc(100% + 32px);
   height: calc(100% + 60px);
   will-change: transform;
 }
+/* --mx / --my (-1..1) follow the mouse (Scenery.tsx); near layers move more than far ones. */
+.layer-sky {
+  transform: translate(calc(var(--mx) * -1.5px), calc(var(--my) * -1px));
+}
 .layer-far {
-  transform: translateY(calc(var(--p) * -6px));
+  transform: translate(calc(var(--mx) * -3px), calc(var(--p) * -6px + var(--my) * -1.5px));
 }
 .layer-mid {
-  transform: translateY(calc(var(--p) * -16px));
+  transform: translate(calc(var(--mx) * -5px), calc(var(--p) * -16px + var(--my) * -2.5px));
 }
 .layer-forest {
-  transform: translateY(calc(var(--p) * -26px));
+  transform: translate(calc(var(--mx) * -8px), calc(var(--p) * -26px + var(--my) * -4px));
 }
 .layer-fore {
-  transform: translateY(calc(var(--p) * -48px));
+  transform: translate(calc(var(--mx) * -13px), calc(var(--p) * -48px + var(--my) * -6px));
+}
+
+/* Ambient motion: framing pines sway about their base, lake glints drift and fade.
+   Cycle lengths and offsets are set per element in Scenery.tsx. */
+.pine-sway {
+  transform-box: view-box;
+  animation: pine-sway 9s ease-in-out infinite alternate;
+}
+@keyframes pine-sway {
+  from { transform: rotate(-0.7deg); }
+  to { transform: rotate(0.7deg); }
+}
+.shimmer rect {
+  animation: lake-glint 7s ease-in-out infinite alternate;
+}
+@keyframes lake-glint {
+  from { transform: translateX(-10px); opacity: 0.1; }
+  50% { opacity: 0.42; }
+  to { transform: translateX(10px); opacity: 0.14; }
+}
+/* The navbar pause switch freezes all ambient motion where it is. */
+html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drift, .leaf, .leaf-sway) {
+  animation-play-state: paused;
 }
 
 .stars circle {
@@ -1200,6 +1230,10 @@ body {
   .scene-layer,
   .sun {
     transform: none;
+  }
+  .pine-sway,
+  .shimmer rect {
+    animation: none;
   }
 }
 

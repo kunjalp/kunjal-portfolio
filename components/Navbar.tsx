@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Menu, Mountain, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import GravityToggle from "./GravityToggle";
+import MotionToggle from "./MotionToggle";
 import { ProjectIndexButton } from "./ProjectIndex";
 
 const links = [
@@ -65,6 +66,7 @@ export default function Navbar() {
         <div className="ml-auto flex items-center gap-3">
           <Clock />
           <ProjectIndexButton />
+          <MotionToggle />
           <GravityToggle />
           <ThemeToggle />
           <button
