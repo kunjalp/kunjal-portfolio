@@ -3,8 +3,18 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
-import { CatmullRomCurve3, Group, MeshLambertMaterial, Vector3 } from "three";
-import { COLOR_VARS, PARTS, type ColorRole, type Part, type Shape } from "./carParts";
+import {
+  CanvasTexture,
+  CatmullRomCurve3,
+  DoubleSide,
+  Group,
+  MeshLambertMaterial,
+  Shape as Outline,
+  SRGBColorSpace,
+  Vector2,
+  Vector3,
+} from "three";
+import { CAR_NUMBER, COLORS, LIVERY, PARTS, type ColorRole, type Part, type Shape } from "./carParts";
 
 /**
  * Small low-poly FSAE car built from primitives, exploded by `target` (0..1).
@@ -31,21 +41,31 @@ const MAX_DPR = 1.75;
 const ease = (t: number) => t * t * (3 - 2 * t);
 const clamp01 = (v: number) => Math.min(Math.max(v, 0), 1);
 
-/** One material per site color, recolored from the CSS variables when the theme changes. */
-function useSiteMaterials() {
+/**
+ * One material per color role. Livery colors are fixed; site colors are re-read
+ * from the CSS variables whenever the theme changes.
+ */
+function useCarMaterials() {
   const invalidate = useThree((s) => s.invalidate);
   const mats = useMemo(
     () =>
       Object.fromEntries(
-        (Object.keys(COLOR_VARS) as ColorRole[]).map((role) => [role, new MeshLambertMaterial({ flatShading: true })]),
+        (Object.keys(COLORS) as ColorRole[]).map((role) => {
+          const c = COLORS[role];
+          const m = new MeshLambertMaterial({ flatShading: true, side: DoubleSide });
+          if ("hex" in c) m.color.setStyle(c.hex);
+          return [role, m];
+        }),
       ) as Record<ColorRole, MeshLambertMaterial>,
     [],
   );
   useEffect(() => {
     const apply = () => {
       const cs = getComputedStyle(document.documentElement);
-      for (const role of Object.keys(COLOR_VARS) as ColorRole[]) {
-        const rgb = cs.getPropertyValue(COLOR_VARS[role]).trim().split(/\s+/).join(", ");
+      for (const role of Object.keys(COLORS) as ColorRole[]) {
+        const c = COLORS[role];
+        if (!("cssVar" in c)) continue;
+        const rgb = cs.getPropertyValue(c.cssVar).trim().split(/\s+/).join(", ");
         mats[role].color.setStyle(`rgb(${rgb})`);
       }
       invalidate();
@@ -61,7 +81,64 @@ function useSiteMaterials() {
   return mats;
 }
 
+/** The racing number as a texture: plain bold digits, black on transparent, drawn once. */
+function useNumberTexture() {
+  const tex = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = 256;
+    c.height = 160;
+    const g = c.getContext("2d")!;
+    g.fillStyle = LIVERY.black;
+    g.font = "800 128px system-ui, -apple-system, 'Segoe UI', Arial, sans-serif";
+    g.textAlign = "center";
+    g.textBaseline = "middle";
+    g.fillText(CAR_NUMBER, 128, 86);
+    const t = new CanvasTexture(c);
+    t.colorSpace = SRGBColorSpace;
+    t.anisotropy = 4;
+    return t;
+  }, []);
+  useEffect(() => () => tex.dispose(), [tex]);
+  return tex;
+}
+
+function NumberDecal({ s }: { s: Extract<Shape, { kind: "decal" }> }) {
+  const tex = useNumberTexture();
+  return (
+    <mesh position={s.pos} rotation={s.rot ?? [0, 0, 0]}>
+      <planeGeometry args={s.size} />
+      <meshBasicMaterial map={tex} transparent depthWrite={false} />
+    </mesh>
+  );
+}
+
+/** Flat plate from a smooth 2D outline (the rear wing endplates). */
+function Plate({ s, mat }: { s: Extract<Shape, { kind: "plate" }>; mat: MeshLambertMaterial }) {
+  const outline = useMemo(() => {
+    const o = new Outline();
+    const pts = s.outline.map(([x, y]) => new Vector2(x, y));
+    o.moveTo(pts[0].x, pts[0].y);
+    o.splineThru(pts.slice(1));
+    o.closePath();
+    return o;
+  }, [s.outline]);
+  return (
+    <mesh position={s.pos} rotation={s.rot ?? [0, 0, 0]} material={mat}>
+      <extrudeGeometry args={[outline, { depth: s.depth, bevelEnabled: false, curveSegments: 6 }]} />
+    </mesh>
+  );
+}
+
 function ShapeMesh({ s, mat }: { s: Shape; mat: MeshLambertMaterial }) {
+  if (s.kind === "decal") return <NumberDecal s={s} />;
+  if (s.kind === "plate") return <Plate s={s} mat={mat} />;
+  if (s.kind === "sphere") {
+    return (
+      <mesh position={s.pos} material={mat}>
+        <icosahedronGeometry args={[s.r, 1]} />
+      </mesh>
+    );
+  }
   if (s.kind === "tube") {
     const curve = new CatmullRomCurve3(s.points.map((p) => new Vector3(...p)));
     return (
@@ -73,7 +150,7 @@ function ShapeMesh({ s, mat }: { s: Shape; mat: MeshLambertMaterial }) {
   return (
     <mesh position={s.pos} rotation={s.rot ?? [0, 0, 0]} material={mat}>
       {s.kind === "box" && <boxGeometry args={s.size} />}
-      {s.kind === "cyl" && <cylinderGeometry args={[s.r, s.r, s.h, s.seg ?? 12]} />}
+      {s.kind === "cyl" && <cylinderGeometry args={[s.r, s.r2 ?? s.r, s.h, s.seg ?? 12]} />}
       {s.kind === "cone" && <coneGeometry args={[s.r, s.h, 8]} />}
     </mesh>
   );
@@ -95,7 +172,7 @@ function PartMesh({
   return (
     <group ref={setRef}>
       {part.shapes.map((s, i) => (
-        <ShapeMesh key={i} s={s} mat={mats[s.color ?? part.color]} />
+        <ShapeMesh key={i} s={s} mat={mats[("color" in s && s.color) || part.color]} />
       ))}
       {part.callout && (
         <Html position={part.callout.at} center zIndexRange={[20, 0]}>
@@ -119,7 +196,7 @@ function PartMesh({
 }
 
 function Car({ target, onNote }: { target: number; onNote: (n: string | null) => void }) {
-  const mats = useSiteMaterials();
+  const mats = useCarMaterials();
   const root = useRef<Group>(null);
   const groups = useRef<(Group | null)[]>([]);
   const labels = useRef<(HTMLButtonElement | null)[]>([]);
