@@ -4,7 +4,7 @@ import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function Cosmos() {
   return (
-    <Window title="cosmos/perception-and-mapping">
+    <Window section="projects" title="cosmos/perception-and-mapping">
       <div className="grid items-start gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_1.25fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle title="Scaled Autonomous Vehicle" meta={["UC San Diego COSMOS", "July – August 2024"]} />

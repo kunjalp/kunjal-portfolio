@@ -1,8 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { dockAdd, dockRemove } from "./windowDock";
-import { useGravity } from "./gravity";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { dockAdd, dockRemove, setWindowExpanded, type Section } from "./windowDock";
+import { stackAnchor, NAV_H } from "./stackLayout";
+import { isMotionPaused } from "./motion";
+import { prefersReducedMotion, useGravity } from "./gravity";
 import { useSwing } from "./useSwing";
 import { useSpringPosition } from "./useSpringPosition";
 
@@ -17,9 +19,14 @@ type Props = {
   title: string;
   children: React.ReactNode;
   className?: string;
+  /** Which desk stack this window joins when minimized. */
+  section?: Section;
 };
 
-export default function Window({ title, children, className = "" }: Props) {
+// Motion paused (site toggle) or reduced motion: windows just appear and disappear.
+const instant = () => isMotionPaused() || prefersReducedMotion();
+
+export default function Window({ title, children, className = "", section = "other" }: Props) {
   const id = useId();
   const [z, setZ] = useState(1);
   const [dragging, setDragging] = useState(false);
@@ -34,6 +41,7 @@ export default function Window({ title, children, className = "" }: Props) {
   const rs = useRef<{ sx: number; sy: number; w: number; h: number } | null>(null);
   const win = useRef<HTMLDivElement>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
+  const backFrom = useRef<DOMRect | null>(null);
 
   // Gravity mode: each window hangs from its title bar and swings.
   const gravity = useGravity();
@@ -67,24 +75,58 @@ export default function Window({ title, children, className = "" }: Props) {
   };
   useEffect(() => () => clearTimeout(toastTimer.current), []);
 
-  /* ---------- yellow: minimize to dock ---------- */
-  const restore = useCallback(() => {
-    dockRemove(id);
-    setMinState("back");
-    setZ(++topZ);
-    setTimeout(() => setMinState("off"), 260);
-  }, [id]);
+  /* ---------- yellow: minimize to a desk stack ---------- */
+  const restore = useCallback(
+    (from?: DOMRect | null) => {
+      dockRemove(id);
+      backFrom.current = from ?? null;
+      setMinState("back");
+      setZ(++topZ);
+      setTimeout(() => setMinState("off"), instant() ? 0 : 260);
+    },
+    [id],
+  );
 
   const minimize = () => {
     if (expanded) setExpanded(false);
     setToast(false);
-    setMinState("going");
-    setTimeout(() => {
+    const hadFocus = !!win.current?.contains(document.activeElement);
+    const done = () => {
       setMinState("on");
-      dockAdd({ id, title, restore });
-    }, 240);
+      dockAdd({ id, title, section, node: win.current, restore });
+      // keyboard users land on the stack the window went into
+      if (hadFocus)
+        requestAnimationFrame(() =>
+          document.querySelector<HTMLElement>(`[data-stack="${section}"] .dstk-icon`)?.focus({ preventScroll: true }),
+        );
+    };
+    if (instant()) return done();
+    setMinState("going");
+    setTimeout(done, 240);
   };
   useEffect(() => () => dockRemove(id), [id]);
+
+  // Aim the shrink (or the grow-back) at the stack, or at the fanned card that was picked.
+  useLayoutEffect(() => {
+    const node = win.current;
+    if (!node || (minState !== "going" && minState !== "back")) return;
+    // measure without the animation's first frame applied
+    node.style.animation = "none";
+    let r = node.getBoundingClientRect();
+    if (minState === "back") {
+      if (r.top < NAV_H + 16 || r.top > window.innerHeight * 0.7) {
+        window.scrollTo({ top: window.scrollY + r.top - NAV_H - 48, behavior: "instant" });
+        r = node.getBoundingClientRect();
+      }
+      node.querySelector<HTMLElement>(".win-bar")?.focus({ preventScroll: true });
+    }
+    const a = (minState === "back" && backFrom.current) || stackAnchor(section);
+    const s = Math.min(0.3, Math.max(0.05, a.width / Math.max(1, r.width)));
+    node.style.setProperty("--min-s", s.toFixed(3));
+    node.style.setProperty("--min-dx", `${(a.left + a.width / 2 - (r.left + r.width / 2)).toFixed(1)}px`);
+    node.style.setProperty("--min-dy", `${(a.top + a.height / 2 - r.top - (r.height * s) / 2).toFixed(1)}px`);
+    node.style.animation = "";
+  }, [minState, section]);
 
   /* ---------- green: expand / restore ---------- */
   const toggleExpand = () => {
@@ -96,6 +138,7 @@ export default function Window({ title, children, className = "" }: Props) {
   };
   useEffect(() => {
     if (!expanded) return;
+    setWindowExpanded(true);
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setExpanded(false);
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -103,6 +146,7 @@ export default function Window({ title, children, className = "" }: Props) {
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      setWindowExpanded(false);
     };
   }, [expanded]);
 
@@ -247,7 +291,7 @@ export default function Window({ title, children, className = "" }: Props) {
           <button
             type="button"
             className="win-dot win-dot-min"
-            aria-label="Minimize window to the dock"
+            aria-label={`Minimize ${title} to the desk`}
             onClick={minimize}
           />
           <button
