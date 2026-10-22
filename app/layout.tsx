@@ -5,7 +5,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "@fontsource/caveat/500.css";
 import "@fontsource/caveat/700.css";
 import "./globals.css";
-import Dock from "@/components/Dock";
+import DeskStacks from "@/components/DeskStacks";
 import ProjectIndex from "@/components/ProjectIndex";
 import Toaster, { Konami } from "@/components/Toaster";
 import Leaves from "@/components/Leaves";
@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Scenery />
         <SkyClock />
         {children}
-        <Dock />
+        <DeskStacks />
         <ProjectIndex />
         <Toaster />
         <Konami />

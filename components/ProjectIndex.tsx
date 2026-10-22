@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CornerDownLeft, Search } from "lucide-react";
+import { restoreNode } from "./windowDock";
+import { isMotionPaused } from "./motion";
 
 /**
  * Project index: Cmd/Ctrl+K (or the nav button, or `projects` in the terminal) opens
@@ -26,6 +28,12 @@ export const PROJECTS: Entry[] = [
 export function jumpTo(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
+  // a minimized window comes back off its desk stack first, then we scroll to it
+  const min = el.querySelector<HTMLElement>(".win");
+  if (min && restoreNode(min)) {
+    setTimeout(() => jumpTo(id), isMotionPaused() ? 30 : 300);
+    return;
+  }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   const win = el.querySelector<HTMLElement>(".win");
