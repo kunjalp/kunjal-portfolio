@@ -20,7 +20,7 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 max-w-[560px] xl:-mt-8 xl:ml-[40%]">
-          <Window title="README.md">
+          <Window section="home" title="README.md">
             <div className="p-6 sm:p-7">
               <p className="text-[1.05rem] leading-relaxed">
                 I write firmware for a Formula SAE race car, built perception and

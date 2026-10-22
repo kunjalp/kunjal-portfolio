@@ -4,7 +4,7 @@ import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function SammysPalate() {
   return (
-    <Window title="sammys-palate/README.md">
+    <Window section="projects" title="sammys-palate/README.md">
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.2fr_1fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle title="Sammy's Palate" meta={["UCSC dining tracker", "June 2026 – Present"]} />

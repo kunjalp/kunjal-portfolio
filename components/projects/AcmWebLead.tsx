@@ -3,7 +3,7 @@ import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function AcmWebLead() {
   return (
-    <Window title="acm-ucsc/web-lead.md">
+    <Window section="projects" title="acm-ucsc/web-lead.md">
       <div className="space-y-3 p-5 sm:p-6">
         <ProjectTitle title="ACM at UCSC: Web Redesign" meta={["Web Development Lead", "August 2026 – Present"]} />
         <p className="text-base leading-relaxed">

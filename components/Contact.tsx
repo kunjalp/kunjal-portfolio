@@ -191,7 +191,7 @@ export default function Contact() {
         <p className="on-sky mt-3 text-[1.05rem]">Click the terminal and type, or use the buttons.</p>
 
         <div className="mt-8">
-          <Window title="kunjal@portfolio: ~/contact">
+          <Window section="contact" title="kunjal@portfolio: ~/contact">
             <div
               className="flex min-h-full flex-col bg-[rgb(var(--tire))] p-4 font-mono text-[0.85rem] leading-7 sm:p-5"
               onClick={() => input.current?.focus()}

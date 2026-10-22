@@ -4,7 +4,7 @@ import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function FormulaSlug() {
   return (
-    <Window title="formula-slug/vcu-firmware">
+    <Window section="projects" title="formula-slug/vcu-firmware">
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle
