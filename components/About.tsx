@@ -77,7 +77,7 @@ export default function About() {
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
           {/* intro */}
           <div className="lg:col-span-2">
-            <Window title="about/why-i-build.md">
+            <Window section="about" title="about/why-i-build.md">
               <div className="grid gap-8 p-6 sm:p-7 lg:grid-cols-[320px_1fr]">
                 <Polaroid
                   src="portrait.jpg"
@@ -122,7 +122,7 @@ export default function About() {
             <Corkboard />
           </div>
 
-          <Window title="on-repeat.txt">
+          <Window section="about" title="on-repeat.txt">
             <div className="space-y-4 p-6 sm:p-7">
               <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">What&apos;s on repeat</h3>
               <p className="text-[1.05rem] leading-relaxed">
@@ -136,7 +136,7 @@ export default function About() {
             </div>
           </Window>
 
-          <Window title="next.todo">
+          <Window section="about" title="next.todo">
             <div className="space-y-4 p-6 sm:p-7">
               <h3 className="text-[1.6rem] font-bold leading-tight tracking-[-0.01em]">What&apos;s next</h3>
               <ul className="space-y-2 text-[1.02rem] leading-relaxed">
@@ -158,7 +158,7 @@ export default function About() {
           </Window>
 
           <div className="lg:col-span-2">
-            <Window title="fun-facts.txt">
+            <Window section="about" title="fun-facts.txt">
               <div className="p-6 sm:p-7">
                 <Facts
                   items={[
