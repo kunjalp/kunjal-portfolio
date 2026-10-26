@@ -1777,3 +1777,93 @@ html[data-motion="paused"] :is(.dstk, .dstk-fan-card, .win-min-going, .win-min-b
   .dstk, .dstk-fan-card { animation: none; }
   .dstk-pile, .dstk-fan-card { transition: none; }
 }
+
+/* ---- Nav: letters roll up on hover ---- */
+.roll {
+  display: inline-flex;
+  overflow: hidden;
+  height: 1.35em;
+  line-height: 1.35;
+  vertical-align: middle;
+}
+.roll-c {
+  position: relative;
+  display: inline-block;
+  white-space: pre;
+}
+.roll-c::after {
+  content: attr(data-c);
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .roll-c {
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 22ms);
+  }
+  a:hover .roll-c,
+  a:focus-visible .roll-c {
+    transform: translateY(-100%);
+  }
+  html[data-motion="paused"] .roll-c {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+/* ---- Custom cursor (mouse only; the system cursor stays for inputs and window dragging) ---- */
+.c-dot,
+.c-ring {
+  display: none;
+}
+html.has-cursor.cursor-on .c-dot,
+html.has-cursor.cursor-on .c-ring {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  will-change: transform;
+}
+html.has-cursor .c-dot::before,
+html.has-cursor .c-ring::before {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  translate: -50% -50%;
+  transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease, opacity 0.25s ease, border-radius 0.2s ease;
+}
+html.has-cursor .c-dot::before {
+  width: 7px;
+  height: 7px;
+  background: rgb(var(--accent));
+}
+html.has-cursor .c-ring::before {
+  width: 34px;
+  height: 34px;
+  border: 2px solid rgb(var(--edge) / 0.85);
+}
+html.has-cursor[data-cursor="link"] .c-ring::before {
+  width: 56px;
+  height: 56px;
+  background: rgb(var(--accent) / 0.16);
+  border-color: rgb(var(--accent));
+}
+html.has-cursor[data-cursor="grab"] .c-ring::before {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+html.has-cursor[data-cursor="text"] .c-dot::before,
+html.has-cursor[data-cursor="text"] .c-ring::before {
+  opacity: 0;
+}
+html.has-cursor.cursor-down .c-ring::before {
+  width: 22px;
+  height: 22px;
+}
+/* hide the system arrow and hand only over plain page and links; inputs and drag handles keep theirs */
+html.has-cursor.cursor-on :where(body, a, button, label, [role="button"], [role="option"], .drive-scene) {
+  cursor: none !important;
+}

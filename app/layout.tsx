@@ -8,6 +8,8 @@ import "./globals.css";
 import DeskStacks from "@/components/DeskStacks";
 import ProjectIndex from "@/components/ProjectIndex";
 import Toaster, { Konami } from "@/components/Toaster";
+import SmoothScroll from "@/components/SmoothScroll";
+import Cursor from "@/components/Cursor";
 import Leaves from "@/components/Leaves";
 import Scenery from "@/components/Scenery";
 import SkyClock from "@/components/SkyClock";
@@ -68,6 +70,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Toaster />
         <Konami />
         <Leaves />
+        <SmoothScroll />
+        <Cursor />
         <Analytics />
       </body>
     </html>
