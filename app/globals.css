@@ -1827,22 +1827,24 @@ html.has-cursor.cursor-on .c-ball {
 html.has-cursor .c-ball::before {
   content: "";
   position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   border-radius: 999px;
   translate: -50% -50%;
-  background: rgb(var(--fg) / 0.92);
-  transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
-}
-@supports (backdrop-filter: invert(1)) {
-  html.has-cursor .c-ball::before {
-    background: transparent;
-    backdrop-filter: grayscale(1) invert(1) contrast(1.6);
-  }
+  background: rgb(var(--accent));
+  border: 2px solid rgb(var(--accent));
+  box-sizing: border-box;
+  transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease, opacity 0.2s ease;
 }
 html.has-cursor[data-cursor="link"] .c-ball::before {
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 54px;
+  background: rgb(var(--accent) / 0.2);
+}
+html.has-cursor[data-cursor="nav"] .c-ball::before {
+  width: 30px;
+  height: 30px;
+  background: rgb(var(--accent) / 0.2);
 }
 html.has-cursor[data-cursor="grab"] .c-ball::before {
   width: 40px;
