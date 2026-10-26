@@ -21,7 +21,7 @@ export default function Cursor() {
 
     let x = -100, y = -100, rx = -100, ry = -100, raf = 0, seen = false;
     const tick = () => {
-      const k = isMotionPaused() ? 1 : 0.2;
+      const k = isMotionPaused() ? 1 : 0.42;
       rx += (x - rx) * k;
       ry += (y - ry) * k;
       ball.current?.style.setProperty("transform", `translate3d(${rx}px,${ry}px,0)`);
@@ -31,6 +31,7 @@ export default function Cursor() {
 
     const kindOf = (el: Element | null) => {
       if (el?.closest("input, textarea, [contenteditable='true']")) return "text";
+      if (el?.closest(".menubar")) return "nav";
       if (el?.closest(".win-bar")) return "grab";
       if (el?.closest("a, button, summary, [role='button'], [role='option'], .drive-scene, label")) return "link";
       return "";
