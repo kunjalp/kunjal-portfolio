@@ -15,6 +15,22 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
+/** Link text whose letters roll up on hover, each a beat after the last. Screen readers get the plain label. */
+function Roll({ text }: { text: string }) {
+  return (
+    <>
+      <span className="sr-only">{text}</span>
+      <span aria-hidden className="roll">
+        {Array.from(text).map((c, i) => (
+          <span key={i} className="roll-c" data-c={c === " " ? "\u00a0" : c} style={{ "--i": i } as React.CSSProperties}>
+            {c === " " ? "\u00a0" : c}
+          </span>
+        ))}
+      </span>
+    </>
+  );
+}
+
 /** Desktop-style clock in Santa Cruz time. Rendered after mount only. */
 function Clock() {
   const [now, setNow] = useState<string | null>(null);
@@ -50,14 +66,14 @@ export default function Navbar() {
           onClick={() => setOpen(false)}
         >
           <Mountain size={18} strokeWidth={2.4} aria-hidden />
-          Kunjal Purohit
+          <Roll text="Kunjal Purohit" />
         </a>
 
         <ul className="hidden items-center md:flex">
           {links.map((l) => (
             <li key={l.href}>
               <a href={l.href} className="menu-link">
-                {l.label}
+                <Roll text={l.label} />
               </a>
             </li>
           ))}
