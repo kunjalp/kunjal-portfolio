@@ -10,8 +10,7 @@ import { isMotionPaused } from "./motion";
  * the site depends on it. Not mounted for touch or reduced motion.
  */
 export default function Cursor() {
-  const dot = useRef<HTMLDivElement>(null);
-  const ring = useRef<HTMLDivElement>(null);
+  const ball = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fine = matchMedia("(hover: hover) and (pointer: fine)");
@@ -22,11 +21,10 @@ export default function Cursor() {
 
     let x = -100, y = -100, rx = -100, ry = -100, raf = 0, seen = false;
     const tick = () => {
-      const k = isMotionPaused() ? 1 : 0.18;
+      const k = isMotionPaused() ? 1 : 0.2;
       rx += (x - rx) * k;
       ry += (y - ry) * k;
-      dot.current?.style.setProperty("transform", `translate3d(${x}px,${y}px,0)`);
-      ring.current?.style.setProperty("transform", `translate3d(${rx}px,${ry}px,0)`);
+      ball.current?.style.setProperty("transform", `translate3d(${rx}px,${ry}px,0)`);
       raf = Math.abs(x - rx) + Math.abs(y - ry) > 0.1 ? requestAnimationFrame(tick) : 0;
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
@@ -63,10 +61,5 @@ export default function Cursor() {
     };
   }, []);
 
-  return (
-    <>
-      <div ref={ring} aria-hidden className="c-ring" />
-      <div ref={dot} aria-hidden className="c-dot" />
-    </>
-  );
+  return <div ref={ball} aria-hidden className="c-ball" />;
 }

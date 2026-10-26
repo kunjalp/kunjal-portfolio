@@ -1799,7 +1799,7 @@ html[data-motion="paused"] :is(.dstk, .dstk-fan-card, .win-min-going, .win-min-b
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .roll-c {
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 22ms);
+    transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 26ms);
   }
   a:hover .roll-c,
   a:focus-visible .roll-c {
@@ -1811,13 +1811,11 @@ html[data-motion="paused"] :is(.dstk, .dstk-fan-card, .win-min-going, .win-min-b
   }
 }
 
-/* ---- Custom cursor (mouse only; the system cursor stays for inputs and window dragging) ---- */
-.c-dot,
-.c-ring {
+/* ---- Custom cursor: one solid ball that trails the pointer and inverts what it covers ---- */
+.c-ball {
   display: none;
 }
-html.has-cursor.cursor-on .c-dot,
-html.has-cursor.cursor-on .c-ring {
+html.has-cursor.cursor-on .c-ball {
   display: block;
   position: fixed;
   left: 0;
@@ -1826,44 +1824,40 @@ html.has-cursor.cursor-on .c-ring {
   pointer-events: none;
   will-change: transform;
 }
-html.has-cursor .c-dot::before,
-html.has-cursor .c-ring::before {
+html.has-cursor .c-ball::before {
   content: "";
   position: absolute;
-  border-radius: 999px;
-  translate: -50% -50%;
-  transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease, opacity 0.25s ease, border-radius 0.2s ease;
-}
-html.has-cursor .c-dot::before {
-  width: 7px;
-  height: 7px;
-  background: rgb(var(--accent));
-}
-html.has-cursor .c-ring::before {
-  width: 34px;
-  height: 34px;
-  border: 2px solid rgb(var(--edge) / 0.85);
-}
-html.has-cursor[data-cursor="link"] .c-ring::before {
-  width: 56px;
-  height: 56px;
-  background: rgb(var(--accent) / 0.16);
-  border-color: rgb(var(--accent));
-}
-html.has-cursor[data-cursor="grab"] .c-ring::before {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-}
-html.has-cursor[data-cursor="text"] .c-dot::before,
-html.has-cursor[data-cursor="text"] .c-ring::before {
-  opacity: 0;
-}
-html.has-cursor.cursor-down .c-ring::before {
   width: 22px;
   height: 22px;
+  border-radius: 999px;
+  translate: -50% -50%;
+  background: rgb(var(--fg) / 0.92);
+  transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
 }
-/* hide the system arrow and hand only over plain page and links; inputs and drag handles keep theirs */
-html.has-cursor.cursor-on :where(body, a, button, label, [role="button"], [role="option"], .drive-scene) {
-  cursor: none !important;
+@supports (backdrop-filter: invert(1)) {
+  html.has-cursor .c-ball::before {
+    background: transparent;
+    backdrop-filter: grayscale(1) invert(1) contrast(1.6);
+  }
+}
+html.has-cursor[data-cursor="link"] .c-ball::before {
+  width: 58px;
+  height: 58px;
+}
+html.has-cursor[data-cursor="grab"] .c-ball::before {
+  width: 40px;
+  height: 40px;
+}
+html.has-cursor[data-cursor="text"] .c-ball::before {
+  opacity: 0;
+}
+html.has-cursor.cursor-down .c-ball::before {
+  width: 14px;
+  height: 14px;
+}
+
+/* nav text links: no filled box on hover, the ball and the rolling letters do the work */
+.menu-link:has(.roll):hover {
+  background: transparent;
+  color: inherit;
 }
