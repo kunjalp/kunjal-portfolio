@@ -1,5 +1,6 @@
 import AcmWebLead from "./projects/AcmWebLead";
 import Cosmos from "./projects/Cosmos";
+import Dowser from "./projects/Dowser";
 import FormulaSlug from "./projects/FormulaSlug";
 import Heirloom from "./projects/Heirloom";
 import SammysPalate from "./projects/SammysPalate";
@@ -25,6 +26,9 @@ export default function Projects() {
         </p>
 
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
+          <Wide id="project-dowser">
+            <Dowser />
+          </Wide>
           <Wide id="project-heirloom">
             <Heirloom />
           </Wide>

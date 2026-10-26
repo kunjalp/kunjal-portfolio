@@ -60,11 +60,12 @@ const milestones: Milestone[] = [
     short: "UCSC",
     period: "2026 – Present",
     title: "UCSC Leadership & Tech",
-    blurb: "ACM Web Dev Lead, Sammy's Palate on the App Store, and 1st place in the Daytona track at SF Tech Week with Heirloom.",
+    blurb: "ACM Web Dev Lead, Sammy's Palate on the App Store, and 1st place in the Daytona track at SF Tech Week with Heirloom, and Dowser at Cal Hacks 13.0.",
     tags: ["Next.js", "TypeScript", "Supabase", "Capacitor"],
     icon: Code,
     patches: ["acm", "daytona"],
     projects: [
+      ["Dowser", "project-dowser"],
       ["Heirloom", "project-heirloom"],
       ["Sammy's Palate", "project-sammys"],
       ["ACM Web Redesign", "project-acm"],
