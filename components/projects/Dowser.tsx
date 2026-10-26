@@ -12,6 +12,23 @@ const LINKS: { label: string; href: string; aria: string }[] = [
   },
 ];
 
+const PHOTOS: { src: string; alt: string; caption: string; tilt: number; pos: string }[] = [
+  {
+    src: "/images/dowser/team.jpg",
+    alt: "Four teammates standing in front of the Cal Hacks 13.0 banner in a warehouse venue",
+    caption: "the team at Cal Hacks 13.0",
+    tilt: -2,
+    pos: "50% 62%",
+  },
+  {
+    src: "/images/dowser/bench.jpg",
+    alt: "A laptop showing the Dowser app and code, next to an ESP32 on a breadboard with a potentiometer",
+    caption: "ESP32 + potentiometer (simulated sensor input)",
+    tilt: 2,
+    pos: "50% 50%",
+  },
+];
+
 export default function Dowser() {
   return (
     <Window section="projects" title="dowser/README.md">
@@ -68,6 +85,28 @@ export default function Dowser() {
             label="Team"
             items={["Ryann: data and pipeline", "Murad: ESP32 firmware", "Emir: YOLO/ML", "Kunjal: Field View app, backend, pitch"]}
           />
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            {PHOTOS.map((ph) => (
+              <figure
+                key={ph.src}
+                className="border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper))] p-1.5 pb-2 shadow-[3px_3px_0_rgb(var(--edge)/0.9)]"
+                style={{ transform: `rotate(${ph.tilt}deg)` }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={ph.src}
+                  alt={ph.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-[4/3] w-full object-cover"
+                  style={{ objectPosition: ph.pos }}
+                />
+                <figcaption className="mt-1.5 text-center font-mono text-[0.65rem] leading-tight text-muted">
+                  {ph.caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </div>
     </Window>
