@@ -32,8 +32,6 @@ export default function Cursor() {
     const kindOf = (el: Element | null) => {
       if (el?.closest("input, textarea, [contenteditable='true']")) return "text";
       if (el?.closest(".menubar")) return "nav";
-      if (el?.closest(".win-bar")) return "grab";
-      if (el?.closest("a, button, summary, [role='button'], [role='option'], .drive-scene, label")) return "link";
       return "";
     };
     const onMove = (e: PointerEvent) => {

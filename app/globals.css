@@ -1834,19 +1834,10 @@ html.has-cursor .c-ball::before {
   background: rgb(var(--accent));
   transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease, opacity 0.2s ease;
 }
-html.has-cursor[data-cursor="link"] .c-ball::before {
-  width: 54px;
-  height: 54px;
-  background: rgb(var(--accent) / 0.34);
-}
 html.has-cursor[data-cursor="nav"] .c-ball::before {
   width: 30px;
   height: 30px;
   background: rgb(var(--accent) / 0.34);
-}
-html.has-cursor[data-cursor="grab"] .c-ball::before {
-  width: 40px;
-  height: 40px;
 }
 html.has-cursor[data-cursor="text"] .c-ball::before {
   opacity: 0;
