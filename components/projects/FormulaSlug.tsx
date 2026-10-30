@@ -19,7 +19,7 @@ export default function FormulaSlug() {
             items={[
               "Built tray-temperature monitoring across 4 DS18B20 OneWire sensors, with automatic shutdown on safety-threshold faults.",
               "Redesigned the CAN protocol for a new battery and chip architecture. The electrical team now uses it for on-car telemetry.",
-              "Replaced a discontinuous piecewise torque map with a smooth cubic-polynomial curve, now the default accelerator mapping. The chart shows the first revision, a 17-point lookup table.",
+              "Replaced a continuous but non-differentiable piecewise torque map with a continuously differentiable cubic-polynomial LUT, now the default accelerator mapping.",
             ]}
           />
           <Metrics

@@ -15,16 +15,25 @@ function oldMap(p: number) {
   return s1 * k + s2 * k2 + (p - s1 - s2) * k;
 }
 
-// New: 17-point power-law (k = 1.4) lookup table with linear interpolation.
+// New: the final accelerator map, the cubic y = -0.2x^3 + 0.9x^2 + 0.3x (x = pedal travel, 0 to 1)
+// precomputed as a 41-entry lookup table (2.5% pedal steps, index = pedal * 40) with linear interpolation.
 export const LUT = [
-  0.0, 0.020785, 0.054854, 0.098863, 0.151214, 0.210744, 0.276632, 0.34825, 0.425114,
-  0.506822, 0.593026, 0.683424, 0.777748, 0.875758, 0.977239, 1.0, 1.0,
+  0.000000000, 0.008059375, 0.017225000, 0.027478125, 0.038800000,
+  0.051171875, 0.064575000, 0.078990625, 0.094400000, 0.110784380,
+  0.128125000, 0.146403120, 0.165600000, 0.185696880, 0.206675000,
+  0.228515630, 0.251200000, 0.274709370, 0.299025000, 0.324128120,
+  0.350000000, 0.376621870, 0.403975000, 0.432040630, 0.460800000,
+  0.490234380, 0.520325000, 0.551053130, 0.582400000, 0.614346870,
+  0.646875000, 0.679965630, 0.713600000, 0.747759380, 0.782425000,
+  0.817578130, 0.853200000, 0.889271880, 0.925775000, 0.962690630,
+  1.000000000,
 ];
+const STEPS = LUT.length - 1;
 function newMap(p: number) {
   p = Math.min(1, Math.max(0, p));
-  const x = p * 16;
+  const x = p * STEPS;
   const i = Math.floor(x);
-  if (i >= 16) return 1;
+  if (i >= STEPS) return 1;
   return LUT[i] + (x - i) * (LUT[i + 1] - LUT[i]);
 }
 
@@ -52,7 +61,9 @@ export default function ThrottleMap() {
   return (
     <div>
       <p className="text-sm text-muted">
-        Pedal position in, torque request out. Drag across the chart or use the slider.
+        Pedal position in, torque request out. Drag across the chart or use the slider. The new cubic is
+        flatter at low pedal and steeper toward high pedal, runs cheaply as a precomputed 41-point LUT with
+        linear interpolation, and leaves full torque at 100% unchanged.
       </p>
 
       <svg
@@ -105,7 +116,7 @@ export default function ThrottleMap() {
           <svg width="22" height="8" aria-hidden>
             <line x1="0" x2="22" y1="4" y2="4" stroke="rgb(var(--accent))" strokeWidth="2.5" />
           </svg>
-          New power-law table
+          New cubic LUT
         </span>
         <span className="ml-auto font-mono text-xs" aria-live="polite">
           {pct}% pedal → old {o.toFixed(2)}, new {n.toFixed(2)}
