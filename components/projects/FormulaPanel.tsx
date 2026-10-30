@@ -2,29 +2,30 @@
 
 import { lazy, Suspense, useState } from "react";
 import CanTicker from "./CanTicker";
-import ThrottleMap from "./ThrottleMap";
+import ThrottleMap, { LUT } from "./ThrottleMap";
 
 // Loaded only when the tab is first opened (React.lazy adds nothing to the page bundle, unlike next/dynamic).
 // The tab only renders after a click, so this never runs on the server. The 3D code inside loads later still.
 const ExplodedView = lazy(() => import("./car/ExplodedView"));
 
-// From vcu/etc/etc_controller.cpp, PR #26 (first version of the change).
+// Accelerator map: the cubic y = -0.2x^3 + 0.9x^2 + 0.3x as a 41-entry LUT. The table is printed from the same
+// LUT the chart draws, so the two cannot drift apart. Interpolation is standard linear interpolation.
+const N = LUT.length - 1;
+const rows = Array.from({ length: Math.ceil(LUT.length / 4) }, (_, r) =>
+  "        " + LUT.slice(r * 4, r * 4 + 4).map((v) => `${v.toFixed(9)}f`).join(", ") + (r * 4 + 4 < LUT.length ? "," : ""),
+).join("\n");
 const CODE = `float ETCController::accelerator_mapping(float pedal_travel) {
     // Clamp input pedal position between 0.0 (0%) and 1.0 (100%)
     pedal_travel = clamp(pedal_travel, 0.0f, 1.0f);
 
-    // Pre-computed 17-Point Power Law (k=1.4) LUT
-    static constexpr float TORQUE_LUT[17] = {
-        0.000000f, 0.020785f, 0.054854f, 0.098863f,
-        0.151214f, 0.210744f, 0.276632f, 0.348250f,
-        0.425114f, 0.506822f, 0.593026f, 0.683424f,
-        0.777748f, 0.875758f, 0.977239f, 1.000000f,
-        1.000000f
+    // Pre-computed 41-point LUT of y = -0.2x^3 + 0.9x^2 + 0.3x, 2.5% pedal steps
+    static constexpr float TORQUE_LUT[${LUT.length}] = {
+${rows}
     };
 
-    float scaled_index = pedal_travel * 16.0f;
+    float scaled_index = pedal_travel * ${N}.0f;
     int index = static_cast<int>(scaled_index);
-    if (index >= 16) {
+    if (index >= ${N}) {
         return 1.0f;
     }
 
