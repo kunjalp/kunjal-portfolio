@@ -112,7 +112,7 @@ export default function Contact() {
         add({ kind: "link", text: "Kunjal_Purohit_Resume.pdf (download)", href: LINKS.resume });
         break;
       case "contact":
-        add({ kind: "out", text: "Starting message. Press Enter after each answer." });
+        add({ kind: "out", text: "Starting message. Press Enter after each answer. First, your name." });
         setMode("name");
         break;
       case "gravity":
@@ -143,15 +143,21 @@ export default function Contact() {
     } else if (mode === "name") {
       if (!v) return;
       draft.current.name = v;
-      add({ kind: "cmd", text: `name: ${v}` });
+      add(
+        { kind: "cmd", text: `name: ${v}` },
+        { kind: "out", text: `Thanks, ${v}. Now your email, so I can reply (like name@example.com).` },
+      );
       setMode("email");
     } else if (mode === "email") {
       if (!/^\S+@\S+\.\S+$/.test(v)) {
-        add({ kind: "err", text: "That doesn't look like an email address. Try again." });
+        add({ kind: "err", text: "That doesn't look like an email address (like name@example.com). Try again." });
         return;
       }
       draft.current.email = v;
-      add({ kind: "cmd", text: `your email: ${v}` });
+      add(
+        { kind: "cmd", text: `your email: ${v}` },
+        { kind: "out", text: "Last one: what would you like to say?" },
+      );
       setMode("msg");
     } else {
       if (!v) return;
