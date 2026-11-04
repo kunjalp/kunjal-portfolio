@@ -11,9 +11,10 @@ export default function SammysPalate() {
           <Bullets
             items={[
               "Live on the App Store, plus a web demo.",
-              "A scheduled Python/Playwright scraper parses every campus dining menu, with a name-based fallback.",
-              "I designed the PostgreSQL schema and the Supabase row-level security (RLS) policies that keep each person's data private.",
-              "A Codemagic CI/CD pipeline builds, code-signs and ships each iOS update.",
+              "Shipped a web and iOS macro tracker that makes UCSC dining nutrition easy to find, reaching 80+ downloads.",
+              "Indexed 233K+ menu records across 14 dining halls with daily Python/Playwright scrapers on GitHub Actions (100% success over 470+ runs).",
+              "Stored with 90+ days of history in Supabase PostgreSQL with per-user row-level security (RLS).",
+              "A Codemagic CI/CD pipeline runs on every merge, producing 64 builds and 4 App Store releases (v1.0–v1.3), with iOS builds and code-signing automated.",
             ]}
           />
           <div className="flex flex-wrap gap-2">
@@ -43,8 +44,10 @@ export default function SammysPalate() {
           <Metrics
             cols="sm:grid-cols-2"
             items={[
-              ["60+", "App Store users"],
-              ["14", "dining menus scraped"],
+              ["80+", "downloads"],
+              ["233K+", "menu records"],
+              ["14", "dining halls"],
+              ["4", "App Store releases"],
             ]}
           />
           <Tags

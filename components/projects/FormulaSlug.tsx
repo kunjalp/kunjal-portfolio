@@ -9,26 +9,26 @@ export default function FormulaSlug() {
         <div className="space-y-3">
           <ProjectTitle
             title="Formula Slug: vehicle firmware"
-            meta={["Embedded Software Engineer, FSAE", "Oct 2025 – Present"]}
+            meta={["Embedded Software Engineer Intern, FSAE", "Oct 2025 – Present"]}
           />
           <p className="text-base leading-relaxed">
-            I own the STM32 C/C++ firmware that takes sensor readings and reports them over the CAN bus, plus
-            work on the throttle map in the vehicle control unit.
+            I contribute to the firmware that monitors and protects the 126 V battery pack of our student-built
+            electric race car, and I work on the throttle map in the vehicle control unit.
           </p>
           <Bullets
             items={[
-              "Built tray-temperature monitoring across 4 DS18B20 OneWire sensors, with automatic shutdown on safety-threshold faults.",
-              "Redesigned the CAN protocol for a new battery and chip architecture. The electrical team now uses it for on-car telemetry.",
-              "Replaced a continuous but non-differentiable piecewise torque map with a continuously differentiable cubic-polynomial LUT, now the default accelerator mapping.",
+              "Built STM32 C/C++ firmware that turns the pack's 30 cell voltages and 60 temperatures into CAN telemetry, including tray-temperature monitoring on 4 DS18B20 sensors that triggers automatic shutdown on faults.",
+              "Replaced a piecewise pedal-to-torque map with a smooth cubic-polynomial curve (41-point LUT) for a smoother throttle response, now the default accelerator mapping in VCU firmware.",
+              "Redesigned the CAN protocol for a new battery and chip architecture, adopted team-wide, and documented the pack's telemetry data (units, ranges, resolution) so teammates can decode it without reading the firmware.",
             ]}
           />
           <Metrics
             dense
             cols="grid-cols-1 sm:grid-cols-3"
             items={[
-              ["4", "temperature sensors"],
-              ["Cubic", "default throttle curve"],
-              ["CAN", "protocol redesigned"],
+              ["126 V", "pack"],
+              ["30/60", "cells/temps"],
+              ["41-pt", "throttle LUT"],
             ]}
           />
           <Tags items={["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"]} />

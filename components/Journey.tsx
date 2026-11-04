@@ -49,7 +49,7 @@ const milestones: Milestone[] = [
     short: "Formula Slug",
     period: "Oct 2025 – Present",
     title: "Formula Slug (FSAE)",
-    blurb: "STM32 firmware for accumulator temperatures, CAN telemetry and the throttle map.",
+    blurb: "STM32 firmware for battery-pack monitoring, CAN telemetry and the throttle map.",
     tags: ["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"],
     icon: Cpu,
     patches: ["fsae"],

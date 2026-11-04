@@ -2,9 +2,9 @@ import Window from "./Window";
 
 const GROUPS: { label: string; items: string[] }[] = [
   { label: "Languages", items: ["Python", "TypeScript", "JavaScript", "C/C++", "Java", "Swift", "SQL (PostgreSQL)", "HTML/CSS", "Assembly"] },
-  { label: "Embedded & hardware", items: ["STM32", "CAN Bus", "OneWire", "DS18B20 sensors", "Sensor integration", "Signal filtering", "Real-time data acquisition"] },
+  { label: "Embedded & hardware", items: ["STM32", "ESP32", "CAN Bus", "OneWire", "DS18B20 sensors", "Sensor integration", "Signal filtering", "Real-time data acquisition"] },
   { label: "Autonomous systems", items: ["LiDAR", "GNSS / NMEA parsing", "Jetson Nano", "Occupancy-grid mapping", "Localization", "Sensor fusion", "OpenCV", "ROS"] },
-  { label: "Frameworks & libraries", items: ["Next.js", "React", "Node.js", "FastAPI", "Capacitor", "Playwright", "Tailwind CSS"] },
+  { label: "Frameworks & libraries", items: ["Next.js", "React", "Node.js", "FastAPI", "Capacitor", "Convex", "Playwright", "Tailwind CSS"] },
   { label: "Tools & platforms", items: ["Supabase", "Neo4j", "Clerk", "Plaid", "Vercel", "Codemagic", "GitHub Actions", "Unix/Linux"] },
   { label: "Software engineering", items: ["Object-oriented programming", "System design", "Testing", "Data pipelines", "CI/CD"] },
 ];
@@ -59,6 +59,9 @@ export default function Skills() {
                 <p className="text-sm text-muted">UC Santa Cruz, CS + CE double major, GPA 3.95 / 4.0</p>
                 <div>
                   <Listing dir="completed" items={["Computer Systems & C", "Assembly Language", "Discrete Mathematics", "Linear Algebra", "Multivariable Calculus", "Differential Equations"]} />
+                </div>
+                <div>
+                  <Listing dir="honors" items={["Dean's Honors List (3x)", "American High School Principal's Award in Technology (top 2 of 600+)"]} />
                 </div>
                 <div>
                   <Listing dir="in-progress" items={["Data Structures & Algorithms", "Probability & Statistics"]} />

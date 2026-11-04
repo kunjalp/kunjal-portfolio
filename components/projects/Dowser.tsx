@@ -48,7 +48,7 @@ export default function Dowser() {
               "A YOLO detector reads old USGS topo maps for those circles and converts them to coordinates.",
               "Each one is checked against 158,000 California state well records. Wells with no nearby record become candidates, ranked by how close they are to homes, schools and water.",
               "A person reviews every flag, and rejected detections stay visible.",
-              "In the field, an ESP32 handheld streams readings live to a phone app. Simulated sensor input: a potentiometer stands in for the gas sensor.",
+              "In the field, an ESP32 handheld streams readings live to a phone app, which auto-confirms after 8 readings of 1000 or more within 10 s. Simulated sensor input: a potentiometer stands in for the gas sensor.",
             ]}
           />
           <div className="flex flex-wrap gap-2">

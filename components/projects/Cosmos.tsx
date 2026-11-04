@@ -10,9 +10,9 @@ export default function Cosmos() {
           <ProjectTitle title="Scaled Autonomous Vehicle" meta={["UC San Diego COSMOS", "July – August 2024"]} />
           <Bullets
             items={[
-              "On a 5-person team, I wrote Python drivers for a LiDAR and a GNSS receiver and fused both into one time-aligned log, enabling 3 fully autonomous laps.",
-              "Built occupancy-grid mapping and localization, validated in simulation and on real indoor and outdoor courses.",
-              "Generated synthetic LiDAR logs from a kinematic bicycle model to test mapping before the hardware was ready.",
+              "On a 5-person team, I wrote Python drivers for a LiDAR and a GNSS receiver and fused both into one log time-aligned at 0.05 s on a Jetson Nano, enabling 3 fully autonomous laps of a 1/10-scale car.",
+              "Built occupancy-grid mapping, localization, and real-time OpenCV lane tracking and obstacle detection.",
+              "Validated at 3 levels: simulated ground truth from a bicycle-model generator, an indoor hallway, and an outdoor courtyard.",
             ]}
           />
           <p className="text-sm text-muted">Try the occupancy grid: a robot builds a map by clearing the space it has seen.</p>
@@ -21,6 +21,8 @@ export default function Cosmos() {
             items={[
               ["3", "autonomous laps"],
               ["5", "person team"],
+              ["0.05 s", "time-aligned log"],
+              ["1/10", "scale car"],
             ]}
           />
           <Tags items={["Python", "OpenCV", "ROS", "LiDAR", "GNSS", "Jetson Nano"]} />

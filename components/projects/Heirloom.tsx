@@ -12,9 +12,9 @@ export default function Heirloom() {
           </p>
           <Bullets
             items={[
-              "Won the Daytona track by iterating on live feedback from finance professionals.",
-              "Designed AI agents that flag family goal conflicts for wealth advisors.",
-              "Multi-tenant data isolation with row-level security.",
+              "Won 1st place in the Daytona track (20 teams, $250 prize) at SF Tech Week, building a multi-generational AI wealth platform in 12 hours with 3 AI agents, a Neo4j knowledge graph and Plaid.",
+              "Designed a pipeline of 3 AI agents (intake, analyst, advisor) over 8 deterministic checks that flags conflicts between parents' finances and heirs' goals and routes urgent cases to the wealth manager.",
+              "Built two-layer data isolation so advisors see only their own firm's clients (row-level security plus org scoping on 16 tables).",
             ]}
           />
         </div>
