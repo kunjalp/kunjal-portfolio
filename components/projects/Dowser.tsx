@@ -77,8 +77,8 @@ export default function Dowser() {
             ]}
           />
           <p className="text-[0.95rem] leading-snug">
-            <span className="font-bold">My part:</span> the Field View iOS app, the backend on Convex, the pitch, and
-            the initial ESP32 setup.
+            <span className="font-bold">My part:</span> the Field View iOS app, the backend on Convex, the ESP32
+            prototype, and the pitch.
           </p>
           <Tags items={["Next.js", "TypeScript", "Convex", "Capacitor (iOS)", "ESP32", "YOLO", "Python", "Vercel"]} />
           <Tags
