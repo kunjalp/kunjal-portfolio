@@ -1879,7 +1879,7 @@ html.has-cursor.cursor-down .c-ball::before {
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .term-chip:hover::after,
   .term-chip:focus-visible::after {
-    animation: chip-shine 0.55s ease-out;
+    animation: chip-shine 0.85s ease-out;
   }
   html[data-motion="paused"] .term-chip::after {
     animation: none !important;
