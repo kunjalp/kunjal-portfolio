@@ -31,7 +31,7 @@ function Roll({ text }: { text: string }) {
   );
 }
 
-/** Desktop-style clock in Santa Cruz time. Rendered after mount only. */
+/** Desktop-style clock in Bay Area (Pacific) time. Rendered after mount only. */
 function Clock() {
   const [now, setNow] = useState<string | null>(null);
   useEffect(() => {
@@ -48,8 +48,8 @@ function Clock() {
   }, []);
   if (!now) return null;
   return (
-    <span className="hidden font-mono text-xs tabular-nums lg:inline" title="Santa Cruz, CA">
-      Santa Cruz {now}
+    <span className="hidden font-mono text-xs tabular-nums lg:inline" title="Fremont, CA">
+      Fremont {now}
     </span>
   );
 }
