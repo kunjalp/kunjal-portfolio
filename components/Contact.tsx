@@ -269,7 +269,7 @@ export default function Contact() {
                       run(c);
                       input.current?.focus();
                     }}
-                    className="rounded border border-[rgb(var(--term-fg)/0.35)] px-2 py-0.5 text-xs text-[rgb(var(--term-fg)/0.85)] hover:border-[rgb(var(--g1))] hover:text-[rgb(var(--g1))]"
+                    className="term-chip rounded border border-[rgb(var(--term-fg)/0.35)] px-2 py-0.5 text-xs text-[rgb(var(--term-fg)/0.85)]"
                   >
                     {c}
                   </button>
