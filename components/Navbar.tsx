@@ -31,7 +31,7 @@ function Roll({ text }: { text: string }) {
   );
 }
 
-/** Desktop-style clock in Bay Area (Pacific) time. Rendered after mount only. */
+/** Desktop-style clock, always Pacific time (mine, not the visitor's), labelled PST/PDT. Rendered after mount only. */
 function Clock() {
   const [now, setNow] = useState<string | null>(null);
   useEffect(() => {
@@ -39,6 +39,7 @@ function Clock() {
       weekday: "short",
       hour: "numeric",
       minute: "2-digit",
+      timeZoneName: "short",
       timeZone: "America/Los_Angeles",
     });
     const tick = () => setNow(fmt.format(new Date()));
@@ -48,8 +49,8 @@ function Clock() {
   }, []);
   if (!now) return null;
   return (
-    <span className="hidden font-mono text-xs tabular-nums lg:inline" title="Fremont, CA">
-      Fremont {now}
+    <span className="hidden font-mono text-xs tabular-nums lg:inline" title="Pacific time">
+      {now}
     </span>
   );
 }
