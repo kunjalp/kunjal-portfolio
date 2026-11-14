@@ -38,7 +38,7 @@ export default function Hero() {
               </dl>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#journey" className="glass-btn btn-primary">
+                <a href="#projects" className="glass-btn btn-primary">
                   See my work
                   <ArrowDown size={16} aria-hidden />
                 </a>
