@@ -1,4 +1,4 @@
-import { ArrowDown, Leaf, Mail } from "lucide-react";
+import { ArrowDown, FileText, Leaf, Mail } from "lucide-react";
 import Window from "./Window";
 
 const facts: [string, string][] = [
@@ -41,6 +41,16 @@ export default function Hero() {
                 <a href="#projects" className="glass-btn btn-primary">
                   See my work
                   <ArrowDown size={16} aria-hidden />
+                </a>
+                <a
+                  href="/Kunjal_Purohit_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Resume, PDF (opens in a new tab)"
+                  className="glass-btn"
+                >
+                  <FileText size={16} aria-hidden />
+                  Resume
                 </a>
                 <a href="#contact" className="glass-btn">
                   <Mail size={16} aria-hidden />

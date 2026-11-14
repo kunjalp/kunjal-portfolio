@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, Mountain, X } from "lucide-react";
+import { FileText, Menu, Mountain, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import GravityToggle from "./GravityToggle";
 import MotionToggle from "./MotionToggle";
@@ -14,6 +14,8 @@ const links = [
   { href: "#skills", label: "Skills" },
   { href: "#contact", label: "Contact" },
 ];
+
+const RESUME = "/Kunjal_Purohit_Resume.pdf";
 
 /** Link text whose letters roll up on hover, each a beat after the last. Screen readers get the plain label. */
 function Roll({ text }: { text: string }) {
@@ -82,6 +84,16 @@ export default function Navbar() {
 
         <div className="ml-auto flex items-center gap-3">
           <Clock />
+          <a
+            href={RESUME}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Resume, PDF (opens in a new tab)"
+            className="nav-resume hidden md:flex"
+          >
+            <FileText size={15} strokeWidth={2.2} aria-hidden />
+            Resume
+          </a>
           <ProjectIndexButton />
           <MotionToggle />
           <GravityToggle />
@@ -112,6 +124,18 @@ export default function Navbar() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href={RESUME}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="menu-link flex min-h-[44px] items-center gap-2 font-bold"
+            >
+              <FileText size={16} strokeWidth={2.2} aria-hidden />
+              Resume (PDF)
+            </a>
+          </li>
         </ul>
       )}
     </header>

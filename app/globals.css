@@ -423,6 +423,33 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
     background: rgb(var(--fg));
     color: rgb(var(--paper));
   }
+  /* Resume link in the menu bar: a small bordered key so it reads as the one action up there */
+  .nav-resume {
+    align-items: center;
+    gap: 0.35rem;
+    height: 2rem;
+    padding: 0 0.65rem;
+    border: 2px solid rgb(var(--edge));
+    border-radius: 8px;
+    background: rgb(var(--paper));
+    color: rgb(var(--fg));
+    box-shadow: 2px 2px 0 rgb(var(--shadow));
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .nav-resume:hover {
+    background: rgb(var(--accent));
+    color: rgb(var(--paper));
+  }
+  .nav-resume:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 rgb(var(--shadow));
+  }
+  .nav-resume:focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+  }
 
   /* ---- Window ---- */
   .win {

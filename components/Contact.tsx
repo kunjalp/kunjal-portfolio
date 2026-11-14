@@ -109,7 +109,7 @@ export default function Contact() {
         add({ kind: "out", text: "usage: sudo hire kunjal" });
         break;
       case "resume":
-        add({ kind: "link", text: "Kunjal_Purohit_Resume.pdf (download)", href: LINKS.resume });
+        add({ kind: "link", text: "Kunjal_Purohit_Resume.pdf (opens in a new tab)", href: LINKS.resume });
         break;
       case "contact":
         add({ kind: "out", text: "Starting message. Press Enter after each answer. First, your name." });
@@ -223,8 +223,7 @@ export default function Contact() {
                     ) : l.kind === "link" && l.href ? (
                       <a
                         href={l.href}
-                        {...(l.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                        {...(l.href === LINKS.resume ? { download: true } : {})}
+                        {...(l.href.startsWith("http") || l.href === LINKS.resume ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       >
                         {l.text}
                       </a>
