@@ -22,7 +22,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
 
-const TITLE = "Kunjal Purohit | CS & Computer Engineering";
+const TITLE = "Kunjal Purohit | Embedded & Full-Stack Software, UCSC";
 const DESCRIPTION =
   "Kunjal Purohit is a Computer Science and Computer Engineering double major at UC Santa Cruz, working across embedded firmware, autonomous systems, and full-stack software.";
 

@@ -6,6 +6,7 @@ const facts: [string, string][] = [
   ["majors", "Computer Science + Computer Engineering"],
   ["gpa", "3.95 / 4.0"],
   ["graduating", "June 2028"],
+  ["seeking", "SWE internship, summer 2027"],
 ];
 
 export default function Hero() {
@@ -16,10 +17,10 @@ export default function Hero() {
           Kunjal Purohit
         </h1>
         <p className="on-sky mt-4 max-w-xl text-[clamp(1.15rem,1.8vw,1.45rem)] font-medium leading-snug">
-          I build where software meets hardware.
+          Firmware for a Formula SAE electric race car. An iOS app on the App Store.
         </p>
 
-        <div className="mt-10 max-w-[560px] xl:-mt-8 xl:ml-[40%]">
+        <div className="mt-10 max-w-[560px] xl:mt-0 xl:ml-[40%]">
           <Window section="home" title="README.md">
             <div className="p-6 sm:p-7">
               <p className="text-[1.05rem] leading-relaxed">
