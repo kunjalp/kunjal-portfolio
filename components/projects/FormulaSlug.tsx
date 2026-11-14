@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import Window from "../Window";
 import FormulaPanel from "./FormulaPanel";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
@@ -32,6 +33,18 @@ export default function FormulaSlug() {
             ]}
           />
           <Tags items={["STM32", "C/C++", "CAN Bus", "OneWire", "DS18B20"]} />
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="https://github.com/kunjalp/ETC-project"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Accelerator pedal (APPS) plausibility checker for Formula Slug on GitHub (opens in a new tab)"
+              className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+            >
+              APPS plausibility checker · GitHub
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
+          </div>
         </div>
         <FormulaPanel />
       </div>

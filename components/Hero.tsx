@@ -1,4 +1,4 @@
-import { ArrowDown, FileText, Leaf, Mail } from "lucide-react";
+import { ArrowDown, ArrowUpRight, FileText, Github, Leaf, Linkedin, Mail } from "lucide-react";
 import Window from "./Window";
 
 const facts: [string, string][] = [
@@ -55,6 +55,31 @@ export default function Hero() {
                 <a href="#contact" className="glass-btn">
                   <Mail size={16} aria-hidden />
                   Contact me
+                </a>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a
+                  href="https://github.com/kunjalp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Kunjal on GitHub (opens in a new tab)"
+                  className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+                >
+                  <Github size={14} aria-hidden />
+                  GitHub
+                  <ArrowUpRight size={14} aria-hidden />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/kunjalpurohit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Kunjal on LinkedIn (opens in a new tab)"
+                  className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+                >
+                  <Linkedin size={14} aria-hidden />
+                  LinkedIn
+                  <ArrowUpRight size={14} aria-hidden />
                 </a>
               </div>
 

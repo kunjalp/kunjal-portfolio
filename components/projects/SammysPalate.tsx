@@ -38,6 +38,16 @@ export default function SammysPalate() {
               Live Web Demo
               <ArrowUpRight size={14} aria-hidden />
             </a>
+            <a
+              href="https://github.com/kunjalp/ucsc_dining_tracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Sammy's Palate source on GitHub (opens in a new tab)"
+              className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+            >
+              GitHub
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
           </div>
         </div>
         <div className="space-y-4">
