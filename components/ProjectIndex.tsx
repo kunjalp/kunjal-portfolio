@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CornerDownLeft, Search } from "lucide-react";
 import { restoreNode } from "./windowDock";
 import { isMotionPaused } from "./motion";
+import { openProjectDetails } from "./projects/ProjectCard";
 
 /**
  * Project index: Cmd/Ctrl+K (or the nav button, or `projects` in the terminal) opens
@@ -35,16 +36,22 @@ export function jumpTo(id: string) {
     setTimeout(() => jumpTo(id), isMotionPaused() ? 30 : 300);
     return;
   }
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  const win = el.querySelector<HTMLElement>(".win");
-  if (win) {
-    win.classList.remove("win-flash");
-    void win.offsetWidth; // restart the animation
-    win.classList.add("win-flash");
-    setTimeout(() => win.classList.remove("win-flash"), 1600);
-    win.querySelector<HTMLElement>(".win-bar")?.focus({ preventScroll: true });
-  }
+  // open the card's details, then scroll once the page has its new layout
+  openProjectDetails(id);
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      const win = el.querySelector<HTMLElement>(".win");
+      if (win) {
+        win.classList.remove("win-flash");
+        void win.offsetWidth; // restart the animation
+        win.classList.add("win-flash");
+        setTimeout(() => win.classList.remove("win-flash"), 1600);
+        win.querySelector<HTMLElement>(".win-bar")?.focus({ preventScroll: true });
+      }
+    }),
+  );
 }
 
 export default function ProjectIndex() {
