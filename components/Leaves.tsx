@@ -347,7 +347,7 @@ export default function Leaves() {
         <div className="fixed inset-0 z-[15]" onClick={close} aria-hidden />
       )}
 
-      <div className="pointer-events-none fixed inset-0 z-20 overflow-hidden">
+      <div className="leaf-layer pointer-events-none fixed inset-0 z-[5] overflow-hidden">
         {leaves.map((leaf, i) => {
           const isActive = active?.id === leaf.id;
           return (

@@ -835,13 +835,32 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
 
 /* ==========================================================================
    Drifting leaves
+   They fall behind the windows (layer z 5, page content z 10) so they never sit
+   on top of text. The empty parts of the page let clicks through to them: only
+   the real content blocks inside each section take pointer events.
    ========================================================================== */
+@layer base {
+  main,
+  main > section,
+  main > section > div {
+    pointer-events: none;
+  }
+  main > section > div > * {
+    pointer-events: auto;
+  }
+}
 .leaf {
   position: absolute;
   top: 0;
   left: var(--x);
   animation: drift var(--dur) linear var(--delay) infinite;
   will-change: transform;
+}
+/* Phones: windows fill the width, so two drifting at a time is plenty. */
+@media (max-width: 639px) {
+  .leaf-layer > .leaf:nth-child(n + 3) {
+    display: none;
+  }
 }
 .leaf-sway {
   animation: sway var(--sway) ease-in-out infinite;
