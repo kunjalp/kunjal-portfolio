@@ -6,14 +6,6 @@ import Heirloom from "./projects/Heirloom";
 import SammysPalate from "./projects/SammysPalate";
 import VexRobotics from "./projects/VexRobotics";
 
-/** Spans both columns on large screens. The id is the jump target for the project index. */
-function Wide({ id, children }: { id: string; children: React.ReactNode }) {
-  return (
-    <div id={id} className="scroll-mt-24 lg:col-span-2">
-      {children}
-    </div>
-  );
-}
 export default function Projects() {
   return (
     <section id="projects" className="scroll-mt-20 px-4 py-16 sm:px-8 md:py-24">
@@ -22,31 +14,18 @@ export default function Projects() {
           Projects
         </h2>
         <p className="on-sky mt-3 max-w-xl text-[1.05rem]">
-          Drag any window by its title bar. All of them respond to you.
+          Seven projects. Open any one with <span className="font-mono text-[0.95em]">cat details</span>, or drag a
+          window by its title bar.
         </p>
 
-        <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
-          <Wide id="project-heirloom">
-            <Heirloom />
-          </Wide>
-          <Wide id="project-formula-slug">
-            <FormulaSlug />
-          </Wide>
-          <Wide id="project-dowser">
-            <Dowser />
-          </Wide>
-          <Wide id="project-sammys">
-            <SammysPalate />
-          </Wide>
-          <Wide id="project-cosmos">
-            <Cosmos />
-          </Wide>
-          <Wide id="project-acm">
-            <AcmWebLead />
-          </Wide>
-          <Wide id="project-vex">
-            <VexRobotics />
-          </Wide>
+        <div className="mt-10 grid items-start gap-6 lg:grid-cols-2">
+          <Heirloom />
+          <FormulaSlug />
+          <Dowser />
+          <SammysPalate />
+          <Cosmos />
+          <AcmWebLead />
+          <VexRobotics />
         </div>
       </div>
     </section>

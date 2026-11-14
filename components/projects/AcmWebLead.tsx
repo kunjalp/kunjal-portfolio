@@ -1,9 +1,20 @@
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function AcmWebLead() {
   return (
-    <Window section="projects" title="acm-ucsc/web-lead.md">
+    <ProjectCard
+      id="project-acm"
+      file="acm-ucsc/web-lead.md"
+      name="ACM at UCSC: Web Redesign"
+      what="Web Development Lead"
+      when="August 2026 – Present"
+      line="Leading a 4-person team on UCSC's largest CS club site."
+      metrics={[
+        ["4", "person team led"],
+        ["15+", "events"],
+      ]}
+    >
       <div className="space-y-3 p-5 sm:p-6">
         <ProjectTitle title="ACM at UCSC: Web Redesign" meta={["Web Development Lead", "August 2026 – Present"]} />
         <p className="text-base leading-relaxed">
@@ -25,6 +36,6 @@ export default function AcmWebLead() {
         />
         <Tags label="Skills" items={["Next.js", "TypeScript", "Tailwind CSS", "Team leadership"]} />
       </div>
-    </Window>
+    </ProjectCard>
   );
 }

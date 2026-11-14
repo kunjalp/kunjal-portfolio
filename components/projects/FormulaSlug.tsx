@@ -1,11 +1,30 @@
 import { ArrowUpRight } from "lucide-react";
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import FormulaPanel from "./FormulaPanel";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function FormulaSlug() {
   return (
-    <Window section="projects" title="formula-slug/vcu-firmware">
+    <ProjectCard
+      id="project-formula-slug"
+      file="formula-slug/vcu-firmware"
+      name="Formula Slug"
+      what="Embedded Software Engineer Intern, FSAE"
+      when="Oct 2025 – Present"
+      line="STM32 firmware, CAN telemetry and the throttle map."
+      metrics={[
+        ["126 V", "pack"],
+        ["30/60", "cells/temps"],
+        ["41-pt", "throttle LUT"],
+      ]}
+      links={[
+        {
+          label: "APPS checker · GitHub",
+          href: "https://github.com/kunjalp/ETC-project",
+          aria: "Accelerator pedal (APPS) plausibility checker for Formula Slug on GitHub (opens in a new tab)",
+        },
+      ]}
+    >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle
@@ -48,6 +67,6 @@ export default function FormulaSlug() {
         </div>
         <FormulaPanel />
       </div>
-    </Window>
+    </ProjectCard>
   );
 }

@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 const LINKS: { label: string; href: string; aria: string }[] = [
@@ -31,7 +31,20 @@ const PHOTOS: { src: string; alt: string; caption: string; tilt: number; pos: st
 
 export default function Dowser() {
   return (
-    <Window section="projects" title="dowser/README.md">
+    <ProjectCard
+      id="project-dowser"
+      file="dowser/README.md"
+      name="Dowser"
+      what="Cal Hacks 13.0 · Climate track"
+      when="October 2026"
+      line="Finds possible unrecorded oil wells on old topo maps."
+      metrics={[
+        ["42 hrs", "to build it"],
+        ["4", "person team"],
+        ["158,000", "CA well records"],
+      ]}
+      links={LINKS}
+    >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle title="Dowser" meta={["Finding possible unrecorded oil wells", "October 2026"]} />
@@ -109,6 +122,6 @@ export default function Dowser() {
           </div>
         </div>
       </div>
-    </Window>
+    </ProjectCard>
   );
 }

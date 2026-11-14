@@ -1,10 +1,22 @@
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import VexWorkshop from "./VexWorkshop";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function VexRobotics() {
   return (
-    <Window section="projects" title="vex-vrc/leadership.txt">
+    <ProjectCard
+      id="project-vex"
+      file="vex-vrc/leadership.txt"
+      name="VEX VRC Robotics"
+      what="Club President"
+      when="Jul 2021 – May 2025"
+      line="Drivetrains, flywheels and intakes, 3 teams."
+      metrics={[
+        ["~30", "members led"],
+        ["3", "competitive teams"],
+        ["$3,000+", "annual budget"],
+      ]}
+    >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.2fr_1fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle title="VEX VRC Robotics" meta={["Club President", "Fremont, CA", "Jul 2021 – May 2025"]} />
@@ -46,6 +58,6 @@ export default function VexRobotics() {
           />
         </div>
       </div>
-    </Window>
+    </ProjectCard>
   );
 }

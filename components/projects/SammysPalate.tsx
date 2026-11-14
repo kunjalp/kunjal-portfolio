@@ -1,10 +1,39 @@
 import { ArrowUpRight } from "lucide-react";
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function SammysPalate() {
   return (
-    <Window section="projects" title="sammys-palate/README.md">
+    <ProjectCard
+      id="project-sammys"
+      file="sammys-palate/README.md"
+      name="Sammy's Palate"
+      what="UCSC dining tracker"
+      when="June 2026 – Present"
+      line="A web and iOS macro tracker, live on the App Store."
+      metrics={[
+        ["80+", "downloads"],
+        ["233K+", "menu records"],
+        ["14", "dining halls"],
+      ]}
+      links={[
+        {
+          label: "App Store",
+          href: "https://apps.apple.com/app/sammys-palate/id6806954658",
+          aria: "Sammy's Palate on the App Store (opens in a new tab)",
+        },
+        {
+          label: "Live Web Demo",
+          href: "https://ucsc-dining-tracker.vercel.app/",
+          aria: "Sammy's Palate live web demo (opens in a new tab)",
+        },
+        {
+          label: "GitHub",
+          href: "https://github.com/kunjalp/ucsc_dining_tracker",
+          aria: "Sammy's Palate source on GitHub (opens in a new tab)",
+        },
+      ]}
+    >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.2fr_1fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle title="Sammy's Palate" meta={["UCSC dining tracker", "June 2026 – Present"]} />
@@ -65,6 +94,6 @@ export default function SammysPalate() {
           />
         </div>
       </div>
-    </Window>
+    </ProjectCard>
   );
 }

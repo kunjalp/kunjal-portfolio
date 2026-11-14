@@ -1,9 +1,21 @@
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function Heirloom() {
   return (
-    <Window section="projects" title="heirloom/README.md">
+    <ProjectCard
+      id="project-heirloom"
+      file="heirloom/README.md"
+      name="Heirloom"
+      what="AI multi-generational wealth platform"
+      when="October 2026"
+      line="1st place, Daytona track at SF Tech Week."
+      metrics={[
+        ["1st", "Daytona track"],
+        ["20", "teams competing"],
+        ["12 hrs", "to build it"],
+      ]}
+    >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-3">
           <ProjectTitle title="Heirloom" meta={["AI multi-generational wealth platform", "October 2026"]} />
@@ -33,6 +45,6 @@ export default function Heirloom() {
           />
         </div>
       </div>
-    </Window>
+    </ProjectCard>
   );
 }

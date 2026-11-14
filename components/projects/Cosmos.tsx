@@ -1,10 +1,22 @@
-import Window from "../Window";
+import ProjectCard from "./ProjectCard";
 import OccupancyGrid from "./OccupancyGrid";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function Cosmos() {
   return (
-    <Window section="projects" title="cosmos/perception-and-mapping">
+    <ProjectCard
+      id="project-cosmos"
+      file="cosmos/perception-and-mapping"
+      name="Scaled Autonomous Vehicle"
+      what="UC San Diego COSMOS"
+      when="July – August 2024"
+      line="LiDAR and GNSS drivers, occupancy-grid mapping."
+      metrics={[
+        ["3", "autonomous laps"],
+        ["0.05 s", "time-aligned log"],
+        ["1/10", "scale car"],
+      ]}
+    >
       <div className="grid items-start gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_1.25fr] lg:gap-7">
         <div className="space-y-3">
           <ProjectTitle title="Scaled Autonomous Vehicle" meta={["UC San Diego COSMOS", "July – August 2024"]} />
@@ -29,6 +41,6 @@ export default function Cosmos() {
         </div>
         <OccupancyGrid />
       </div>
-    </Window>
+    </ProjectCard>
   );
 }
