@@ -183,8 +183,8 @@ export default function Contact() {
   const cls: Record<Line["kind"], string> = {
     cmd: "text-[rgb(var(--term-fg))]",
     out: "text-[rgb(var(--term-fg)/0.75)]",
-    link: "text-[rgb(var(--g1))] underline underline-offset-2 hover:text-[rgb(var(--term-fg))]",
-    copy: "text-[rgb(var(--g1))]",
+    link: "text-[rgb(var(--term-g))] underline underline-offset-2 hover:text-[rgb(var(--term-fg))]",
+    copy: "text-[rgb(var(--term-g))]",
     err: "text-[rgb(var(--accent))]",
   };
 
@@ -206,7 +206,7 @@ export default function Contact() {
                 {lines.map((l, i) => (
                   <p key={i} className={`whitespace-pre-wrap break-words ${cls[l.kind]}`}>
                     {l.kind === "cmd" && !/^(name|your email|message):/.test(l.text) && (
-                      <span className="text-[rgb(var(--g1))]">$ </span>
+                      <span className="text-[rgb(var(--term-g))]">$ </span>
                     )}
                     {l.kind === "copy" ? (
                       <button
@@ -243,7 +243,7 @@ export default function Contact() {
                   submit();
                 }}
               >
-                <label htmlFor="term-input" className="shrink-0 text-[rgb(var(--g1))]">
+                <label htmlFor="term-input" className="shrink-0 text-[rgb(var(--term-g))]">
                   {PROMPT[mode]}
                 </label>
                 <input

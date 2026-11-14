@@ -62,6 +62,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: MOTION_JS }} />
       </head>
       <body>
+        <a href="#projects" className="skip-link">
+          Skip to projects
+        </a>
         <Scenery />
         <SkyClock />
         {children}
