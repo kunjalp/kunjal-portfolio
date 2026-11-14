@@ -17,11 +17,11 @@ export const openProjectIndex = () => window.dispatchEvent(new Event(OPEN_INDEX)
 type Entry = { id: string; name: string; what: string; when: string; line: string; keys: string };
 
 export const PROJECTS: Entry[] = [
-  { id: "project-dowser", name: "Dowser", what: "Cal Hacks 13.0, Climate track", when: "Oct 2026", line: "Finds possible unrecorded oil wells on old topo maps.", keys: "nextjs convex esp32 yolo ios hackathon climate oil wells maps" },
   { id: "project-heirloom", name: "Heirloom", what: "AI wealth platform", when: "Oct 2026", line: "1st place, Daytona track at SF Tech Week.", keys: "nextjs fastapi neo4j ai agents hackathon" },
   { id: "project-formula-slug", name: "Formula Slug", what: "Vehicle firmware, FSAE", when: "Oct 2025 – Present", line: "STM32 firmware, CAN telemetry and the throttle map.", keys: "stm32 c++ can embedded race car" },
-  { id: "project-cosmos", name: "Scaled Autonomous Vehicle", what: "UC San Diego COSMOS", when: "Jul – Aug 2024", line: "LiDAR and GNSS drivers, occupancy-grid mapping.", keys: "python ros lidar opencv mapping" },
+  { id: "project-dowser", name: "Dowser", what: "Cal Hacks 13.0, Climate track", when: "Oct 2026", line: "Finds possible unrecorded oil wells on old topo maps.", keys: "nextjs convex esp32 yolo ios hackathon climate oil wells maps" },
   { id: "project-sammys", name: "Sammy's Palate", what: "UCSC dining tracker", when: "Jun 2026 – Present", line: "On the App Store, 80+ downloads, 233K+ menu records.", keys: "ios supabase postgres playwright app" },
+  { id: "project-cosmos", name: "Scaled Autonomous Vehicle", what: "UC San Diego COSMOS", when: "Jul – Aug 2024", line: "LiDAR and GNSS drivers, occupancy-grid mapping.", keys: "python ros lidar opencv mapping" },
   { id: "project-acm", name: "ACM Web Redesign", what: "Web Development Lead", when: "Aug 2026 – Present", line: "Leading a 4-person team on UCSC's largest CS club site.", keys: "web team auth leadership" },
   { id: "project-vex", name: "VEX VRC Robotics", what: "Club President, mechanical builder", when: "2021 – 2025", line: "Drivetrains, flywheels and intakes, 3 teams.", keys: "robotics mechanical vex" },
 ];

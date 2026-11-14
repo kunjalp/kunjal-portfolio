@@ -26,20 +26,20 @@ export default function Projects() {
         </p>
 
         <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
-          <Wide id="project-dowser">
-            <Dowser />
-          </Wide>
           <Wide id="project-heirloom">
             <Heirloom />
           </Wide>
           <Wide id="project-formula-slug">
             <FormulaSlug />
           </Wide>
-          <Wide id="project-cosmos">
-            <Cosmos />
+          <Wide id="project-dowser">
+            <Dowser />
           </Wide>
           <Wide id="project-sammys">
             <SammysPalate />
+          </Wide>
+          <Wide id="project-cosmos">
+            <Cosmos />
           </Wide>
           <Wide id="project-acm">
             <AcmWebLead />
