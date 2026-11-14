@@ -64,10 +64,10 @@ export default function Navbar() {
 
   return (
     <header className="menubar fixed inset-x-0 top-0 z-50">
-      <nav aria-label="Primary" className="mx-auto flex h-12 max-w-[1400px] items-center gap-2 px-4 sm:px-6">
+      <nav aria-label="Primary" className="mx-auto flex h-12 max-w-[1400px] items-center gap-1 px-3 sm:gap-2 sm:px-6">
         <a
           href="#top"
-          className="menu-link mr-2 flex items-center gap-2 !px-2 font-bold"
+          className="menu-link flex items-center gap-2 !px-1.5 font-bold sm:mr-2 sm:!px-2"
           onClick={() => setOpen(false)}
         >
           <Mountain size={18} strokeWidth={2.4} aria-hidden />
@@ -84,16 +84,16 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
+        <div className="ml-auto flex items-center gap-0.5 sm:gap-3">
           <Clock />
           <a
             href={RESUME}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Resume, PDF (opens in a new tab)"
-            className="nav-resume flex"
+            className="nav-resume mr-1 flex sm:mr-0"
           >
-            <FileText size={15} strokeWidth={2.2} aria-hidden />
+            <FileText size={15} strokeWidth={2.2} aria-hidden className="hidden sm:block" />
             Resume
           </a>
           <ProjectIndexButton />
