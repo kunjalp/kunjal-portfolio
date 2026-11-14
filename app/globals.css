@@ -1300,6 +1300,20 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
   }
 }
 
+/* Phones: the terminal's links and command chips get finger-sized targets. */
+@media (max-width: 639px) {
+  .term-tap {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .term-chip {
+    min-height: 44px;
+    padding: 0 0.85rem;
+    font-size: 0.8rem;
+  }
+}
+
 /* Journey patches: pressed onto the card like iron-ons */
 .patch {
   transform: rotate(var(--tilt, 0deg));

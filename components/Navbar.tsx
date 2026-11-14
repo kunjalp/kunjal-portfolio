@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Menu, Mountain, X } from "lucide-react";
+import { ArrowDownToLine, FileText, Menu, Mountain, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import GravityToggle from "./GravityToggle";
+import { toggleGravity, useGravity } from "./gravity";
 import MotionToggle from "./MotionToggle";
 import { ProjectIndexButton } from "./ProjectIndex";
 
@@ -59,6 +60,7 @@ function Clock() {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const gravityOn = useGravity();
 
   return (
     <header className="menubar fixed inset-x-0 top-0 z-50">
@@ -82,21 +84,24 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-3">
           <Clock />
           <a
             href={RESUME}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Resume, PDF (opens in a new tab)"
-            className="nav-resume hidden md:flex"
+            className="nav-resume flex"
           >
             <FileText size={15} strokeWidth={2.2} aria-hidden />
             Resume
           </a>
           <ProjectIndexButton />
           <MotionToggle />
-          <GravityToggle />
+          {/* on phones the gravity switch lives in the menu, so Resume gets the room up here */}
+          <div className="hidden md:block">
+            <GravityToggle />
+          </div>
           <ThemeToggle />
           <button
             type="button"
@@ -135,6 +140,20 @@ export default function Navbar() {
               <FileText size={16} strokeWidth={2.2} aria-hidden />
               Resume (PDF)
             </a>
+          </li>
+          <li>
+            <button
+              type="button"
+              onClick={() => {
+                toggleGravity();
+                setOpen(false);
+              }}
+              aria-pressed={gravityOn}
+              className="menu-link flex min-h-[44px] w-full items-center gap-2 text-left"
+            >
+              <ArrowDownToLine size={16} strokeWidth={2.2} aria-hidden />
+              Gravity mode: {gravityOn ? "on" : "off"}
+            </button>
           </li>
         </ul>
       )}

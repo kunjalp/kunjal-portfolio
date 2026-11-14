@@ -216,12 +216,13 @@ export default function Contact() {
                           copyEmail(l.value);
                         }}
                         title="Copy to clipboard"
-                        className="text-left underline decoration-dotted underline-offset-2 hover:text-[rgb(var(--term-fg))]"
+                        className="term-tap text-left underline decoration-dotted underline-offset-2 hover:text-[rgb(var(--term-fg))]"
                       >
                         {l.text}
                       </button>
                     ) : l.kind === "link" && l.href ? (
                       <a
+                        className="term-tap"
                         href={l.href}
                         {...(l.href.startsWith("http") || l.href === LINKS.resume ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       >
