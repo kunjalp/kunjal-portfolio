@@ -21,12 +21,14 @@ type Props = {
   className?: string;
   /** Which desk stack this window joins when minimized. */
   section?: Section;
+  /** Called when the window enters or leaves full screen. */
+  onExpandedChange?: (expanded: boolean) => void;
 };
 
 // Motion paused (site toggle) or reduced motion: windows just appear and disappear.
 const instant = () => isMotionPaused() || prefersReducedMotion();
 
-export default function Window({ title, children, className = "", section = "other" }: Props) {
+export default function Window({ title, children, className = "", section = "other", onExpandedChange }: Props) {
   const id = useId();
   const [z, setZ] = useState(1);
   const [dragging, setDragging] = useState(false);
@@ -134,6 +136,7 @@ export default function Window({ title, children, className = "", section = "oth
       setSlotH(win.current?.getBoundingClientRect().height ?? 0);
       front();
     }
+    onExpandedChange?.(!expanded);
     setExpanded((x) => !x);
   };
   useEffect(() => {

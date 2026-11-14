@@ -1302,6 +1302,37 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
   }
 }
 
+/* Project cards: the "cat details" bar along the bottom of each project window. */
+.card-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.75rem 0.5rem 1rem; /* right side clears the resize grip */
+  border-top: 2px dashed rgb(var(--edge) / 0.3);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+.card-toggle:hover {
+  background: rgb(var(--paper2) / 0.7);
+}
+.card-toggle:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: -3px;
+}
+.card-toggle svg {
+  transition: transform 0.2s ease;
+}
+@media (min-width: 640px) {
+  .card-toggle {
+    padding-left: 1.25rem;
+  }
+}
+
 /* Skip link: first tab stop, hidden until it has keyboard focus. */
 .skip-link {
   position: fixed;
