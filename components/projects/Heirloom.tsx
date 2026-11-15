@@ -1,6 +1,14 @@
 import ProjectCard from "./ProjectCard";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
+const LINKS: { label: string; href: string; aria: string }[] = [
+  {
+    label: "GitHub",
+    href: "https://github.com/templeterror/britishraj",
+    aria: "Heirloom on GitHub (opens in a new tab)",
+  },
+];
+
 export default function Heirloom() {
   return (
     <ProjectCard
@@ -15,6 +23,7 @@ export default function Heirloom() {
         ["20", "teams competing"],
         ["12 hrs", "to build it"],
       ]}
+      links={LINKS}
       image={{
         src: "/images/heirloom/sf-tech-week.jpg",
         alt: "Two people smiling in front of the Talk Tousers slide at SF Tech Week.",

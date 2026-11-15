@@ -50,7 +50,7 @@ export default function Dowser() {
         width: 1100,
         height: 700,
         strip: "50% 50%",
-        side: "72% 50%",
+        side: "0% 22%",
       }}
     >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">

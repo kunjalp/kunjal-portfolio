@@ -1321,7 +1321,7 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
    so nothing moves when the image arrives. */
 .card-shot {
   position: relative;
-  height: 150px;
+  height: 180px;
   flex: none;
   overflow: hidden;
   border-bottom: 2px solid rgb(var(--edge));
