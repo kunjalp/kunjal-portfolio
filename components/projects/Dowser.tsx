@@ -44,6 +44,14 @@ export default function Dowser() {
         ["158,000", "CA well records"],
       ]}
       links={LINKS}
+      image={{
+        src: "/images/dowser/app-map.jpg",
+        alt: "The Dowser command map: candidate undocumented wells in Kern County marked on satellite imagery, beside filters and a ranked list.",
+        width: 1100,
+        height: 700,
+        strip: "50% 50%",
+        side: "72% 50%",
+      }}
     >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
         <div className="space-y-3">
