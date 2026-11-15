@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import ProjectCard from "./ProjectCard";
 import FormulaPanel from "./FormulaPanel";
+import ThrottleThumb from "./ThrottleThumb";
 import { Bullets, Metrics, ProjectTitle, Tags } from "./shared";
 
 export default function FormulaSlug() {
@@ -24,6 +25,7 @@ export default function FormulaSlug() {
           aria: "Accelerator pedal (APPS) plausibility checker for Formula Slug on GitHub (opens in a new tab)",
         },
       ]}
+      visual={<ThrottleThumb />}
     >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.15fr_1fr] lg:gap-7">
         <div className="space-y-3">

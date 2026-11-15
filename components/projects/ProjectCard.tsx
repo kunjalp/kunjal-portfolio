@@ -42,6 +42,8 @@ type Props = {
   metrics: [string, string][];
   links?: ProjectLink[];
   image?: ProjectImage;
+  /** A drawn visual (an inline chart) in the same slot as `image`, for cards whose real material is data, not a photo. */
+  visual?: React.ReactNode;
   /** The full write-up, shown inside the same window once opened. */
   children: React.ReactNode;
 };
@@ -51,7 +53,7 @@ type Props = {
  * "cat details" swaps the summary for the full write-up inside the same window,
  * and the card then takes the full row so the write-up has room.
  */
-export default function ProjectCard({ id, file, name, what, when, line, metrics, links = [], image, children }: Props) {
+export default function ProjectCard({ id, file, name, what, when, line, metrics, links = [], image, visual, children }: Props) {
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const bodyId = useId();
@@ -89,7 +91,8 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
         {open ? (
           <div id={bodyId}>{children}</div>
         ) : (
-          <div id={bodyId} className={image ? "sm:flex" : ""}>
+          <div id={bodyId} className={image || visual ? "sm:flex" : ""}>
+            {visual && !image && <div className="card-shot">{visual}</div>}
             {image && (
               <div
                 className="card-shot"

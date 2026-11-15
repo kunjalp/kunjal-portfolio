@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // Real curves, taken from vcu/etc/etc_controller.cpp (PR #26).
 // Old: piecewise map with regions of 30% / 40% / 30% and 2x scaling at the ends.
-function oldMap(p: number) {
+export function oldMap(p: number) {
   const r1 = 0.3, r2 = 0.4, k = 2;
   const s1 = r1 / k;
   const s3 = (1 - r1 - r2) / k;
@@ -29,7 +29,7 @@ export const LUT = [
   1.000000000,
 ];
 const STEPS = LUT.length - 1;
-function newMap(p: number) {
+export function newMap(p: number) {
   p = Math.min(1, Math.max(0, p));
   const x = p * STEPS;
   const i = Math.floor(x);
