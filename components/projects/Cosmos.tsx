@@ -21,7 +21,7 @@ export default function Cosmos() {
         alt: "The 1/10-scale autonomous car, with its LiDAR and camera mounted on top, parked on a table in a courtyard.",
         width: 549,
         height: 976,
-        strip: "50% 68%",
+        strip: "50% 60%",
         side: "50% 73%",
       }}
     >

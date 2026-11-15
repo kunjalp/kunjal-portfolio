@@ -18,7 +18,7 @@ export default function Projects() {
           window by its title bar.
         </p>
 
-        <div className="mt-10 grid items-start gap-6 lg:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
           <Heirloom />
           <FormulaSlug />
           <Dowser />
