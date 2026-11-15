@@ -1,12 +1,11 @@
 import Window from "./Window";
 
+// Kept to what the SWE resume and the projects on this page actually use.
 const GROUPS: { label: string; items: string[] }[] = [
-  { label: "Languages", items: ["Python", "TypeScript", "JavaScript", "C/C++", "Java", "Swift", "SQL (PostgreSQL)", "HTML/CSS", "Assembly"] },
-  { label: "Embedded & hardware", items: ["STM32", "ESP32", "CAN Bus", "OneWire", "DS18B20 sensors", "Sensor integration", "Signal filtering", "Real-time data acquisition"] },
-  { label: "Autonomous systems", items: ["LiDAR", "GNSS / NMEA parsing", "Jetson Nano", "Occupancy-grid mapping", "Localization", "Sensor fusion", "OpenCV", "ROS"] },
-  { label: "Frameworks & libraries", items: ["Next.js", "React", "Node.js", "FastAPI", "Capacitor", "Convex", "Playwright", "Tailwind CSS"] },
-  { label: "Tools & platforms", items: ["Supabase", "Neo4j", "Clerk", "Plaid", "Vercel", "Codemagic", "GitHub Actions", "Unix/Linux"] },
-  { label: "Software engineering", items: ["Object-oriented programming", "System design", "Testing", "Data pipelines", "CI/CD"] },
+  { label: "Languages", items: ["C/C++", "Python", "TypeScript", "JavaScript", "Swift", "SQL (PostgreSQL)"] },
+  { label: "Embedded & robotics", items: ["STM32", "ESP32", "CAN Bus", "OneWire", "ROS", "OpenCV"] },
+  { label: "Frameworks & libraries", items: ["Next.js", "React", "FastAPI", "Tailwind CSS", "Playwright"] },
+  { label: "Tools & platforms", items: ["Supabase", "GitHub Actions", "Vercel", "Unix/Linux"] },
 ];
 
 const slug = (t: string) =>
