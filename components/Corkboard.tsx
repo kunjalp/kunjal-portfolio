@@ -38,6 +38,10 @@ type Zoom = { id: string; cx: number; cy: number; w: number; h: number; tilt: nu
 
 const DEFAULT_ORDER = ITEMS.map((i) => i.id);
 
+// On a narrow board (the grid layout phones get) only these stay: two notes, each with one photo.
+// The rest are hidden with CSS from the first paint, so nothing moves.
+const NARROW_KEEP = new Set(["card-sunsets", "beach", "card-breaks", "buddha"]);
+
 function PushPin({ color = RED }: { color?: string }) {
   return (
     <span aria-hidden className="cork-pin" style={{ background: `radial-gradient(circle at 35% 30%, #fff8 0 18%, ${color} 22%)` }} />
@@ -199,7 +203,7 @@ export default function Corkboard() {
       <div className="cork-frame">
         <div
           ref={board}
-          className={`cork-board ${free ? "relative" : "grid grid-cols-2 items-start gap-5 p-5"}`}
+          className={`cork-board ${free ? "relative" : "cork-narrow grid grid-cols-2 items-start gap-5 p-5"}`}
           style={free ? { height: BOARD_H * scale } : undefined}
           role="group"
           aria-label="Corkboard of photos and drawings"
@@ -227,7 +231,7 @@ export default function Corkboard() {
             return (
               <div
                 key={it.id}
-                className={`cork-item ${cls} ${isHeld ? "is-held" : ""} ${free ? "cursor-grab" : ""}`}
+                className={`cork-item ${cls} ${isHeld ? "is-held" : ""} ${free ? "cursor-grab" : ""} ${NARROW_KEEP.has(it.id) ? "" : "cork-extra"}`}
                 style={style}
                 tabIndex={free ? 0 : undefined}
                 aria-label={free ? `${label}. Use arrow keys to move.` : undefined}

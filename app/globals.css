@@ -950,6 +950,10 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
 :root[data-theme="dark"] .cork-board {
   filter: brightness(0.82) saturate(0.9);
 }
+/* Narrow (grid) board: two notes and two photos only. */
+.cork-narrow > .cork-extra {
+  display: none;
+}
 .cork-item {
   touch-action: none;
   user-select: none;
