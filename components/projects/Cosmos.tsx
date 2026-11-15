@@ -16,6 +16,14 @@ export default function Cosmos() {
         ["0.05 s", "time-aligned log"],
         ["1/10", "scale car"],
       ]}
+      image={{
+        src: "/images/cosmos/car.jpg",
+        alt: "The 1/10-scale autonomous car, with its LiDAR and camera mounted on top, parked on a table in a courtyard.",
+        width: 549,
+        height: 976,
+        strip: "50% 54%",
+        side: "50% 73%",
+      }}
     >
       <div className="grid items-start gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_1.25fr] lg:gap-7">
         <div className="space-y-3">
