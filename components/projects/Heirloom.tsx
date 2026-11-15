@@ -15,6 +15,14 @@ export default function Heirloom() {
         ["20", "teams competing"],
         ["12 hrs", "to build it"],
       ]}
+      image={{
+        src: "/images/heirloom/sf-tech-week.jpg",
+        alt: "Two people smiling in front of the Talk Tousers slide at SF Tech Week.",
+        width: 1003,
+        height: 752,
+        strip: "50% 78%",
+        side: "50% 80%",
+      }}
     >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-3">
