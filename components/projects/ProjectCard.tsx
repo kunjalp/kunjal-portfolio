@@ -10,6 +10,23 @@ export const openProjectDetails = (id: string) => window.dispatchEvent(new Custo
 
 export type ProjectLink = { label: string; href: string; aria: string };
 
+/**
+ * One real picture of the work for the collapsed card. On phones it is a strip under the
+ * title bar; from 640px up it is a column down the card's right side. Both crop with
+ * object-fit: cover, so each layout gets its own object-position to keep the subject in frame.
+ */
+export type ProjectImage = {
+  src: string;
+  alt: string;
+  /** Intrinsic pixel size of the file, so the browser reserves the space before it loads. */
+  width: number;
+  height: number;
+  /** object-position for the phone strip (wide and short). */
+  strip: string;
+  /** object-position for the side column (narrow and tall). */
+  side: string;
+};
+
 type Props = {
   /** Jump target for the project index, e.g. "project-heirloom". */
   id: string;
@@ -24,6 +41,7 @@ type Props = {
   /** Two or three headline numbers. Every value must come from the resume or the full write-up. */
   metrics: [string, string][];
   links?: ProjectLink[];
+  image?: ProjectImage;
   /** The full write-up, shown inside the same window once opened. */
   children: React.ReactNode;
 };
@@ -33,7 +51,7 @@ type Props = {
  * "cat details" swaps the summary for the full write-up inside the same window,
  * and the card then takes the full row so the write-up has room.
  */
-export default function ProjectCard({ id, file, name, what, when, line, metrics, links = [], children }: Props) {
+export default function ProjectCard({ id, file, name, what, when, line, metrics, links = [], image, children }: Props) {
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const bodyId = useId();
@@ -71,7 +89,17 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
         {open ? (
           <div id={bodyId}>{children}</div>
         ) : (
-          <div id={bodyId} className="space-y-2.5 p-4 sm:p-5">
+          <div id={bodyId} className={image ? "sm:flex" : ""}>
+            {image && (
+              <div
+                className="card-shot"
+                style={{ "--pos-strip": image.strip, "--pos-side": image.side } as React.CSSProperties}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+              </div>
+            )}
+            <div className="min-w-0 flex-1 space-y-2.5 p-4 sm:p-5">
             <h3 className="text-[1.3rem] font-bold leading-tight tracking-[-0.01em]">{name}</h3>
             <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
               <span className="text-[0.9rem] font-semibold">{what}</span>
@@ -106,6 +134,7 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
                 ))}
               </div>
             )}
+            </div>
           </div>
         )}
         <button
