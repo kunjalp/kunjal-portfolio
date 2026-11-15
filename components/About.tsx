@@ -98,20 +98,18 @@ export default function About() {
                     something real.
                   </p>
                   <p className="text-[1.05rem] leading-relaxed">
-                    Give me something hard and I&apos;m all in. I want to do it as well as I can,
-                    if not better.
+                    Give me something hard and I&apos;m all in.
                   </p>
                   <p className="border-l-4 border-[rgb(var(--accent))] pl-4 text-[1.05rem]">
                     <span className="font-mono text-xs text-muted">WHAT I&apos;M AFTER</span>
                     <br />
-                    Building technology that actually solves real problems, across software and
-                    hardware. Autonomous vehicles are what first hooked me, but I&apos;m excited by any
-                    team working on hard, real-world problems.
+                    Technology that solves real problems, across software and hardware. Autonomous
+                    vehicles first hooked me, but I&apos;m excited by any team working on hard,
+                    real-world problems.
                   </p>
                   <p className="text-[1.05rem] leading-relaxed">
                     Sammy&apos;s Palate is the one I&apos;m proudest of. I made it because I wanted an
-                    easier way to see the nutrition of what I was eating on campus. If something
-                    bugs me, I add a feature.
+                    easier way to see the nutrition of what I was eating on campus.
                   </p>
                 </div>
               </div>
@@ -130,8 +128,7 @@ export default function About() {
               </p>
               <p className="font-mono text-xs text-muted">FOOD I&apos;LL NEVER SAY NO TO</p>
               <p className="text-[1.05rem] leading-relaxed">
-                Thai, Indian, or anything homemade. And chai. Making it is honestly just as fun as
-                drinking it.
+                Thai, Indian, or anything homemade. And chai.
               </p>
             </div>
           </Window>
@@ -142,11 +139,8 @@ export default function About() {
               <ul className="space-y-2 text-[1.02rem] leading-relaxed">
                 {[
                   "Build more stuff I'm excited about",
-                  "Keep pushing to see how far I can go",
-                  "Travel more and see new places",
-                  "Make tons of memories with friends and family",
-                  "Make the most of college",
                   "Get better at what I do, without losing the rest of me",
+                  "Travel more and see new places",
                 ].map((t) => (
                   <li key={t} className="flex gap-3">
                     <span aria-hidden className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
@@ -165,7 +159,7 @@ export default function About() {
                     {
                       n: "01",
                       t: "I wanted to be a barber",
-                      d: "My parents used to joke about it, and now I actually cut and style hair for my family and friends. I've even given myself bangs.",
+                      d: "Now I cut and style hair for my family and friends. I've even given myself bangs.",
                     },
                     {
                       n: "02",
@@ -175,7 +169,7 @@ export default function About() {
                     {
                       n: "03",
                       t: "Not much of a movie person",
-                      d: "I'd way rather have a packed day where I get to do a bunch of different things.",
+                      d: "I'd rather have a packed day doing a bunch of different things.",
                     },
                   ]}
                 />
