@@ -1,11 +1,11 @@
 import Window from "./Window";
 
-// Kept to what the SWE resume and the projects on this page actually use.
+// Kept to what the resumes and the projects on this page actually use.
 const GROUPS: { label: string; items: string[] }[] = [
-  { label: "Languages", items: ["C/C++", "Python", "TypeScript", "JavaScript", "Swift", "SQL (PostgreSQL)"] },
+  { label: "Languages", items: ["C/C++", "Python", "TypeScript", "JavaScript", "Java", "Swift", "SQL (PostgreSQL)", "HTML/CSS", "Assembly"] },
   { label: "Embedded & robotics", items: ["STM32", "ESP32", "CAN Bus", "OneWire", "ROS", "OpenCV"] },
-  { label: "Frameworks & libraries", items: ["Next.js", "React", "FastAPI", "Tailwind CSS", "Playwright"] },
-  { label: "Tools & platforms", items: ["Supabase", "GitHub Actions", "Vercel", "Unix/Linux"] },
+  { label: "Frameworks & libraries", items: ["Next.js", "React", "Node.js", "FastAPI", "Capacitor", "Convex", "Tailwind CSS", "Playwright"] },
+  { label: "Tools & platforms", items: ["Supabase", "Neo4j", "Clerk", "Plaid", "GitHub Actions", "Codemagic", "Vercel", "Unix/Linux", "BeamNG.tech/BeamNGpy"] },
 ];
 
 const slug = (t: string) =>
