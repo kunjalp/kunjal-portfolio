@@ -34,12 +34,12 @@ export default function SammysPalate() {
         },
       ]}
       image={{
-        src: "/images/about/sammys-menu.jpg",
+        src: "/images/sammys/menu.jpg",
         alt: "Sammy’s Palate on a phone: calorie and macro totals for the day above a dining hall’s menu.",
-        width: 359,
-        height: 780,
-        strip: "50% 15%",
-        side: "50% 10%",
+        width: 448,
+        height: 915,
+        strip: "50% 8%",
+        side: "50% 6%",
       }}
     >
       <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.2fr_1fr] lg:gap-7">
