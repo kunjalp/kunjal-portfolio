@@ -43,19 +43,30 @@ export default function Hero() {
                   See my work
                   <ArrowDown size={16} aria-hidden />
                 </a>
+                <a href="#contact" className="glass-btn">
+                  <Mail size={16} aria-hidden />
+                  Contact me
+                </a>
+                <span aria-hidden className="hidden basis-full sm:block" />
                 <a
                   href="/Kunjal_Purohit_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Resume, PDF (opens in a new tab)"
+                  aria-label="Resume for software engineering roles, PDF (opens in a new tab)"
                   className="glass-btn"
                 >
                   <FileText size={16} aria-hidden />
-                  Resume
+                  Resume: SWE
                 </a>
-                <a href="#contact" className="glass-btn">
-                  <Mail size={16} aria-hidden />
-                  Contact me
+                <a
+                  href="/Kunjal_Purohit_Resume_Embedded.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Resume for embedded roles, PDF (opens in a new tab)"
+                  className="glass-btn"
+                >
+                  <FileText size={16} aria-hidden />
+                  Resume: Embedded
                 </a>
               </div>
 

@@ -11,6 +11,7 @@ const LINKS = {
   linkedin: "https://www.linkedin.com/in/kunjalpurohit",
   github: "https://github.com/kunjalp",
   resume: "/Kunjal_Purohit_Resume.pdf",
+  resumeEmbedded: "/Kunjal_Purohit_Resume_Embedded.pdf",
 };
 
 // "copy" lines copy their value to the clipboard when clicked
@@ -27,7 +28,8 @@ const INITIAL: Line[] = [
   { kind: "link", text: "linkedin  → linkedin.com/in/kunjalpurohit", href: LINKS.linkedin },
   { kind: "link", text: "github    → github.com/kunjalp", href: LINKS.github },
   { kind: "copy", text: `email     → ${EMAIL}`, value: EMAIL },
-  { kind: "link", text: "resume    → Kunjal_Purohit_Resume.pdf", href: LINKS.resume },
+  { kind: "link", text: "resume    → Kunjal_Purohit_Resume.pdf (SWE)", href: LINKS.resume },
+  { kind: "link", text: "embedded  → Kunjal_Purohit_Resume_Embedded.pdf", href: LINKS.resumeEmbedded },
   { kind: "out", text: "Type `contact` to write me a message, or `help` for all commands." },
 ];
 
@@ -109,7 +111,8 @@ export default function Contact() {
         add({ kind: "out", text: "usage: sudo hire kunjal" });
         break;
       case "resume":
-        add({ kind: "link", text: "Kunjal_Purohit_Resume.pdf (opens in a new tab)", href: LINKS.resume });
+        add({ kind: "link", text: "Kunjal_Purohit_Resume.pdf, SWE (opens in a new tab)", href: LINKS.resume });
+        add({ kind: "link", text: "Kunjal_Purohit_Resume_Embedded.pdf, embedded (opens in a new tab)", href: LINKS.resumeEmbedded });
         break;
       case "contact":
         add({ kind: "out", text: "Starting message. Press Enter after each answer. First, your name." });
@@ -224,7 +227,7 @@ export default function Contact() {
                       <a
                         className="term-tap"
                         href={l.href}
-                        {...(l.href.startsWith("http") || l.href === LINKS.resume ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        {...(l.href.startsWith("http") || l.href === LINKS.resume || l.href === LINKS.resumeEmbedded ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       >
                         {l.text}
                       </a>

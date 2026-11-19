@@ -17,6 +17,7 @@ const links = [
 ];
 
 const RESUME = "/Kunjal_Purohit_Resume.pdf";
+const RESUME_EMBEDDED = "/Kunjal_Purohit_Resume_Embedded.pdf";
 
 /** Link text whose letters roll up on hover, each a beat after the last. Screen readers get the plain label. */
 function Roll({ text }: { text: string }) {
@@ -91,6 +92,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Resume, PDF (opens in a new tab)"
+            title="Resume (SWE version)"
             className="nav-resume mr-1 flex sm:mr-0"
           >
             <FileText size={15} strokeWidth={2.2} aria-hidden className="hidden sm:block" />
@@ -138,7 +140,19 @@ export default function Navbar() {
               className="menu-link flex min-h-[44px] items-center gap-2 font-bold"
             >
               <FileText size={16} strokeWidth={2.2} aria-hidden />
-              Resume (PDF)
+              Resume: SWE (PDF)
+            </a>
+          </li>
+          <li>
+            <a
+              href={RESUME_EMBEDDED}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="menu-link flex min-h-[44px] items-center gap-2 font-bold"
+            >
+              <FileText size={16} strokeWidth={2.2} aria-hidden />
+              Resume: Embedded (PDF)
             </a>
           </li>
           <li>
