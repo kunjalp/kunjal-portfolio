@@ -3,10 +3,14 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import Window from "../Window";
+import Reveal, { revealNow } from "../Reveal";
 
 /** Fired by the project index and the Journey buttons: open this project's details before scrolling to it. */
 export const OPEN_PROJECT = "open-project-details";
-export const openProjectDetails = (id: string) => window.dispatchEvent(new CustomEvent(OPEN_PROJECT, { detail: id }));
+export const openProjectDetails = (id: string) => {
+  revealNow(id);
+  window.dispatchEvent(new CustomEvent(OPEN_PROJECT, { detail: id }));
+};
 
 export type ProjectLink = { label: string; href: string; aria: string };
 
@@ -87,15 +91,17 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
 
   return (
     <div ref={wrap} id={id} className={`scroll-mt-24 ${open ? "lg:col-span-2" : ""}`}>
+      <Reveal name={id}>
       <Window section="projects" title={file} onExpandedChange={(full) => full && setOpen(true)}>
         {open ? (
           <div id={bodyId}>{children}</div>
         ) : (
           <div id={bodyId} className={image || visual ? "sm:flex" : ""}>
-            {visual && !image && <div className="card-shot">{visual}</div>}
+            {visual && !image && <div className="card-shot" data-rv="4">{visual}</div>}
             {image && (
               <div
                 className="card-shot"
+                data-rv="4"
                 style={{ "--pos-strip": image.strip, "--pos-side": image.side } as React.CSSProperties}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -103,13 +109,13 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
               </div>
             )}
             <div className="min-w-0 flex-1 space-y-2.5 p-4 sm:p-5">
-            <h3 className="text-[1.3rem] font-bold leading-tight tracking-[-0.01em]">{name}</h3>
-            <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+            <h3 data-rv="1" className="text-[1.3rem] font-bold leading-tight tracking-[-0.01em]">{name}</h3>
+            <p data-rv="1" className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
               <span className="text-[0.9rem] font-semibold">{what}</span>
               <span className="font-mono text-xs text-muted">{when}</span>
             </p>
-            <p className="text-[0.95rem] leading-snug">{line}</p>
-            <dl className="grid grid-cols-3 gap-2">
+            <p data-rv="1" className="text-[0.95rem] leading-snug">{line}</p>
+            <dl data-rv="2" className="grid grid-cols-3 gap-2">
               {metrics.map(([v, l]) => (
                 <div
                   key={l}
@@ -121,7 +127,7 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
               ))}
             </dl>
             {links.length > 0 && (
-              <div className="flex flex-wrap gap-2">
+              <div data-rv="3" className="flex flex-wrap gap-2">
                 {links.map((l) => (
                   <a
                     key={l.href}
@@ -157,6 +163,7 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
           <ChevronDown size={18} aria-hidden className={open ? "rotate-180" : ""} />
         </button>
       </Window>
+      </Reveal>
     </div>
   );
 }
