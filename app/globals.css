@@ -59,6 +59,8 @@
   --trees-back: 86 96 52;
   --hill-front: 70 80 42;
   --trees-front: 56 66 34;
+  --foot-bg: 52 64 38;
+  --foot-fg: 226 232 208;
   --lake-top: 146 184 170;
   --lake-bottom: 78 128 118;
   --shine: 252 222 196;
@@ -136,6 +138,8 @@
   --trees-back: 40 34 34;
   --hill-front: 44 36 36;
   --trees-front: 34 28 28;
+  --foot-bg: 26 36 26;
+  --foot-fg: 184 200 168;
   --lake-top: 196 104 104;
   --lake-bottom: 66 42 68;
   --shine: 255 196 146;

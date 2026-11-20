@@ -18,10 +18,12 @@ export default function Page() {
         <Skills />
         <Contact />
       </main>
-      <footer className="relative z-10 border-t border-[rgb(var(--edge)/0.25)] bg-bg px-4 py-6 sm:px-6">
-        <p className="mx-auto max-w-5xl font-mono text-[0.85rem] text-muted">
-          &copy; 2026 Kunjal Purohit
-        </p>
+      <footer className="relative z-10 bg-[rgb(var(--foot-bg))] px-4 pb-6 pt-2 text-left sm:px-6">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 -top-12 h-12 bg-gradient-to-b from-transparent to-[rgb(var(--foot-bg))]"
+        />
+        <p className="font-mono text-[0.85rem] text-[rgb(var(--foot-fg))]">&copy; 2026 Kunjal Purohit</p>
       </footer>
     </>
   );
