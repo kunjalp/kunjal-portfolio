@@ -2085,3 +2085,146 @@ html[data-motion="paused"] :is(.rv, .rv [data-rv]) {
     transition: none !important;
   }
 }
+
+/* ==========================================================================
+   Theme switch: a pill with a tiny landscape. Sun behind the hills in light,
+   moon and stars in dark. Driven by html[data-theme]; transitions only once
+   [data-ready] is set (after first paint, and not when motion is reduced/paused).
+   ========================================================================== */
+.theme-switch {
+  --tt: 350ms cubic-bezier(0.55, 0, 0.25, 1);
+  display: grid;
+  place-items: center;
+  /* 44px touch height without growing the 48px bar's layout */
+  height: 44px;
+  margin-block: -4px;
+  padding: 0 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-pill {
+  position: relative;
+  display: block;
+  width: 56px;
+  height: 30px;
+  overflow: hidden;
+  border: 2px solid rgb(var(--edge));
+  border-radius: 999px;
+  box-shadow: 2px 2px 0 rgb(var(--shadow));
+  background: rgb(var(--paper));
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.theme-switch:active .theme-pill {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgb(var(--shadow));
+}
+.theme-switch:focus-visible {
+  outline: none;
+}
+.theme-switch:focus-visible .theme-pill {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 3px;
+}
+.theme-pill > * {
+  position: absolute;
+  inset: 0;
+}
+.theme-pill {
+  /* own sky colours: the page's live sky shifts with the clock, the pill should not */
+  --ts-a: var(--paper2);
+  --ts-b: var(--petal);
+}
+:root[data-theme="dark"] .theme-pill {
+  --ts-a: var(--paper);
+  --ts-b: var(--g3);
+}
+.theme-sky {
+  background: linear-gradient(rgb(var(--ts-a)), rgb(var(--ts-b)));
+}
+.theme-ghost {
+  background: linear-gradient(rgb(var(--gt)), rgb(var(--gl)));
+  animation: theme-ghost-out 350ms cubic-bezier(0.55, 0, 0.25, 1) forwards;
+  pointer-events: none;
+}
+@keyframes theme-ghost-out {
+  to { opacity: 0; }
+}
+.theme-stars {
+  width: 100%;
+  height: 100%;
+  fill: rgb(var(--fg));
+  stroke: rgb(var(--fg));
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  opacity: 0;
+}
+:root[data-theme="dark"] .theme-stars {
+  opacity: 1;
+}
+.theme-disc {
+  inset: auto;
+  left: 7px;
+  top: 11px;
+  width: 12px;
+  height: 12px;
+}
+:root[data-theme="dark"] .theme-disc {
+  left: 34px;
+  top: 2px;
+}
+.theme-sun,
+.theme-moon {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+.theme-sun {
+  background: rgb(var(--g2));
+  box-shadow: 0 0 0 1.5px rgb(var(--g2) / 0.35);
+}
+.theme-moon {
+  background: rgb(var(--fg));
+  opacity: 0;
+  transform: rotate(-40deg) scale(0.8);
+}
+.theme-moon i {
+  position: absolute;
+  border-radius: 50%;
+  background: rgb(var(--muted) / 0.55);
+}
+.theme-moon i:nth-child(1) { left: 6.5px; top: 2.5px; width: 3px; height: 3px; }
+.theme-moon i:nth-child(2) { left: 3px; top: 7px; width: 2px; height: 2px; }
+:root[data-theme="dark"] .theme-sun {
+  opacity: 0;
+  transform: scale(0.7);
+}
+:root[data-theme="dark"] .theme-moon {
+  opacity: 1;
+  transform: none;
+}
+.theme-land {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.theme-hill-back { fill: rgb(var(--leaf) / 0.55); }
+.theme-hill { fill: rgb(var(--leaf)); }
+.theme-pine { fill: rgb(var(--edge) / 0.9); }
+:root[data-theme="dark"] .theme-hill-back { fill: rgb(var(--leaf) / 0.4); }
+:root[data-theme="dark"] .theme-pine { fill: rgb(var(--paper) / 0.55); }
+
+.theme-switch[data-ready] .theme-disc {
+  transition: left var(--tt), top var(--tt);
+}
+.theme-switch[data-ready] .theme-sun,
+.theme-switch[data-ready] .theme-moon {
+  transition: opacity var(--tt), transform var(--tt);
+}
+.theme-switch[data-ready] .theme-stars {
+  transition: opacity var(--tt);
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-ghost { animation: none; opacity: 0; }
+}
