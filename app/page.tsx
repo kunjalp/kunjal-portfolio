@@ -18,6 +18,11 @@ export default function Page() {
         <Skills />
         <Contact />
       </main>
+      <footer className="relative z-10 border-t border-[rgb(var(--edge)/0.25)] bg-bg px-4 py-6 sm:px-6">
+        <p className="mx-auto max-w-5xl font-mono text-[0.85rem] text-muted">
+          &copy; 2026 Kunjal Purohit
+        </p>
+      </footer>
     </>
   );
 }
