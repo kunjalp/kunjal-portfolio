@@ -1362,12 +1362,7 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
     object-position: var(--pos-side, 50% 50%);
   }
 }
-@media (min-width: 1024px) {
-  .card-shot {
-    width: 140px;
-    min-height: 170px;
-  }
-}
+
 .card-toggle:hover {
   background: rgb(var(--paper2) / 0.7);
 }
@@ -2054,42 +2049,6 @@ html.has-cursor.cursor-down .c-ball::before {
 @keyframes chip-shine {
   from { transform: translateX(-130%); }
   to { transform: translateX(260%); }
-}
-
-/* ---- Scroll reveal (components/Reveal.tsx) ----
-   .rv is added only after mount, for blocks below the fold; .rv-in starts the fade.
-   Opacity and transform only, so the page height never changes. */
-.rv {
-  transition: opacity 900ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--rv-delay, 0ms), transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--rv-delay, 0ms);
-}
-.rv:not(.rv-in) {
-  opacity: 0;
-  transform: translateY(32px);
-}
-/* inside a block: frame first, then title, numbers, links, picture */
-.rv [data-rv] {
-  transition: opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
-  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-step) * 150ms);
-}
-.rv:not(.rv-in) [data-rv] {
-  opacity: 0;
-  transform: translateY(12px);
-}
-[data-rv="1"] { --rv-step: 1; }
-[data-rv="2"] { --rv-step: 2; }
-[data-rv="3"] { --rv-step: 3; }
-[data-rv="4"] { --rv-step: 4; }
-html[data-motion="paused"] :is(.rv, .rv [data-rv]) {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-  :is(.rv, .rv [data-rv]) {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
 }
 
 /* ==========================================================================
