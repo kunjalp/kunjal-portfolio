@@ -18,8 +18,8 @@ const REVEAL_NOW = "reveal-now";
 /** Show the block with this name at once, no animation (before jumping to it). */
 export const revealNow = (name: string) => window.dispatchEvent(new CustomEvent(REVEAL_NOW, { detail: name }));
 
-const STAGGER = 80; // ms between blocks that enter together
-const DONE = 800; // block fade (500) plus the last inner step, then the classes come off
+const STAGGER = 160; // ms between blocks that enter together
+const DONE = 1700; // block fade (900) plus the last inner step (4 x 150 + 700), then the classes come off
 
 // blocks that enter in the same frame stagger in DOM order (observers fire in creation order)
 let queued = 0;

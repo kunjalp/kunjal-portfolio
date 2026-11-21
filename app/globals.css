@@ -2060,20 +2060,20 @@ html.has-cursor.cursor-down .c-ball::before {
    .rv is added only after mount, for blocks below the fold; .rv-in starts the fade.
    Opacity and transform only, so the page height never changes. */
 .rv {
-  transition: opacity 500ms ease-out var(--rv-delay, 0ms), transform 500ms ease-out var(--rv-delay, 0ms);
+  transition: opacity 900ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--rv-delay, 0ms), transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1) var(--rv-delay, 0ms);
 }
 .rv:not(.rv-in) {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(32px);
 }
 /* inside a block: frame first, then title, numbers, links, picture */
 .rv [data-rv] {
-  transition: opacity 420ms ease-out, transform 420ms ease-out;
-  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-step) * 70ms);
+  transition: opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: calc(var(--rv-delay, 0ms) + var(--rv-step) * 150ms);
 }
 .rv:not(.rv-in) [data-rv] {
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(12px);
 }
 [data-rv="1"] { --rv-step: 1; }
 [data-rv="2"] { --rv-step: 2; }
