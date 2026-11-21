@@ -88,7 +88,7 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
   };
 
   return (
-    <div ref={wrap} id={id} className="scroll-mt-24">
+    <div ref={wrap} id={id} className={`scroll-mt-24 ${open ? "card-open" : ""} roll-card`}>
       <Window section="projects" title={file} onExpandedChange={(full) => full && setOpen(true)}>
         {open ? (
           <div id={bodyId}>{children}</div>

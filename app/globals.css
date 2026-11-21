@@ -1333,6 +1333,20 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
   }
 }
 
+/* An opened project card breaks out of the narrow column so its details sit side by side
+   and fit on screen (the column is 680px; open cards grow to about 1080px, centered). */
+.card-open {
+  margin-inline: 0;
+}
+@media (min-width: 900px) {
+  .roll-card {
+    transition: margin-inline 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .card-open {
+    margin-inline: calc((min(1080px, 100vw - 4rem) - 680px) / -2);
+  }
+}
+
 /* Project cards: the "cat details" bar along the bottom of each project window. */
 .card-toggle {
   display: flex;
