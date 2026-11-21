@@ -108,21 +108,21 @@ export default function ProjectCard({ id, file, name, what, when, line, metrics,
                 <img src={image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
               </div>
             )}
-            <div className="min-w-0 flex-1 space-y-2.5 p-4 sm:p-5">
-            <h3 data-rv="1" className="text-[1.3rem] font-bold leading-tight tracking-[-0.01em]">{name}</h3>
+            <div className="min-w-0 flex-1 space-y-2 p-4 sm:p-5 lg:space-y-1.5 lg:p-3.5">
+            <h3 data-rv="1" className="text-[1.3rem] font-bold leading-tight lg:text-[1.1rem] tracking-[-0.01em]">{name}</h3>
             <p data-rv="1" className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-              <span className="text-[0.9rem] font-semibold">{what}</span>
+              <span className="text-[0.9rem] font-semibold lg:text-[0.82rem]">{what}</span>
               <span className="font-mono text-xs text-muted">{when}</span>
             </p>
-            <p data-rv="1" className="text-[0.95rem] leading-snug">{line}</p>
+            <p data-rv="1" className="text-[0.95rem] leading-snug lg:text-[0.85rem]">{line}</p>
             <dl data-rv="2" className="grid grid-cols-3 gap-2">
               {metrics.map(([v, l]) => (
                 <div
                   key={l}
-                  className="rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] px-2.5 py-1.5"
+                  className="rounded-lg border-2 border-[rgb(var(--edge))] bg-[rgb(var(--paper2)/0.5)] px-2.5 py-1.5 lg:px-2 lg:py-1"
                 >
-                  <dd className="text-[1.05rem] font-extrabold leading-none">{v}</dd>
-                  <dt className="mt-1 text-[0.72rem] leading-tight text-muted">{l}</dt>
+                  <dd className="text-[1.05rem] font-extrabold leading-none lg:text-[0.95rem]">{v}</dd>
+                  <dt className="mt-1 text-[0.72rem] leading-tight text-muted lg:text-[0.68rem]">{l}</dt>
                 </div>
               ))}
             </dl>

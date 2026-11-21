@@ -1362,6 +1362,12 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
     object-position: var(--pos-side, 50% 50%);
   }
 }
+@media (min-width: 1024px) {
+  .card-shot {
+    width: 140px;
+    min-height: 170px;
+  }
+}
 .card-toggle:hover {
   background: rgb(var(--paper2) / 0.7);
 }
