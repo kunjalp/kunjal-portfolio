@@ -5,7 +5,6 @@ import { ArrowDownToLine, FileText, Menu, Mountain, X } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import GravityToggle from "./GravityToggle";
 import { toggleGravity, useGravity } from "./gravity";
-import MotionToggle from "./MotionToggle";
 import { ProjectIndexButton } from "./ProjectIndex";
 
 const links = [
@@ -99,7 +98,6 @@ export default function Navbar() {
             Resume
           </a>
           <ProjectIndexButton />
-          <MotionToggle />
           {/* on phones the gravity switch lives in the menu, so Resume gets the room up here */}
           <div className="hidden md:block">
             <GravityToggle />

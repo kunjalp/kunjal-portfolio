@@ -73,11 +73,10 @@ export default function ThemeToggle() {
             onAnimationEnd={() => setGhost(null)}
           />
         )}
-        <svg className="theme-stars" viewBox="0 0 52 26" aria-hidden>
-          <path d="M9 6.5h1.6M9.8 5.7v1.6" />
-          <circle cx="19" cy="11" r="0.9" />
-          <circle cx="25" cy="5" r="1.1" />
-          <circle cx="14" cy="15" r="0.7" />
+        <svg className="theme-stars" viewBox="0 0 56 28" aria-hidden>
+          <circle cx="11" cy="8" r="1" />
+          <circle cx="19" cy="17" r="0.8" />
+          <circle cx="25" cy="7" r="1.1" />
         </svg>
         <span className="theme-disc" aria-hidden>
           <span className="theme-sun" />
@@ -86,13 +85,8 @@ export default function ThemeToggle() {
             <i />
           </span>
         </span>
-        <svg className="theme-land" viewBox="0 0 52 26" aria-hidden>
-          <path className="theme-hill-back" d="M0 26V21L8 17.5 14 20.5 24 14 34 8.5 42 15 52 11V26Z" />
-          <path className="theme-hill" d="M0 26V23.5L9 20.5 18 24 30 18.5 41 24 52 20V26Z" />
-          <g className="theme-pine">
-            <path d="M44.5 8.5L48.3 15H46.5L49.3 20H39.7L42.5 15H40.7Z" />
-            <rect x="43.7" y="19.5" width="1.6" height="4" />
-          </g>
+        <svg className="theme-land" viewBox="0 0 56 28" aria-hidden>
+          <path className="theme-hill" d="M0 28V22.5C9 17.5 17 17.5 27 21.5S46 23 56 18.5V28Z" />
         </svg>
       </span>
     </button>

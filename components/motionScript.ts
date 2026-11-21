@@ -2,5 +2,5 @@
 
 export const MOTION_KEY = "motion-paused";
 
-/** Inline <head> snippet: restores a saved pause before first paint, so nothing moves for a frame. */
-export const MOTION_JS = `try{if(localStorage.getItem('${MOTION_KEY}')==='1')document.documentElement.dataset.motion='paused'}catch(e){}`;
+/** Inline <head> snippet: the Pause button is gone, so drop any pause an earlier visit saved. */
+export const MOTION_JS = `try{localStorage.removeItem('${MOTION_KEY}')}catch(e){}`;
