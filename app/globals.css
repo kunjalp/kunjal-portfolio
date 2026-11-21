@@ -1310,6 +1310,39 @@ html[data-motion="paused"] :is(.pine-sway, .shimmer rect, .bird-flap, .bird-drif
   }
 }
 
+/* Hero buttons: flip over to an inverted face on hover (components/FlipLink.tsx). */
+@media (hover: hover) {
+  .flip-btn {
+    transform-origin: 50% 50%;
+  }
+  .flip-btn.flip-on {
+    background: rgb(var(--fg));
+    color: rgb(var(--paper));
+    animation: flip-on 460ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flip-btn.flip-off {
+    animation: flip-off 460ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+@keyframes flip-on {
+  0%    { transform: perspective(500px) rotateX(0);       background: rgb(var(--paper)); color: rgb(var(--fg)); }
+  49.9% { transform: perspective(500px) rotateX(90deg);   background: rgb(var(--paper)); color: rgb(var(--fg)); }
+  50%   { transform: perspective(500px) rotateX(-90deg);  background: rgb(var(--fg));    color: rgb(var(--paper)); }
+  100%  { transform: perspective(500px) rotateX(0);       background: rgb(var(--fg));    color: rgb(var(--paper)); }
+}
+@keyframes flip-off {
+  0%    { transform: perspective(500px) rotateX(0);       background: rgb(var(--fg));    color: rgb(var(--paper)); }
+  49.9% { transform: perspective(500px) rotateX(-90deg);  background: rgb(var(--fg));    color: rgb(var(--paper)); }
+  50%   { transform: perspective(500px) rotateX(90deg);   background: rgb(var(--paper)); color: rgb(var(--fg)); }
+  100%  { transform: perspective(500px) rotateX(0);       background: rgb(var(--paper)); color: rgb(var(--fg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip-btn.flip-on,
+  .flip-btn.flip-off {
+    animation: none;
+  }
+}
+
 /* Project cards: the "cat details" bar along the bottom of each project window. */
 .card-toggle {
   display: flex;

@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUpRight, FileText, Github, Leaf, Linkedin, Mail } from "lucide-react";
 import Window from "./Window";
+import FlipLink from "./FlipLink";
 
 const facts: [string, string][] = [
   ["school", "UC Santa Cruz"],
@@ -43,56 +44,54 @@ export default function Hero() {
                   See my work
                   <ArrowDown size={16} aria-hidden />
                 </a>
-                <a href="#contact" className="glass-btn">
+                <FlipLink href="#contact">
                   <Mail size={16} aria-hidden />
                   Contact me
-                </a>
+                </FlipLink>
                 <span aria-hidden className="hidden basis-full sm:block" />
-                <a
+                <FlipLink
                   href="/Kunjal_Purohit_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Resume for software engineering roles, PDF (opens in a new tab)"
-                  className="glass-btn"
                 >
                   <FileText size={16} aria-hidden />
                   Resume: SWE
-                </a>
-                <a
+                </FlipLink>
+                <FlipLink
                   href="/Kunjal_Purohit_Resume_Embedded.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Resume for embedded roles, PDF (opens in a new tab)"
-                  className="glass-btn"
                 >
                   <FileText size={16} aria-hidden />
                   Resume: Embedded
-                </a>
+                </FlipLink>
               </div>
 
               <div className="mt-3 flex flex-wrap gap-2">
-                <a
+                <FlipLink
                   href="https://github.com/kunjalp"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Kunjal on GitHub (opens in a new tab)"
-                  className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+                  className="!min-h-[36px] !px-3 !text-[0.8rem]"
                 >
                   <Github size={14} aria-hidden />
                   GitHub
                   <ArrowUpRight size={14} aria-hidden />
-                </a>
-                <a
+                </FlipLink>
+                <FlipLink
                   href="https://www.linkedin.com/in/kunjalpurohit"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Kunjal on LinkedIn (opens in a new tab)"
-                  className="glass-btn !min-h-[36px] !px-3 !text-[0.8rem]"
+                  className="!min-h-[36px] !px-3 !text-[0.8rem]"
                 >
                   <Linkedin size={14} aria-hidden />
                   LinkedIn
                   <ArrowUpRight size={14} aria-hidden />
-                </a>
+                </FlipLink>
               </div>
 
               <p className="mt-5 flex items-center gap-2 text-sm text-muted">
